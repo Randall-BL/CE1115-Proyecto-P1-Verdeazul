@@ -1,0 +1,301 @@
+%=====================================================================
+%  CE-1115 Seguridad de la Informacion -- Proyecto, Parte 1
+%  Consultas al cliente: preguntas escritas para la reunion con
+%  Verdeazul Carbono S.A. (el profesor, en el papel del cliente)
+%  Documento de trabajo del Grupo 6. No es uno de los cinco entregables:
+%  lo que se responda pasa a la minuta (Anexo A de P1_Politicas).
+%
+%  Compilar dos veces:  pdflatex P1_ConsultasCliente_grupo6.tex
+%=====================================================================
+\documentclass[11pt,letterpaper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-noshorthands,es-tabla]{babel}
+\usepackage{XCharter}
+\usepackage[defaultsans,scale=0.92]{lato}
+\usepackage[scaled=0.9]{inconsolata}
+\usepackage[letterpaper,margin=2.2cm,headheight=15pt]{geometry}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{booktabs,tabularx,array,longtable}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage[most]{tcolorbox}
+\usepackage{needspace}
+\usepackage[hidelinks]{hyperref}
+
+\newcommand{\numgrupo}{6}
+\newcommand{\titulocorto}{Consultas al cliente}
+
+\definecolor{vz}{HTML}{0F6E6A}
+\definecolor{vzclaro}{HTML}{E7F2F1}
+\definecolor{tinta}{HTML}{1A1A1A}
+\definecolor{gris}{HTML}{5F5E5A}
+\definecolor{regla}{HTML}{B9B8B0}
+\definecolor{pend}{HTML}{9A6200}
+\definecolor{pendfondo}{HTML}{FFF4D9}
+\definecolor{negado}{HTML}{F2F1EC}
+\color{tinta}
+
+\titleformat{\section}{\Large\sffamily\bfseries\color{vz}}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\large\sffamily\bfseries\color{tinta}}{}{0em}{}
+\titlespacing*{\section}{0pt}{1.2em}{0.4em}
+\titlespacing*{\subsection}{0pt}{0.9em}{0.2em}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5em}
+\setlist{leftmargin=1.5em,itemsep=2pt,topsep=3pt,parsep=0pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\sffamily\color{gris}CE-1115 $\cdot$ Proyecto Parte 1 $\cdot$ Grupo \numgrupo}
+\fancyhead[R]{\small\sffamily\color{gris}\titulocorto}
+\fancyfoot[C]{\small\sffamily\color{gris}\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{regla}\leaders\hrule height \headrulewidth\hfill}}
+
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcommand{\cab}[1]{\textbf{\sffamily #1}}
+\newcommand{\porllenar}{\textcolor{pend}{\sffamily\small[por completar]}}
+\newcommand{\pri}{\textcolor{vz}{\sffamily\bfseries A}}      % prioridad A
+\newcommand{\bloque}[1]{\multicolumn{5}{@{}l}{\cellcolor{vzclaro}\cab{#1}} \\}
+\newcommand{\carta}[1]{«\emph{#1}»}
+
+\begin{document}
+
+%--------------------------- encabezado ------------------------------
+{\sffamily\large\color{gris} Proyecto $\cdot$ Parte 1 $\cdot$ Diseño del control de acceso}\\[0.25cm]
+{\sffamily\bfseries\fontsize{22}{26}\selectfont Consultas al cliente}\\[0.15cm]
+{\sffamily\large Preguntas escritas para la reunión con Verdeazul Carbono S.A.}\\[0.2cm]
+{\color{vz}\rule{\textwidth}{1.4pt}}
+
+\vspace{0.2cm}
+\begin{tabularx}{\textwidth}{@{}L{3.6cm} Y@{}}
+\textbf{Equipo consultor} & Grupo \numgrupo: Randall Bolaños López (2019043784), Javier Tenorio Cervantes (2020065308), Julio Varela Venegas (2019008041), Axel Flores Lara (2021453573) \\
+\textbf{Parte interesada} & Prof. MSc. Andrés Vargas Rivera, en el papel de Verdeazul Carbono S.A. \\
+\textbf{Reunión} & Fecha y hora: \porllenar \quad Medio: \porllenar \\
+\end{tabularx}
+
+%=====================================================================
+\section{Para qué son estas preguntas}
+%=====================================================================
+
+La carta de encargo dice a qué se dedica Verdeazul y qué le preocupa, pero deja abiertos varios puntos
+de los que depende el diseño. El equipo ya entregó un diseño completo, construido con supuestos de
+trabajo. Esta reunión es para sustituir esos supuestos por lo que el cliente decida.
+
+\textbf{Cómo se usa en la reunión.}
+
+\begin{itemize}
+\item Las preguntas están redactadas en el lenguaje del negocio. La columna \emph{Qué decide} es para el
+      equipo: dice qué parte del diseño depende de la respuesta.
+\item La columna \emph{Si no hay respuesta} es el supuesto con que hoy está hecho el diseño. Si el
+      cliente lo confirma, no cambia nada.
+\item La prioridad \pri\ marca las doce preguntas que cambian el diseño. Si el tiempo no alcanza, se
+      hacen esas primero, en el orden de la sección~\ref{sec:prioridad}.
+\item Una persona pregunta y otra anota. Lo respondido se pasa el mismo día a la minuta, que es el
+      Anexo~A del informe de políticas.
+\end{itemize}
+
+%=====================================================================
+\section{Las preguntas}
+%=====================================================================
+
+{\small
+\renewcommand{\arraystretch}{1.28}
+\setlength{\tabcolsep}{4.5pt}
+\begin{longtable}{@{}L{0.95cm} L{0.5cm} L{5.5cm} L{4.4cm} L{4.3cm}@{}}
+\toprule
+\cab{N.º} & \cab{Pr.} & \cab{Pregunta al cliente} & \cab{Qué decide} & \cab{Si no hay respuesta} \\
+\midrule
+\endfirsthead
+\toprule
+\cab{N.º} & \cab{Pr.} & \cab{Pregunta al cliente} & \cab{Qué decide} & \cab{Si no hay respuesta} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+
+\bloque{A. Quién mide y quién aprueba}
+P-01 & \pri & ¿Un verificador sale alguna vez a medir, por ejemplo para cubrir a un técnico? ¿Hay verificadores que antes fueron técnicos? &
+Si los puestos de técnico y verificador se excluyen siempre o solo dentro de una misma sesión. &
+Nunca se mezclan, pero puede haber ascensos. Por eso la regla se comprueba medición por medición. \\
+P-02 & \pri & ¿Cuántos técnicos y cuántos verificadores hay? ¿Cuántas fincas son en total y cuántas atiende un técnico en un período? &
+Si la separación y la rotación son viables, y los umbrales de consulta. &
+Hay al menos dos verificadores. \\
+P-03 & B & Cuando una medición trae un error evidente, ¿el verificador lo corrige o siempre la devuelve al técnico? &
+Si el verificador puede modificar una medición. &
+Siempre la devuelve; nunca la edita. \\
+P-04 & B & ¿El certificado se emite solo cuando se aprueba la medición, o alguien más lo firma? ¿Usan hoy firma digital certificada? &
+Si la aprobación lleva firma digital personal o un sello de la empresa. &
+Lo emite el sistema al aprobar, con un sello de la empresa. \\
+
+\bloque{B. Períodos y enmiendas}
+P-05 & \pri & ¿Quién abre y quién cierra un período de medición? ¿Quién decide qué técnico va a cada finca? &
+Qué puesto tiene esos permisos. &
+La Gerencia de Certificación hace las tres cosas. \\
+P-06 & \pri & ¿La revisión de los verificadores termina antes del cierre, o sigue después? ¿Qué pasa con una medición que al cierre no se ha aprobado? &
+Los estados del período y qué se puede hacer después de cerrar. &
+Lo que no esté aprobado al cierre queda fuera y solo se retoma con una enmienda. \\
+P-07 & \pri & Después del cierre, ¿quién puede pedir una corrección y quién debe autorizarla? ¿Debe revisarla un verificador distinto del que aprobó la medición original? &
+El flujo de la enmienda y cuántas personas intervienen. &
+La pide el técnico o el verificador, la autoriza la Gerencia y la revisa un verificador que no participó. \\
+P-08 & \pri & Si la corrección cambia las toneladas de un certificado ya emitido, o ya vendido, ¿qué se hace con ese certificado? &
+Si un certificado se puede revocar y reemplazar. &
+Se revoca y se emite uno nuevo que hace referencia al anterior. Nada se borra. \\
+P-09 & B & ¿Cuántas correcciones de este tipo esperan por período: una o dos, o decenas? &
+Cuánta fricción es aceptable en la enmienda. &
+Son pocas; se acepta un trámite de tres personas. \\
+
+\bloque{C. El técnico del último párrafo de la carta}
+P-10 & \pri & Ante una consulta masiva como la del año pasado, ¿qué quieren que haga el sistema: avisar, pedir una confirmación, o bloquear? ¿A quién debe avisarle? &
+La respuesta de los controles de historial. &
+Tres escalones: avisa, pide confirmación con motivo y, si sigue, bloquea y avisa a la Gerencia. \\
+P-11 & \pri & ¿Un técnico necesita ver fincas que no tiene asignadas? ¿En qué casos? &
+Si el alcance del técnico se limita por asignación. &
+No. Solo ve las fincas que tiene asignadas en el período abierto. \\
+P-12 & B & ¿Cuál es el horario normal de trabajo? ¿Se mide o se registra de noche o en fines de semana? &
+Qué se considera fuera de jornada. &
+Lunes a viernes, de 6:00 a 19:00, para la oficina. El registro de campo no se restringe. \\
+P-13 & B & ¿Cuántas fincas consulta un verificador en un día normal? ¿Y en la última semana de un período? &
+Los umbrales de consulta. &
+40 fincas por día es normal; 80 es el tope. \\
+P-14 & C & ¿El personal firma un acuerdo de confidencialidad? ¿Sabe que sus consultas van a quedar registradas? &
+El respaldo legal de los controles. &
+Lo firma al ingresar, junto con la política de uso aceptable. \\
+
+\bloque{D. Dueños de finca y auditores}
+P-15 & \pri & ¿Los dueños van a entrar ellos mismos al sistema? ¿Un dueño puede tener varias fincas, delegar en un familiar o ser una sociedad? ¿Algún empleado o familiar de empleado es dueño de una finca certificada? &
+Cómo se identifica a un dueño y si hay conflictos de interés. &
+Entran ellos mismos, pueden autorizar representantes, y una finca de un empleado queda fuera de sus asignaciones. \\
+P-16 & B & ¿El dueño debe ver la medición apenas se registra, o solo cuando ya está aprobada? &
+Qué mediciones ve el dueño. &
+Solo las aprobadas. \\
+P-17 & C & ¿Qué datos personales de los dueños guardan hoy? ¿Firman algún consentimiento? &
+Las obligaciones de la Ley 8968. &
+Identificación y contacto, con consentimiento firmado al darse de alta. \\
+P-18 & \pri & ¿Quiénes son los auditores y bajo qué norma auditan? ¿Cuántos días dura la visita, trabajan en sitio o a distancia, y necesitan llevarse copias? &
+La cuenta de auditor y qué exige la norma sobre registros. &
+Personas con nombre, con acceso de solo lectura durante la visita, sin copias de datos personales. \\
+P-19 & B & La trazabilidad de diez años, ¿incluye quién consultó cada dato, o solo quién lo cambió y quién lo aprobó? &
+Cuánto tiempo se guardan las consultas. &
+Cambios y aprobaciones, diez años. Consultas, dos años. \\
+
+\bloque{E. Administración y operación}
+P-20 & B & ¿Quién le pide las altas de personal al administrador y quién las aprueba? ¿Quién lo sustituye cuando no está? &
+Quién da la segunda firma en cuentas y roles. &
+La Gerencia aprueba todo rol; nadie se asigna permisos a sí mismo. \\
+P-21 & B & ¿Qué identifica una hectárea en sus registros: el plano, un polígono, un código? ¿Cómo ocurrió la doble emisión? &
+La regla que impide emitir dos veces. &
+La geometría de la parcela; el sistema rechaza parcelas traslapadas. \\
+P-22 & \pri & ¿Los técnicos registran en la finca, o al volver a la oficina? ¿Hay señal en las fincas? ¿Los equipos son de la empresa? &
+Si hace falta registrar sin conexión. &
+Registran en línea, con un equipo de la empresa. \\
+P-23 & \pri & ¿Dónde estaría el sistema y quién lo operaría? ¿«Solo software libre» deja presupuesto para un servidor y para llaves físicas de seguridad? &
+El hospedaje, quién custodia las llaves y el tipo de segundo factor. &
+Un servidor operado por un proveedor; sin compra de llaves físicas. \\
+P-24 & B & ¿Cuánto tiempo puede estar caído el sistema con un período abierto sin que sea un problema serio? &
+Si hace falta un segundo servidor. &
+Se tolera un día. No se tolera perder datos. \\
+P-25 & C & ¿Alguien de fuera, como un comprador, necesita comprobar que un certificado es auténtico? &
+Si hay una consulta pública de certificados. &
+Conviene, pero queda fuera de esta fase. \\
+P-26 & C & ¿Cuántos años de certificados hay en las hojas de cálculo actuales, y qué debe pasar con ellos? &
+Cómo se trata el histórico. &
+Se migra una sola vez y queda marcado como histórico. \\
+\end{longtable}
+}
+
+{\small \textbf{Pr.}: \pri\ cambia el diseño; B ajusta un valor o un detalle; C confirma un supuesto.}
+
+%=====================================================================
+\section{Si el tiempo es corto: las doce primero}
+\label{sec:prioridad}
+%=====================================================================
+
+En este orden, que va de lo que más cambia el diseño a lo que menos:
+
+\begin{enumerate}[itemsep=1pt]
+\item \textbf{P-01} y \textbf{P-07}: quién puede medir, aprobar y autorizar una enmienda. De aquí sale la
+      técnica de separación de responsabilidades.
+\item \textbf{P-10} y \textbf{P-11}: qué hacer con el técnico del último párrafo.
+\item \textbf{P-05} y \textbf{P-06}: quién abre y cierra períodos, y qué pasa al cierre.
+\item \textbf{P-08}: qué ocurre con un certificado ya emitido cuando hay una enmienda.
+\item \textbf{P-02}: cuánta gente hay. Sin ese número no se sabe si la separación es viable.
+\item \textbf{P-18} y \textbf{P-15}: auditores y dueños.
+\item \textbf{P-22} y \textbf{P-23}: conexión en el campo, hospedaje y presupuesto.
+\end{enumerate}
+
+Son las tres que el enunciado señala como abiertas a propósito (P-01, P-07 y P-10) y las nueve que
+el equipo encontró al diseñar.
+
+%=====================================================================
+\section{Después de la reunión: qué se ajusta}
+%=====================================================================
+
+Para el equipo. Cada respuesta que difiera del supuesto obliga a tocar estos lugares. En los cinco
+entregables, los puntos pendientes están marcados con la etiqueta de la pregunta y se encuentran
+buscando la palabra \texttt{PENDIENTE} o el número, por ejemplo \texttt{P-07}, en el archivo
+\texttt{.tex}.
+
+{\small
+\renewcommand{\arraystretch}{1.22}
+\begin{longtable}{@{}L{1.3cm} L{3.3cm} L{3.8cm} L{3.4cm} L{3.4cm}@{}}
+\toprule
+\cab{Pregunta} & \cab{Políticas (E1)} & \cab{Control de acceso (E2)} & \cab{Matriz (E3)} & \cab{Arquitectura (E4)} \\
+\midrule
+\endfirsthead
+\toprule
+\cab{Pregunta} & \cab{Políticas (E1)} & \cab{Control de acceso (E2)} & \cab{Matriz (E3)} & \cab{Arquitectura (E4)} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+P-01 & --- & §3.4, §5.2, §5.4 & Exclusión TEC--VER (§4) & --- \\
+P-02 & --- & §3.4, §5.3 & Cardinalidad (§4) & --- \\
+P-03 & --- & §5.5 & (VER, Mediciones) & --- \\
+P-04 & §5, Ley 8454 & --- & --- & Anexo B; emisión \\
+P-05 & --- & §3.1 & Columnas Períodos y Asignaciones & --- \\
+P-06 & --- & --- & C3, C14 & Estados (Anexo A.2) \\
+P-07 & --- & §4.1 (H4), §5.5 & C8, C10 & --- \\
+P-08 & --- & --- & C4 & Anexo B; estados \\
+P-09 & --- & §5.5 & --- & --- \\
+P-10 & --- & §4.1 (H1, H3), §4.2 & H1, H3 & --- \\
+P-11 & --- & §4 & C1 & --- \\
+P-12, P-13 & --- & §4.1 (valores iniciales) & H1, H2 & --- \\
+P-14 & §5, POL-CA-02 & §4.2 & --- & --- \\
+P-15 & POL-CA-08 & --- & §4, C5 & --- \\
+P-16 & --- & --- & C5 & --- \\
+P-17 & §2.2 (A-04), §5 & --- & --- & --- \\
+P-18 & §5, POL-CA-07 & --- & C6 & --- \\
+P-19 & POL-BT-04 & §4.1 & --- & §4.5 \\
+P-20 & --- & §3.4 & C12 & --- \\
+P-21 & --- & --- & C11 & §4.2 \\
+P-22 & POL-AU-11 & --- & --- & RR-8; Anexo B \\
+P-23 & POL-CA-09, POL-AU-05 & --- & --- & §1, RR-7 \\
+P-24 & §3 & --- & --- & RR-6 \\
+P-25 & AM-10 & --- & --- & Anexo B \\
+P-26 & §6.4 & --- & --- & RR-9 \\
+\end{longtable}
+}
+
+Además, en todos los casos: llenar el Anexo~A y actualizar el Anexo~B del informe de políticas, quitar
+los bloques de pendiente de los cinco documentos, completar los dos bloques del documento del atributo
+DI, actualizar la lámina de pendientes de la presentación y recompilar.
+
+%=====================================================================
+\section{Consultas de logística al profesor}
+%=====================================================================
+
+Fuera del papel de cliente, conviene confirmar tres cosas del curso:
+
+\begin{enumerate}[itemsep=1pt]
+\item ¿Cuánto dura la defensa oral y cuánto de ese tiempo es para preguntas?
+\item ¿La minuta tiene un formato obligatorio, o basta la plantilla del Anexo~A?
+\item ¿El número de grupo que va en el asunto del correo y en los nombres de archivo es el \numgrupo?
+\end{enumerate}
+
+\end{document}

@@ -1,0 +1,964 @@
+%=====================================================================
+%  CE-1115 Seguridad de la Informacion -- Proyecto, Parte 1
+%  Diapositivas de la defensa oral
+%  Cliente: Verdeazul Carbono S.A. -- Grupo 6
+%
+%  SISTEMA VISUAL (no hay plantilla corporativa):
+%    Lamina   : 13,33 x 7,5 in (las medidas de PowerPoint 16:9).
+%    Tipografia: Lato, dos pesos (regular y bold).
+%    Escala   : cuatro tamanos -- 40 / 28 / 18 / 13 pt. Nada menor de 13.
+%    Color    : UN acento (#0F6E6A) + grises. El acento marca el dato
+%               importante de la lamina; nunca decora.
+%    Reticula : margenes de 0,6 in en los cuatro lados; todo a la
+%               izquierda.
+%    Cada titulo es una afirmacion. El detalle va en las notas (\note).
+%
+%  Compilar:              pdflatex P1_Presentacion_grupo6.tex   (2 veces)
+%  Version con notas:     pdflatex -jobname=P1_Presentacion_grupo6_notas
+%                           "\def\connotas{1}\input{P1_Presentacion_grupo6.tex}"
+%=====================================================================
+\documentclass[aspectratio=169,t]{beamer}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-noshorthands,es-tabla]{babel}
+\usepackage[default]{lato}
+\usepackage{booktabs,array,colortbl}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,calc}
+
+\ifdefined\connotas\setbeameroption{show notes}\fi
+
+%--------------------------- lamina y margenes -----------------------
+\geometry{papersize={13.333in,7.5in}}
+\setbeamersize{text margin left=0.6in,text margin right=0.6in}
+
+%--------------------------- color -----------------------------------
+\definecolor{acento}{HTML}{0F6E6A}
+\definecolor{acentoclaro}{HTML}{E7F2F1}
+\definecolor{tinta}{HTML}{1A1A1A}
+\definecolor{gris}{HTML}{5F5E5A}
+\definecolor{regla}{HTML}{B9B8B0}
+\definecolor{plano}{HTML}{FAFAFA}
+\definecolor{negado}{HTML}{F2F1EC}
+
+%--------------------------- escala: cuatro tamanos ------------------
+\newcommand{\tUno}{\fontsize{40}{45}\selectfont}
+\newcommand{\tDos}{\fontsize{28}{35}\selectfont}
+\newcommand{\tTres}{\fontsize{18}{25}\selectfont}
+\newcommand{\tCuatro}{\fontsize{13}{17.5}\selectfont}
+\makeatletter
+\renewcommand\normalsize{\@setfontsize\normalsize{18}{25}}
+\renewcommand\small{\@setfontsize\small{13}{17.5}}
+\renewcommand\footnotesize{\@setfontsize\footnotesize{13}{17.5}}
+\renewcommand\scriptsize{\@setfontsize\scriptsize{13}{17.5}}
+\renewcommand\tiny{\@setfontsize\tiny{13}{17.5}}
+\renewcommand\large{\@setfontsize\large{28}{35}}
+\renewcommand\Large{\@setfontsize\Large{40}{45}}
+\makeatother
+
+%--------------------------- cromo -----------------------------------
+\usetheme{default}
+\setbeamertemplate{navigation symbols}{}
+\setbeamercolor{structure}{fg=acento}
+\setbeamercolor{normal text}{fg=tinta}
+\setbeamercolor{background canvas}{bg=white}
+\setbeamerfont{note page}{size=\fontsize{20}{27}\selectfont}
+
+\setbeamertemplate{frametitle}{%
+  \vskip0.0in%
+  \begin{minipage}[t]{\textwidth}
+    \raggedright\color{tinta}\tUno\bfseries\insertframetitle\par
+  \end{minipage}\par
+  \vskip0.12in}
+
+\gdef\presentador{}
+\newcommand{\quien}[1]{\gdef\presentador{#1}}
+\setbeamertemplate{footline}{%
+  \hbox to\paperwidth{\hskip0.6in{\tCuatro\color{gris}\insertframenumber}\hfill
+    {\tCuatro\color{gris}\presentador}\hskip0.6in}%
+  \vskip0.45in}
+
+%--------------------------- atajos ----------------------------------
+\newcommand{\dato}[1]{\textcolor{acento}{\textbf{#1}}}
+\newcommand{\pie}[1]{\leavevmode{\tCuatro\color{gris}#1}}
+\newcommand{\cabt}[1]{\leavevmode{\tCuatro\bfseries\color{gris}#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\arrayrulecolor{regla}
+\setlength{\arrayrulewidth}{0.8pt}
+\renewcommand{\arraystretch}{1.5}
+% celdas de la matriz
+\newcommand{\vb}[2]{\mbox{#1\,{\color{acento}\bfseries #2}}}
+\newcommand{\sinacc}{\cellcolor{negado}\leavevmode{\color{gris}---}}
+\newcommand{\suj}[1]{\leavevmode{\tTres\bfseries #1}}
+
+%=====================================================================
+\begin{document}
+
+%--------------------------- 1. PORTADA ------------------------------
+\begin{frame}[plain]
+\vspace*{1.25in}
+{\tCuatro\color{gris}PROYECTO \ $\cdot$ \ PARTE 1 \ $\cdot$ \ DEFENSA ORAL}\\[0.3in]
+{\tUno\bfseries\color{tinta}Diseño del control de acceso\\[4pt] para Verdeazul Carbono}\\[0.25in]
+{\color{acento}\rule{1.6in}{4pt}}\\[0.25in]
+{\tDos\color{gris}Políticas, matriz y arquitectura de seguridad}\\[0.7in]
+{\tTres\bfseries Randall Bolaños \quad Javier Tenorio \quad Julio Varela \quad Axel Flores}\\[0.12in]
+{\tCuatro\color{gris}Grupo 6 \ $\cdot$ \ CE-1115 Seguridad de la Información \ $\cdot$ \ Prof. MSc. Andrés
+Vargas Rivera \ $\cdot$ \ ITCR \ $\cdot$ \ 15 de octubre de 2026}
+\note{Reparto propuesto. Randall: cliente, activos y separación de responsabilidades. Javier:
+amenazas, marco legal, fricción, riesgos residuales y respuestas del cliente. Julio: modelo de control
+de acceso y matriz. Axel: controles de historial y arquitectura. Todos deben poder responder por cualquier lámina:
+las preguntas del profesor son individuales.}
+\end{frame}
+
+%--------------------------- 2. EL NEGOCIO ---------------------------
+\begin{frame}{Verdeazul vende confianza:\\ cada certificado respalda una tonelada real}
+\quien{Randall}
+\vspace{0.15in}
+\begin{tikzpicture}[x=1in,y=1in,
+  caja/.style={draw=regla,line width=0.8pt,fill=plano,minimum width=2.0in,minimum height=0.95in,
+               align=center,font=\tTres,inner sep=2pt},
+  fl/.style={-{Stealth[length=9pt,width=8pt]},draw=gris,line width=1.2pt}]
+\node[caja] (a) at (1.00,0) {Finca\\forestal};
+\node[caja] (b) at (3.53,0) {Técnico\\mide};
+\node[caja] (c) at (6.06,0) {Verificador\\aprueba};
+\node[caja,draw=acento,line width=1.6pt] (d) at (8.59,0) {\textbf{Certificado}\\de carbono};
+\node[caja] (e) at (11.12,0) {Mercado\\internacional};
+\foreach \p/\q in {a/b,b/c,c/d,d/e} \draw[fl] (\p) -- (\q);
+\end{tikzpicture}
+
+\vspace{0.4in}
+{\tDos \dato{Un dato inflado es fraude.}}
+
+\vspace{0.12in}
+Auditores europeos pueden pedir la trazabilidad de cualquier certificado de los últimos diez años.
+\note{Qué decir: Verdeazul certifica captura de carbono en fincas forestales. El técnico mide, el
+verificador aprueba y se emite un certificado que el dueño vende afuera. El valor del certificado es la
+confianza en el dato. Hoy todo vive en hojas de cálculo compartidas.
+
+Si preguntan por qué empezamos por el negocio: porque el enunciado pide políticas que describan a este
+cliente, y casi todas las decisiones salen de esta lámina.}
+\end{frame}
+
+%--------------------------- 3. LOS DOS SUSTOS -----------------------
+\begin{frame}{Los dos sustos de la carta son fallas de integridad}
+\quien{Randall}
+\vspace{0.1in}
+\begin{tabular}{@{}L{2.2in} L{9.5in}@{}}
+\toprule
+\cabt{PRIMER SUSTO} & Una medición cambió después de aprobada, y nadie sabe quién fue. \\
+\midrule
+\cabt{SEGUNDO SUSTO} & Un certificado se emitió dos veces sobre la misma hectárea. \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.45in}
+{\tDos Orden de prioridad: \dato{integridad}, confidencialidad, disponibilidad.}
+
+\vspace{0.12in}
+Cuando dos pilares chocan, gana la integridad: sin registro en bitácora no hay acción.
+\note{Qué decir: ninguno de los dos incidentes fue un robo de información. En los dos, el dato dejó de
+ser confiable. Por eso la integridad va primero. La confidencialidad va segunda por la competencia
+entre dueños y por los datos personales. La disponibilidad va tercera, con un matiz: importa más que el
+dato exista en diez años que un día sin sistema.
+
+Si preguntan por un ejemplo de «gana la integridad»: si la bitácora no se puede escribir, la operación
+se rechaza aunque eso detenga el trabajo (POL-BT-06).}
+\end{frame}
+
+%--------------------------- 4. ACTIVOS ------------------------------
+\begin{frame}{Lo que más vale es lo que sostiene un certificado}
+\quien{Randall}
+\vspace{0.05in}
+\begin{tabular}{@{}L{4.6in} L{2.6in} L{4.4in}@{}}
+\toprule
+\cabt{ACTIVO} & \cabt{CLASIFICACIÓN} & \cabt{LO QUE NO PUEDE FALLAR} \\
+\midrule
+Mediciones y certificados & Confidencial & \dato{Integridad} \\
+Catálogo de fincas: la cartera & Confidencial & Integridad y confidencialidad \\
+Datos personales de los dueños & Confidencial & Confidencialidad \\
+Bitácora y llave de sello & Restringido & \dato{Integridad} \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.3in}
+\pie{El inventario completo tiene once activos, cada uno valorado en los tres pilares (informe de políticas, sección 2).}
+\note{Qué decir: clasificamos en cuatro niveles (público, interno, confidencial, restringido) y valoramos
+cada activo con la escala de FIPS 199. La Gerencia de Certificación es la responsable del dato; el
+administrador y el operador son custodios.
+
+Si preguntan por un activo que no es obvio: los parámetros de cálculo (A-10). Un factor alterado infla
+todos los certificados a la vez. Y la llave de sello (A-09): quien la tenga fabrica certificados
+creíbles.}
+\end{frame}
+
+%--------------------------- 5. AMENAZAS -----------------------------
+\begin{frame}{\textcolor{acento}{7 de 11} amenazas son internas:\\ el atacante más probable ya tiene una cuenta}
+\quien{Javier}
+\vspace{0.05in}
+\begin{tabular}{@{}L{1.4in} L{6.6in} L{3.6in}@{}}
+\toprule
+\cabt{ID} & \cabt{YA OCURRIÓ EN VERDEAZUL} & \cabt{PILAR} \\
+\midrule
+AM-03 & Una medición editada después de aprobarse & Integridad \\
+AM-06 & Un certificado emitido dos veces & Integridad \\
+AM-04 & Cientos de fincas consultadas en un fin de semana & Confidencialidad \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.3in}
+El diseño no mira el perímetro: mira qué puede hacer cada persona autorizada.
+\note{Qué decir: el modelo tiene once amenazas, cada una con agente, motivo, activo, la debilidad que
+hoy lo permite y el riesgo. Siete son internas: técnico que infla, misma persona que mide y aprueba,
+edición silenciosa, extracción de la cartera, administrador u operador que abusa, doble emisión por
+error y, desde la consulta al cliente, el empleado con un vínculo con un dueño (AM-11): no existe un
+registro de esos vínculos. Tres ya ocurrieron.
+
+Externas: dueño que quiere ver a un competidor, robo de credenciales, ransomware y certificado
+falsificado o cuenta de auditor tomada.
+
+Si preguntan cómo calculamos el riesgo: probabilidad por impacto. Probabilidad alta es que ya ocurrió
+aquí o que es la vía habitual de ataque en el país.}
+\end{frame}
+
+%--------------------------- 6. MARCO LEGAL --------------------------
+\begin{frame}{Cada obligación legal termina\\ en una regla que se puede comprobar}
+\quien{Javier}
+\vspace{0.05in}
+\begin{tabular}{@{}L{2.9in} L{4.2in} L{4.5in}@{}}
+\toprule
+\cabt{NORMA} & \cabt{EXIGE} & \cabt{REGLA EN VERDEAZUL} \\
+\midrule
+Ley 8968, art. 14 & Autorización para transferir datos & El auditor consulta en la plataforma \\
+Reglamento, art. 38 & Avisar una fuga en 5 días hábiles & Procedimiento con ese plazo \\
+Ley 7975, art. 2 & Medidas razonables de secreto & Acceso por necesidad y registro \\
+ISO/IEC 17029 & Quien revisa no participó & \dato{Medir y aprobar, separados} \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.2in}
+\pie{El cliente aclaró que no audita bajo una norma determinada: la ISO se cita como referencia. Su exigencia firme es la trazabilidad de diez años.}
+\note{Qué decir: la Ley 8968 aplica porque los datos de los dueños se comparten con auditores externos;
+no es una base de uso exclusivamente interno. Derechos del titular en cinco días hábiles; consentimiento
+informado al dar de alta a un dueño; conservación hasta diez años y después se desasocia.
+
+La Ley 7975 es la que permite reclamar si la cartera llega a la competencia, pero solo si la empresa
+puede demostrar que tomó medidas razonables: por eso el acceso por asignación y la bitácora tienen
+además valor legal.
+
+También: Código Penal (arts. 196 bis, 217 bis, 229 bis y 231), Código de Trabajo art. 71 g) y Ley 8454
+de firma digital.
+
+Auditores, según la minuta (P-18): una vez al año, varios días, en sitio o a distancia. Pueden exportar
+evidencia, pero como paquetes que genera el sistema, sellados, registrados y sin datos personales. El
+acceso vence con la ventana autorizada; prorrogarlo es una autorización nueva.}
+\end{frame}
+
+%--------------------------- 7. MODELO: TRES CAPAS -------------------
+\begin{frame}{Roles con restricciones,\\ y condiciones que solo pueden quitar}
+\quien{Julio}
+\vspace{0.2in}
+\begin{tikzpicture}[x=1in,y=1in,
+  capa/.style={draw=acento,line width=1.4pt,fill=acentoclaro,minimum width=2.4in,minimum height=1.1in,
+               align=center,inner sep=3pt},
+  ext/.style={draw=regla,line width=0.8pt,fill=plano,minimum height=1.1in,align=center,inner sep=3pt},
+  fl/.style={-{Stealth[length=9pt,width=8pt]},draw=gris,line width=1.2pt},
+  no/.style={-{Stealth[length=9pt,width=8pt]},draw=gris,line width=1.0pt,densely dashed}]
+\node[ext,minimum width=1.6in] (p) at (0.8,0) {Petición\\autenticada};
+\node[capa] (r) at (3.25,0) {\textbf{1 $\cdot$ Roles}\\{\tCuatro ¿Este rol puede?}};
+\node[capa] (c) at (6.10,0) {\textbf{2 $\cdot$ Condiciones}\\{\tCuatro ¿Aquí y ahora?}};
+\node[capa] (h) at (8.95,0) {\textbf{3 $\cdot$ Historial}\\{\tCuatro ¿Encaja con lo previo?}};
+\node[ext,minimum width=1.5in] (d) at (11.35,0) {Conceder};
+\draw[fl] (p) -- (r);
+\draw[fl] (r) -- node[above,font=\tCuatro,text=gris]{sí} (c);
+\draw[fl] (c) -- node[above,font=\tCuatro,text=gris]{sí} (h);
+\draw[fl] (h) -- node[above,font=\tCuatro,text=gris]{sí} (d);
+\node[draw=regla,line width=0.8pt,fill=negado,minimum width=8.1in,minimum height=0.6in] (n) at (6.10,-1.55)
+  {Denegar y registrar en bitácora};
+\foreach \k in {r,c,h} \draw[no] (\k.south) -- node[right,font=\tCuatro,text=gris]{no} (\k.south |- n.north);
+\end{tikzpicture}
+
+\vspace{0.3in}
+\dato{Solo la primera capa concede.} La matriz muestra lo máximo que cada rol puede llegar a hacer.
+\note{Qué decir: elegimos RBAC con restricciones, nivel RBAC2 de Sandhu. Sobre esa base, un conjunto
+cerrado de atributos decide si el permiso aplica a esta finca, en este estado y en este momento.
+Es el enfoque centrado en roles de Kuhn, Coyne y Weil.
+
+La frontera del híbrido: la capa 1 dice si el rol tiene el verbo; la capa 2 si aplica a este objeto ahora;
+la capa 3 si encaja con el historial. Se combinan sin contradecirse porque solo la tabla de roles concede
+y las otras dos son filtros: una negativa en cualquier capa gana.
+
+Si preguntan por qué RBAC: la carta describe funciones, no personas; la gente rota; y hay que poder
+explicarlo a un auditor leyendo una fila.}
+\end{frame}
+
+%--------------------------- 8. DESCARTES ----------------------------
+\begin{frame}{Los otros tres modelos fallan\\ por razones de este caso}
+\quien{Julio}
+\vspace{0.05in}
+\begin{tabular}{@{}L{2.2in} L{9.5in}@{}}
+\toprule
+\cabt{MODELO} & \cabt{POR QUÉ NO EN VERDEAZUL} \\
+\midrule
+DAC & Es lo que hay hoy: las hojas compartidas donde ocurrieron los dos sustos. \\
+MAC & No hay niveles de secreto. Haría falta un compartimento por finca. \\
+ABAC puro & Desaparece la fila que responde «¿qué puede hacer un verificador?». \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.3in}
+\pie{De cada uno se conserva algo: la titularidad como atributo (DAC), la política que el usuario no puede
+alterar (MAC) y las condiciones acotadas (ABAC).}
+\note{DAC: el técnico que crea la medición sería su dueño y podría seguir modificándola o compartirla.
+Es el primer susto.
+
+MAC: Bell-LaPadula ordena por niveles de secreto y protege la confidencialidad. Aquí el riesgo principal
+es de integridad. La variante de integridad, Biba, pone una etiqueta fija, pero la confianza en una
+medición cambia con su estado y depende de quién hizo el paso anterior. Es el argumento de Clark y
+Wilson. MAC sí lo usamos en la plataforma: SELinux confina los contenedores.
+
+ABAC puro: podría expresarlo todo, pero no se puede revisar leyendo una fila, y la empresa no tiene
+quién gobierne un catálogo de atributos.}
+\end{frame}
+
+%--------------------------- 9. NIVEL Y EXPLOSION --------------------
+\begin{frame}{\textcolor{acento}{Siete} roles hoy, y siete con el doble de fincas}
+\quien{Julio}
+\vspace{0.25in}
+{\tDos El alcance nunca es un rol: es un atributo.}
+
+\vspace{0.35in}
+\begin{tabular}{@{}L{3.3in} L{8.4in}@{}}
+\toprule
+RBAC$_2$, sin jerarquía & Si el verificador heredara del técnico, podría registrar: se rompe la separación. \\
+Explosión de roles & Aparece al usar un rol para decir dónde o cuándo. Aquí eso vive en las condiciones. \\
+La consulta lo probó & Cinco necesidades nuevas: \dato{un rol y cuatro atributos}. \\
+\bottomrule
+\end{tabular}
+\note{Los siete roles: técnico, verificador, supervisor de campo, gerencia de certificación,
+administrador de catálogo y cuentas, auditor externo y dueño de finca. Más una identidad de servicio
+(SIS), el operador de plataforma, que no tiene rol en la aplicación, y el público sin autenticar.
+
+El séptimo rol salió de la consulta: el cliente dijo que las fincas las asignan los supervisores del
+personal de campo (minuta, P-05). Las otras cuatro necesidades nuevas (el verificador que mide por
+excepción, el técnico que apoya a un compañero, la sociedad con un representante y el empleado con un
+vínculo con un dueño) no son funciones de trabajo: se resolvieron con atributos.
+
+Por qué RBAC2 y no RBAC3: no hay cadena de mando entre las siete funciones; la herencia vuelve
+implícitos los permisos y la matriz no debe tener nada implícito; y con siete roles no ahorra nada.
+
+Restricciones: un rol por persona, una identidad por persona, al menos dos verificadores, cuenta de
+auditor con ventana. La pareja técnico--verificador es la única excepción: es dinámica. Un verificador
+puede recibir una habilitación temporal de técnico, con fecha de fin, y nunca aprueba lo que midió
+(minuta, P-01).
+
+Si preguntan dónde está el riesgo de explosión: un rol por finca para aislar a los dueños, o roles como
+«Técnico Zona Sur 2027».}
+\end{frame}
+
+%--------------------------- 10. HBAC --------------------------------
+\begin{frame}{Cuatro controles de historial, uno de cada tipo}
+\quien{Axel}
+\vspace{0.0in}
+\begin{tabular}{@{}L{0.7in} L{1.7in} L{4.6in} L{4.4in}@{}}
+\toprule
+ & \cabt{TIPO} & \cabt{QUÉ LO DISPARA} & \cabt{QUÉ DECIDE} \\
+\midrule
+H1 & Frecuencia & Muchas fincas distintas en un día & \dato{Tres niveles}: avisa, confirma, restringe \\
+H2 & Tiempo & Una decisión fuera de jornada & Pide segundo factor y motivo \\
+H3 & Combinada & Fuera de jornada, muchas fincas, casi todas nuevas & Confirma y avisa; si insiste, restringe \\
+H4 & Secuencia & Quien participó antes quiere decidir & \dato{Deniega} \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.2in}
+\pie{Ninguna señal aislada restringe: el cliente pidió avisar primero y no bloquear de inmediato (minuta, P-10).}
+\note{Son reglas explícitas, no aprendizaje automático: se le pueden leer a un auditor y se pueden probar.
+
+Cómo se distingue lo legítimo: se cuentan señales: volumen, novedad, momento e insistencia. El trabajo
+extraordinario legítimo muestra una; la extracción de la cartera las muestra juntas.
+
+Tres niveles: aviso (el usuario no nota nada), verificación adicional (segundo factor y motivo) y
+restricción temporal (no abre fincas nuevas hasta el siguiente día hábil; la cuenta sigue activa).
+
+H1 mitiga AM-04. Umbrales por rol, calibrados con datos reales; iniciales 40, 60 y 80 fincas por día
+(supuesto P-13). Los intentos denegados cuentan doble.
+
+H2 mitiga AM-08, la cuenta robada usada de madrugada. H4 es la separación de responsabilidades como
+control de historial: reglas C3, C8 y C10.
+
+H3 es la firma del incidente: fin de semana, cientos de fincas, ninguna suya. Pide confirmación en la
+finca once y avisa; restringe en la veintiuna.
+
+Falsos positivos: verificador con la cola acumulada al cierre, o nuevo y sin historial. El primer
+período corre en observación para calibrar.
+
+Descartada: Muralla China. Todos los dueños compiten: cada empleado quedaría con una sola finca.}
+\end{frame}
+
+%--------------------------- 11. EL TECNICO --------------------------
+\begin{frame}{El técnico del fin de semana\\ hoy no vería ni una finca ajena}
+\quien{Axel}
+\vspace{0.05in}
+\begin{tabular}{@{}L{4.6in} L{7.1in}@{}}
+\toprule
+\cabt{LO QUE HACE} & \cabt{LO QUE HACE EL SISTEMA} \\
+\midrule
+Abre una finca que no tiene asignada & \dato{Deniega}: su rol no ve fincas ajenas \\
+Insiste tres, cinco, diez veces & Avisa a su supervisor; pide segundo factor; lo detiene media hora \\
+La necesitaba de verdad & El supervisor le da una asignación temporal, que vence sola \\
+Presenta su renuncia & Reporte de sus consultas de 90 días \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.25in}
+\pie{El cliente lo confirmó: fincas asignadas con flexibilidad, y respuesta según la gravedad (minuta, P-10 y P-11).}
+\note{Qué decir: la carta dice «no sabemos qué hacer con eso, pero nos gustaría que el sistema al menos se
+diera cuenta». Nuestra primera respuesta no es vigilar el permiso: es quitarlo. Un técnico solo ve las
+fincas que tiene asignadas (regla C1).
+
+El cliente lo confirmó, con una condición: flexibilidad para apoyar a un compañero, sustituir a un
+ausente o atender una visita extraordinaria, sin acceso permanente a todas las fincas. Se resuelve con
+asignaciones temporales que crea el supervisor de campo, con motivo y fecha de fin (regla C19).
+
+El diseño original suspendía la sesión a la quinta denegación. El cliente pidió no bloquear de
+inmediato, y se cambió: aviso al supervisor a la tercera, segundo factor a la quinta, media hora de
+restricción a la décima.
+
+Los controles de historial quedan para quienes sí necesitan leer muchas fincas: verificador, supervisor,
+gerencia, administrador y auditor. Si el técnico hubiera sido verificador, H3 le pide confirmación en la
+finca once y lo restringe en la veintiuna.
+
+Además hay una vía legal: confidencialidad firmada, que persiste después de la salida (Ley 8968 art. 11
+y Ley 7975).}
+\end{frame}
+
+%--------------------------- 12. NADIE EMITE -------------------------
+\begin{frame}{Nadie emite un certificado: lo hace el sistema}
+\quien{Randall}
+\vspace{0.25in}
+\begin{tikzpicture}[x=1in,y=1in,
+  paso/.style={draw=acento,line width=1.4pt,fill=acentoclaro,minimum width=3.3in,minimum height=1.1in,
+               align=center,inner sep=3pt},
+  sis/.style={draw=gris,line width=1.2pt,fill=negado,minimum width=3.3in,minimum height=1.1in,
+              align=center,inner sep=3pt},
+  fl/.style={-{Stealth[length=9pt,width=8pt]},draw=gris,line width=1.2pt},
+  nota/.style={font=\tCuatro,text=gris,align=center}]
+\node[paso] (a) at (1.65,0) {\textbf{Técnico}\\registra y envía};
+\node[paso] (b) at (6.05,0) {\textbf{Verificador}\\aprueba o devuelve};
+\node[sis]  (c) at (10.45,0) {\textbf{Sistema}\\emite};
+\draw[fl] (a) -- (b); \draw[fl] (b) -- (c);
+\node[nota,below=0.08in of a] {solo en fincas asignadas\\y con el período abierto};
+\node[nota,below=0.08in of b] {no registró ninguna versión\\de esa medición};
+\node[nota,below=0.08in of c] {no hay otro certificado vigente\\para la parcela y el período};
+\end{tikzpicture}
+
+\vspace{0.35in}
+Ninguna persona tiene el permiso de emitir. \dato{Hacen falta dos, y distintas.}
+\note{La acción crítica: emitir un certificado. Si una sola persona pudiera medir y aprobar, podría
+inflar la biomasa, aprobar su propio dato y obtener un certificado por toneladas que no existen.
+
+La segunda acción crítica: corregir una medición ya congelada. Es el primer susto, y se trata igual,
+con el orden que pidió el cliente (minuta, P-07): solicita el técnico responsable, un verificador o la
+Gerencia; corrige el técnico; revisa un verificador que no es autor ni solicitante; y la Gerencia da la
+autorización final. Son al menos tres personas.
+
+Si preguntan qué pasa con el certificado tras una enmienda (minuta, P-08): si las toneladas no cambian,
+sigue vigente con la enmienda anotada. Si cambian, el sistema lo revoca y emite el reemplazo en un solo
+acto, enlazados: nunca hay dos vigentes y ninguno se borra. Si ya se vendió, la Gerencia lo registra y
+coordina con las partes.}
+\end{frame}
+
+%--------------------------- 13. POR MEDICION ------------------------
+\begin{frame}{La separación se comprueba\\ por medición, no por puesto}
+\quien{Randall}
+\vspace{0.05in}
+\begin{tabular}{@{}L{3.4in} L{8.3in}@{}}
+\toprule
+\cabt{SI SE COMPRUEBA\ldots} & \cabt{UN TÉCNICO ASCENDIDO A VERIFICADOR\ldots} \\
+\midrule
+por el puesto de hoy & aprueba lo que él mismo midió el año anterior. \\
+\dato{por la medición} & \dato{no puede: figura como autor.} \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.35in}
+Técnica: \textbf{separación por etapas del flujo}, reforzada con roles mutuamente excluyentes.
+\note{Qué decir: quien inicia el proceso no puede cerrarlo. El sistema no pregunta qué rol tiene la
+persona, pregunta si participó en esta medición. En la literatura es la separación basada en el objeto
+o en el historial (Nash y Poland 1990; Simon y Zurko 1997).
+
+Por qué es la adecuada: apunta al riesgo tal como lo dijo el cliente; sobrevive a los cambios de puesto
+(la lección de Kerviel); no depende de que los roles estén bien administrados; y deja dos nombres
+distintos en cada certificado.
+
+El cliente confirmó que algunos verificadores fueron técnicos y que por excepción pueden medir, y pidió
+«garantizar una revisión independiente, sin impedir que el personal pueda asumir otras
+responsabilidades» (minuta, P-01). Una separación por puesto obligaría a escoger; esta da las dos
+cosas: el verificador mide con una habilitación temporal y no podrá aprobar nunca lo que midió.
+
+Coincide con el principio de imparcialidad de ISO/IEC 17029, que citamos solo como referencia.}
+\end{frame}
+
+%--------------------------- 14. ALTERNATIVAS ------------------------
+\begin{frame}{Las alternativas se descartaron\\ por lo que cuestan aquí}
+\quien{Randall}
+\vspace{0.0in}
+\begin{tabular}{@{}L{4.3in} L{7.4in}@{}}
+\toprule
+\cabt{TÉCNICA} & \cabt{POR QUÉ NO ES LA PRINCIPAL} \\
+\midrule
+Roles excluyentes, solos & No cubren a quien cambia de puesto \\
+Doble control (cuatro ojos) & \dato{Duplica la verificación de cada certificado} \\
+Segregación temporal & Limita cuándo, no quién \\
+Rotación & No impide un acto; se recomienda contra la colusión \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.2in}
+\pie{La segregación temporal sí se usa donde el problema es la duración: la asignación temporal, la habilitación del verificador, el plazo de la enmienda y la cuenta del auditor.}
+\note{Roles mutuamente excluyentes estáticos (RBAC2): se conservan como refuerzo. Li, Tripunitara y Bizri
+muestran que excluir roles es un mecanismo para aproximar la separación, no la separación misma.
+
+Exclusión dinámica: basta cerrar sesión y abrir otra. Sola, demora el fraude y no lo impide. Se usa
+como refuerzo en la pareja técnico--verificador, detrás de la regla C3.
+
+Doble control: era la opción más fuerte contra el fraude. Se descartó por costo operativo: duplica la
+verificación de cada certificado, con cualquier tamaño de equipo.
+
+Rotación: cuesta conocimiento de la finca y depende de cuántas personas haya, un dato que el cliente
+pidió no fijar (minuta, P-02).}
+\end{frame}
+
+%--------------------------- 15. FRICCION ----------------------------
+\begin{frame}{La fricción existe y está acotada}
+\quien{Javier}
+\vspace{0.0in}
+\begin{tabular}{@{}L{5.2in} L{6.5in}@{}}
+\toprule
+\cabt{LO QUE CUESTA} & \cabt{CÓMO SE MANEJA} \\
+\midrule
+Siempre hacen falta dos personas & Mínimo dos verificadores; \dato{sin atajo de emergencia} \\
+Las devoluciones quitan tiempo de campo & Validación de rangos al registrar \\
+Una enmienda pide tres personas & Plazo de diez días; el sistema la clasifica \\
+La Gerencia concentra las segundas firmas & Nunca inicia lo que aprueba \\
+\bottomrule
+\end{tabular}
+\note{Qué decir: no existe un atajo para aprobar lo propio. Un atajo así sería el hueco que el auditor
+buscaría. Si el único verificador presente participó, la medición espera; la cola avisa a la Gerencia.
+
+Lo que la técnica no resuelve: la colusión. Si un técnico y un verificador se ponen de acuerdo, el flujo
+se cumple. La separación sube el costo del fraude de una persona a dos. Quedan la rotación, un indicador
+de parejas repetidas y la auditoría externa.
+
+La Gerencia es un cuello de botella y un punto de confianza: firma en varios flujos, pero nunca inicia
+lo que aprueba, no registra ni aprueba mediciones, ya no asigna fincas y no resuelve sus propias alertas.
+
+Enmienda: revisa un verificador distinto del original solo cuando es material (cambia toneladas o ya hay
+certificado); lo determina el sistema. Con solo dos verificadores, si uno solicita sobre lo que aprobó
+el otro no queda revisor: la presenta el técnico o la Gerencia.
+
+La flexibilidad también cuesta un trámite: la asignación temporal la crea el supervisor y la
+habilitación de un verificador para medir pasa por el administrador y la Gerencia.}
+\end{frame}
+
+%--------------------------- 16. MATRIZ (1 de 2) ---------------------
+\begin{frame}{Lo que no está escrito está denegado}
+\quien{Julio}
+\vspace{-0.02in}
+{\tCuatro
+\renewcommand{\arraystretch}{1.3}
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{@{}L{0.75in}|L{1.95in}|L{2.25in}|L{2.0in}|L{1.85in}|L{2.3in}@{}}
+\rowcolor{acentoclaro}
+ & \textbf{Fincas y parcelas} & \textbf{Datos personales del dueño} & \textbf{Períodos de medición} & \textbf{Asignaciones} & \textbf{Mediciones} \\
+\hline
+\suj{TEC} & \vb{leer}{C1} & \vb{leer}{C1} (solo contacto) & leer & \vb{leer}{C1} (las propias) & \vb{leer}{C1}, \vb{crear}{C2}, \vb{modificar}{C2}, \vb{enviar}{C2} \\
+\hline
+\suj{VER} & \vb{leer}{H} & \sinacc & leer & \sinacc & \vb{leer}{H}, \vb{aprobar}{C3}, \vb{devolver}{C3} \\
+\hline
+\suj{SUP} & \vb{leer}{H} & \sinacc & leer & leer, \vb{crear}{C19}, \vb{modificar}{C19} & \vb{leer}{H} (solo estado y fechas) \\
+\hline
+\suj{GER} & \vb{leer}{H}, \vb{aprobar}{C11} & \vb{leer}{H} & leer, \vb{abrir}{C14}, \vb{cerrar}{C14} & leer & \vb{leer}{H} \\
+\hline
+\suj{ADM} & \vb{leer}{H}, \vb{proponer}{C11} & \vb{leer}{H}, crear, modificar, \vb{eliminar}{C16} & leer, crear, \vb{proponer}{C14} & \sinacc & \sinacc \\
+\hline
+\suj{AUD} & \vb{leer}{C6}, \vb{exportar}{C18} & \vb{leer}{C6} & \vb{leer}{C6}, \vb{exportar}{C18} & \vb{leer}{C6}, \vb{exportar}{C18} & \vb{leer}{C6}, \vb{exportar}{C18} \\
+\hline
+\suj{DUE} & \vb{leer}{C5} & \vb{leer}{C5} & leer & \vb{leer}{C5} & \vb{leer}{C5} (solo aprobadas) \\
+\hline
+\suj{SIS} & leer & leer (solo el nombre del titular) & leer & leer & leer \\
+\hline
+\suj{OPE} & \sinacc & \sinacc & \sinacc & \sinacc & \sinacc \\
+\hline
+\suj{PUB} & \sinacc & \sinacc & \sinacc & \sinacc & \sinacc \\
+\end{tabular}
+
+\vspace{0.06in}
+{\color{gris}Matriz real, objetos 1 a 5 de 10. \quad --- sin acceso \quad {\color{acento}\textbf{C}$n$} permiso sujeto a la
+regla $n$ \quad {\color{acento}\textbf{H}} lectura vigilada por historial}
+}
+\note{Cómo leerla: sujetos en las filas, objetos en las columnas. Una celda gris es sin acceso. Una marca C
+significa que el permiso solo vale si se cumple esa regla; las condiciones solo pueden quitar.
+
+Recorrido sugerido: fila TEC, columna Mediciones: crea, modifica y envía, pero no aprueba. Fila VER:
+aprueba y devuelve con C3, no crea ni modifica, y no ve los datos personales del dueño. Fila SUP, que
+es nueva: asigna fincas (C19) y de las mediciones solo ve estado y fechas. Fila GER: abre y cierra
+períodos que registró el administrador (C14); ya no crea asignaciones. Fila AUD: leer y exportar
+evidencia, con ventana (C6 y C18), y ningún verbo de escritura. Fila DUE: solo lo suyo (C5). Filas OPE
+y PUB: nada en esta mitad.
+
+Diez sujetos: siete roles, el sistema, el operador y el público sin autenticar.
+
+Mínimo privilegio: cada permiso amplio tiene su justificación en la sección 6 del documento de la matriz.}
+\end{frame}
+
+%--------------------------- 17. MATRIZ (2 de 2) ---------------------
+\begin{frame}{Nadie tiene «eliminar», y nadie emite}
+\quien{Julio}
+\vspace{-0.02in}
+{\tCuatro
+\renewcommand{\arraystretch}{1.3}
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{@{}L{0.75in}|L{2.3in}|L{1.9in}|L{2.75in}|L{1.4in}|L{2.0in}@{}}
+\rowcolor{acentoclaro}
+ & \textbf{Enmiendas} & \textbf{Certificados} & \textbf{Cuentas y roles} & \textbf{Bitácora} & \textbf{Alertas de historial} \\
+\hline
+\suj{TEC} & \vb{leer}{C1}, \vb{solicitar}{C7}, \vb{corregir}{C9} & \sinacc & \vb{modificar}{C13} & \sinacc & \sinacc \\
+\hline
+\suj{VER} & leer, \vb{solicitar}{C7}, \vb{revisar}{C10} & \vb{leer}{H} & \vb{modificar}{C13} & \sinacc & \sinacc \\
+\hline
+\suj{SUP} & leer (solo estado) & \sinacc & \vb{modificar}{C13} & \sinacc & \vb{leer}{C15}, \vb{resolver}{C15} \\
+\hline
+\suj{GER} & leer, \vb{solicitar}{C7}, \vb{autorizar}{C8} & \vb{leer}{H} & leer, \vb{aprobar}{C12}, \vb{modificar}{C13} & leer & leer, \vb{resolver}{C15} \\
+\hline
+\suj{ADM} & \sinacc & \sinacc & leer, \vb{crear}{C12}, \vb{desactivar}{C12}, \vb{proponer}{C12}, \vb{modificar}{C13} & \sinacc & \sinacc \\
+\hline
+\suj{AUD} & \vb{leer}{C6}, \vb{exportar}{C18} & \vb{leer}{C6}, \vb{exportar}{C18} & \vb{leer}{C6}, \vb{modificar}{C13} & \vb{leer}{C6}, \vb{exportar}{C18} & \vb{leer}{C6}, \vb{exportar}{C18} \\
+\hline
+\suj{DUE} & \vb{leer}{C5} & \vb{leer}{C5} & \vb{modificar}{C13} & \sinacc & \sinacc \\
+\hline
+\suj{SIS} & leer & \dato{emitir C4}, \vb{revocar}{C4} & \sinacc & anexar & crear \\
+\hline
+\suj{OPE} & \sinacc & \sinacc & \sinacc & \sinacc & \sinacc \\
+\hline
+\suj{PUB} & \sinacc & \vb{comprobar}{C20} & \sinacc & \sinacc & \sinacc \\
+\end{tabular}
+
+\vspace{0.06in}
+{\color{gris}Matriz real, objetos 6 a 10 de 10. \quad Toda decisión exige segundo factor reciente. \quad {\color{acento}\textbf{C17}}: nadie decide sobre una finca con cuyo dueño declaró un vínculo.}
+}
+\note{Dos cosas que se ven en esta mitad. Una: el verbo «eliminar» no aparece en enmiendas, certificados,
+cuentas ni bitácora. Nada se borra; todo cambio es una versión nueva o un cambio de estado. Dos: «emitir»
+solo está en la fila SIS. Ninguna fila de persona lo tiene.
+
+Columna Enmiendas: solicitar (técnico, verificador o Gerencia), corregir (técnico), revisar
+(verificador) y autorizar (Gerencia), con las reglas C7 a C10. Cuatro pasos, al menos tres personas.
+
+Columna Cuentas y roles: C13 es «credenciales y declaración propias»; C12 es «nadie se administra a sí
+mismo»: el administrador propone el rol y la Gerencia lo aprueba.
+
+Columna Bitácora: solo se agrega. La leen la Gerencia y el auditor.
+
+Fila PUB: quien tenga el código de un certificado comprueba si es auténtico y si sigue vigente, y nada
+más (C20). Sale de la respuesta del cliente sobre autenticidad y estado del certificado (minuta, P-04).
+
+C17, abstención por vínculo: quien declaró un vínculo familiar o comercial con un dueño no mide, no
+aprueba, no asigna ni autoriza nada sobre esa finca (minuta, P-15).
+
+Al lado de la matriz hay una tabla de exclusiones: cada persona tiene un solo rol, salvo la habilitación
+temporal de un verificador como técnico.}
+\end{frame}
+
+%--------------------------- 18. TRES CELDAS -------------------------
+\begin{frame}{Tres celdas bastan para leer la separación}
+\quien{Julio}
+\vspace{0.0in}
+\begin{tabular}{@{}L{1.0in} L{5.9in} L{4.8in}@{}}
+\toprule
+ & \cabt{MEDICIONES} & \cabt{CERTIFICADOS} \\
+\midrule
+\textbf{TEC} & Crea, modifica y envía. Solo sus borradores, con el período abierto. & Sin acceso \\
+\textbf{VER} & \dato{Aprueba solo si no registró ninguna versión.} & Lee \\
+\textbf{SIS} & Lee & \dato{Emite solo si no hay otro vigente.} \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.25in}
+\pie{Caso de prueba T-06: la verificadora que antes fue técnica intenta aprobar una medición que registró. Resultado esperado: deniega.}
+\note{Son las reglas C2, C3 y C4. Cada regla de la matriz tiene un caso de prueba con resultado esperado:
+treinta y siete casos, T-01 a T-37. El equipo que construya debe convertirlos en pruebas automáticas, más una por
+cada celda sin acceso.
+
+Otros casos para citar: T-07, segunda emisión sobre la misma parcela y período: no emite. T-08, el dueño
+cambia el identificador en la dirección: deniega y responde «no encontrado». T-10, el auditor envía una
+petición de modificación: deniega.
+
+Caso nuevo para citar: T-17, después del cierre el verificador aprueba una medición que se envió a
+tiempo: concede. El cliente pidió distinguir registrar, modificar, revisar y aprobar (minuta, P-06).
+
+El mismo patrón, quien inicia no cierra, se repite en enmiendas (C7 a C10), períodos (C14),
+asignaciones (C19), catálogo (C11) y cuentas (C12).}
+\end{frame}
+
+%--------------------------- 19. ARQUITECTURA ------------------------
+\begin{frame}{Un solo punto decide, en el servidor,\\ antes de tocar el dato}
+\quien{Axel}
+\vspace{0.1in}
+\begin{tikzpicture}[x=1in,y=1in,
+  comp/.style={draw=regla,line width=0.8pt,fill=white,align=center,inner sep=3pt,minimum height=0.8in},
+  pdp/.style={draw=acento,line width=1.6pt,fill=acentoclaro,align=center,inner sep=3pt,minimum height=0.8in},
+  zona/.style={draw=gris,densely dashed,line width=0.7pt},
+  tz/.style={font=\tCuatro\bfseries,text=gris,anchor=north west},
+  dos/.style={{Stealth[length=8pt,width=7pt]}-{Stealth[length=8pt,width=7pt]},draw=gris,line width=1.1pt}]
+\draw[zona] (0,0) rectangle (2.0,3.3);
+\draw[zona] (2.35,0) rectangle (3.95,3.3);
+\draw[zona] (4.3,0) rectangle (8.9,3.3);
+\draw[zona] (9.25,0) rectangle (12.1,3.3);
+\node[tz] at (0.08,3.25) {NO CONFIABLE};
+\node[tz] at (2.43,3.25) {BORDE};
+\node[tz] at (4.38,3.25) {APLICACIÓN};
+\node[tz] at (9.33,3.25) {DATOS Y SECRETOS};
+\node[comp,minimum width=1.6in] (nav) at (1.0,1.25) {Navegador};
+\node[comp,minimum width=1.2in] (px) at (3.15,1.25) {Proxy};
+\node[comp,minimum width=4.0in] (app) at (6.6,1.25) {\textbf{Aplicación}\\{\tCuatro identifica, valida y hace cumplir}};
+\node[pdp,minimum width=4.0in] (opa) at (6.6,2.45) {\textbf{Motor de decisión}\\{\tCuatro la matriz, como política}};
+\node[comp,minimum width=2.4in] (pg) at (10.68,2.1) {\textbf{Base de datos}\\{\tCuatro segundo candado}};
+\node[comp,minimum width=2.4in] (bao) at (10.68,0.75) {\textbf{Bóveda}\\{\tCuatro secretos y sello}};
+\draw[dos] (nav) -- (px);
+\draw[dos] (px) -- (app);
+\draw[dos,draw=acento] (app) -- (opa);
+\draw[dos] ($(app.east)+(0,0.18)$) -- ++(0.3,0) |- (pg.west);
+\draw[dos] ($(app.east)+(0,-0.18)$) -- ++(0.3,0) |- (bao.west);
+\end{tikzpicture}
+
+\vspace{0.2in}
+\dato{Esconder un botón no es autorización.} Si el servidor no decide, cualquiera llama directo.
+\note{Flujo de una petición: el proxy termina la conexión cifrada; la aplicación identifica la sesión,
+valida la forma de los datos y lee de la base los hechos; entrega al motor el sujeto, la acción, el
+objeto y esos hechos; el motor devuelve la decisión con la regla que la determinó. Solo entonces se toca
+el dato, en una transacción que también escribe la bitácora. La base aplica sus propias restricciones.
+
+Fronteras de confianza: nada de lo que llega del navegador se da por bueno; los hechos se toman de la
+base, nunca de la petición; si el motor no responde, se deniega; la base no confía en la aplicación.
+
+Si preguntan qué pasa si el control está solo en la interfaz: el técnico envía a mano la petición de
+aprobar su propia medición y el servidor la ejecuta. Es el error de referencia directa a objetos de la
+clase 13.
+
+Hospedaje, que el cliente dejó a nuestro criterio (minuta, P-23): un servidor virtual contratado, operado
+por personal que la empresa designe. Hay además una ruta pública de solo lectura para comprobar
+certificados.}
+\end{frame}
+
+%--------------------------- 20. TECNOLOGIAS -------------------------
+\begin{frame}{Seis tecnologías libres,\\ elegidas por lo que protegen}
+\quien{Axel}
+\vspace{-0.05in}
+{\renewcommand{\arraystretch}{1.36}
+\begin{tabular}{@{}L{2.9in} L{3.7in} L{5.1in}@{}}
+\toprule
+\cabt{DECISIÓN} & \cabt{ELECCIÓN} & \cabt{LO QUE APORTA} \\
+\midrule
+Lenguaje y framework & Python 3.14, Django 5.2 LTS & Consultas parametrizadas; escape por omisión \\
+Base de datos & PostgreSQL 18 & Seguridad por fila; emisión única \\
+Sesión & De servidor, cookie opaca & \dato{Se revoca en el acto} \\
+Autorización & Open Policy Agent 1.21 & Un solo lugar; la matriz como política \\
+Contenedores & Podman sobre AlmaLinux 10 & Sin privilegios; confinados por SELinux \\
+\bottomrule
+\end{tabular}}
+\note{Para cada una el documento indica versión, alternativas descartadas, aporte, limitaciones y
+herramientas de análisis.
+
+Descartes por licencia: HashiCorp Vault (BUSL desde 2023) y Docker Desktop. Se usa OpenBao, que es
+software libre.
+
+Descartes por seguridad: tokens JWT, porque no se pueden revocar en el acto al dar de baja o cambiar
+de rol; MariaDB, porque no tiene seguridad por fila; Docker Engine, por su servicio con privilegios; una
+cadena de bloques, porque resuelve la desconfianza entre organizaciones, que aquí no existe.
+
+Limitaciones que hay que saber decir: los permisos de Django son por tipo de objeto, no por objeto; su
+sitio de administración no se instala; el superusuario de PostgreSQL se salta todo; el motor no conoce el
+historial y no filtra listados.
+
+Contraseñas: Argon2id con sal por usuario. Segundo factor: llave de acceso o códigos temporales; nunca SMS.}
+\end{frame}
+
+%--------------------------- 21. BITACORA ----------------------------
+\begin{frame}{La bitácora no la reescribe\\ ni quien administra el servidor}
+\quien{Axel}
+\vspace{0.2in}
+\begin{tikzpicture}[x=1in,y=1in,
+  reg/.style={draw=regla,line width=0.8pt,fill=plano,minimum width=2.25in,minimum height=1.0in,
+              align=center,inner sep=3pt},
+  ext/.style={draw=acento,line width=1.6pt,fill=acentoclaro,minimum width=2.6in,minimum height=1.0in,
+              align=center,inner sep=3pt},
+  fl/.style={-{Stealth[length=9pt,width=8pt]},draw=gris,line width=1.2pt}]
+\draw[draw=gris,densely dashed,line width=0.7pt] (-0.1,-0.8) rectangle (8.55,1.15);
+\node[font=\tCuatro\bfseries,text=gris,anchor=north west] at (0,1.1) {SERVIDOR: SOLO SE PUEDE INSERTAR};
+\node[reg] (a) at (1.25,-0.05) {Registro 1041\\{\tCuatro huella del 1040}};
+\node[reg] (b) at (4.2,-0.05) {Registro 1042\\{\tCuatro huella del 1041}};
+\node[reg] (c) at (7.15,-0.05) {Registro 1043\\{\tCuatro huella del 1042}};
+\draw[fl] (b) -- (a); \draw[fl] (c) -- (b);
+\node[ext,minimum width=2.25in] (t) at (10.97,-0.05) {\textbf{Testigo externo}\\{\tCuatro sello de tiempo y auditor}};
+\draw[fl,draw=acento] (c) -- node[above,pos=0.66,font=\tCuatro,text=gris]{cada día} (t);
+\end{tikzpicture}
+
+\vspace{0.3in}
+Cambiar un registro rompe la cadena. Reescribirla entera no coincide con lo que ya salió.
+\note{Cuatro mecanismos que se apoyan: (1) la aplicación solo puede insertar, no modificar ni borrar;
+(2) cada registro incluye la huella SHA-256 del anterior; (3) una vez al día la última huella sale del
+servidor, recibe un sello de tiempo RFC 3161 y va al buzón de la Gerencia y del auditor; (4) la acción y
+su registro se confirman en la misma transacción.
+
+Qué se registra: autenticación, cambios, consultas de datos sensibles, administración y toda decisión
+denegada. Con qué campos: instante, cuenta y rol, acción, objeto y versión, resultado y regla, origen,
+huellas.
+
+Conservación: diez años para cambios y decisiones, que es la trazabilidad que el cliente debe poder
+reconstruir (minuta, P-18); dos para consultas (supuesto P-19).
+
+Secretos: viven en una bóveda; la llave de sello no sale, se le pide a la bóveda que firme. La bóveda se
+abre con dos de tres custodios.}
+\end{frame}
+
+%--------------------------- 22. RESIDUALES --------------------------
+\begin{frame}{Lo que no se cubre está declarado}
+\quien{Javier}
+\vspace{0.0in}
+\begin{tabular}{@{}L{5.0in} L{6.7in}@{}}
+\toprule
+\cabt{RIESGO RESIDUAL} & \cabt{POR QUÉ SE ACEPTA} \\
+\midrule
+Colusión entre técnico y verificador & Evitarla exige una tercera persona por certificado \\
+Una medición falsa desde el origen & El sistema no ve el árbol \\
+Extracción lenta, bajo los umbrales & Bajarlos castiga a quien trabaja bien \\
+Un vínculo con un dueño que nadie declaró & No existe un registro que lo descarte \\
+El histórico de las hojas de cálculo & No se le puede dar la trazabilidad que no tuvo \\
+\bottomrule
+\end{tabular}
+\note{Son trece riesgos residuales en el documento de arquitectura. Otros: equipo de usuario infectado; el
+operador puede detener o destruir (se detecta, no se impide); un solo servidor; sin hardware de
+seguridad dedicado; la fecha de medición es declarada, porque no hay aplicación sin conexión; el
+proveedor de hospedaje tiene acceso físico; la aprobación no lleva firma digital certificada; y la
+misma regla vive en dos lugares, el motor y la base.
+
+Si preguntan qué requerimiento quedó sin cubrir: la trazabilidad de diez años hacia atrás. Las hojas de
+cálculo se congelan, se les calcula la huella y lo migrado queda marcado como histórico.
+
+Antes de entrar en operación hay diez criterios de aceptación, entre ellos una prueba de penetración
+autorizada por escrito.}
+\end{frame}
+
+%--------------------------- 23. RESPUESTAS DEL CLIENTE -------------
+\begin{frame}{El cliente respondió,\\ y el diseño cambió en cinco puntos}
+\quien{Javier}
+\vspace{0.0in}
+\begin{tabular}{@{}L{0.9in} L{5.0in} L{5.6in}@{}}
+\toprule
+ & \cabt{LO QUE RESPONDIÓ} & \cabt{QUÉ CAMBIÓ} \\
+\midrule
+P-01 & Un verificador puede medir, por excepción & Habilitación temporal; no aprueba lo que midió \\
+P-05 & Las fincas las asignan los supervisores & \dato{Rol nuevo: supervisor de campo} \\
+P-06 & La revisión sigue después del cierre & El cierre detiene registrar, no aprobar \\
+P-07 & Revisión técnica antes de autorizar & Solicitar, corregir, revisar, autorizar \\
+P-10 & Avisar primero; no bloquear de inmediato & Aviso, verificación, restricción temporal \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.2in}
+\pie{Catorce de veintiséis consultas, respondidas por escrito. Las otras doce son supuestos declarados. Minuta: informe de políticas, Anexo A.}
+\note{Qué decir: el diseño se hizo completo con supuestos declarados, y la consulta sirvió como validación.
+De catorce respuestas: dos confirmaron el supuesto (P-03, el verificador devuelve y no edita; P-11, el
+técnico solo ve sus fincas), cuatro lo ajustaron, seis lo cambiaron y dos quedaron a nuestro criterio.
+
+Lo que resistió: la técnica de separación. La respuesta a P-01 no la cambió; solo volvió dinámica la
+exclusión entre técnico y verificador.
+
+Lo que hubo que rehacer: el orden de la enmienda (P-07), lo que el cierre detiene (P-06) y quién asigna
+las fincas (P-05). Y el diseño era más estricto de lo que el cliente quería: bloqueaba de inmediato
+donde bastaba avisar (P-10).
+
+Otros cambios para citar si preguntan: sociedades y representantes como dueños, y declaración de
+vínculos con abstención (P-15); ninguna norma de auditoría se da por supuesta, y los auditores exportan
+evidencia sellada (P-18); registro después de la visita, con fecha de medición y fecha de registro
+(P-22); diseño sin cantidades fijas (P-02).
+
+Cada cambio llegó hasta la matriz: diecisiete casos de prueba nuevos, T-21 a T-37, y cinco modificados.}
+\end{frame}
+
+%--------------------------- 24. DECISIONES DELEGADAS ----------------
+\begin{frame}{Cuatro decisiones que el cliente\\ dejó en nuestras manos}
+\quien{Javier}
+\vspace{0.0in}
+\begin{tabular}{@{}L{4.7in} L{7.0in}@{}}
+\toprule
+\cabt{LA PREGUNTA} & \cabt{LO QUE DECIDIMOS} \\
+\midrule
+¿Revisa un verificador distinto del original? & \dato{Sí, cuando la enmienda es material} \\
+¿Hace falta firma digital certificada? & No: sello de la empresa y comprobación en línea \\
+¿Llaves físicas para todo el personal? & No: llave de acceso del propio equipo \\
+¿Dónde se hospeda y quién lo opera? & Servidor virtual contratado; personal designado \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.2in}
+\pie{El cliente pidió que cada decisión tenga una justificación clara y responda a un riesgo real, no el sistema más complejo.}
+\note{Verificador distinto (minuta, P-07): tres opciones. Siempre distinto: toda corrección, hasta una de
+forma, espera a otra persona. El mismo: quien aprobó el dato erróneo dictamina sobre su propio error.
+Elegimos según lo que cambia: es material si cambia un dato del cálculo de toneladas o si ya hay un
+certificado; entonces revisa otro. Lo determina el sistema, no una persona.
+
+Firma digital (P-04): la firma certificada de cada verificador da autenticidad y autoría con presunción
+legal, pero no dice si el certificado fue revocado después, y cuesta por persona. Elegimos sello de la
+empresa, comprobación en línea por código y aprobación personal con segundo factor, que queda en la
+bitácora.
+
+Llaves físicas (P-23): no hay presupuesto para todos. La llave de acceso del propio dispositivo
+(passkey) resiste igual el correo falso y no cuesta nada. Se recomiendan llaves físicas solo para
+Gerencia, administrador, operador y custodios de la bóveda.
+
+Hospedaje (P-23): servidor propio, servidor virtual contratado o servicios administrados, con los
+cuatro criterios del cliente. El propio exige inversión y cuidar energía y enlace en una oficina
+rural; los administrados no son software libre. Lo cotidiano está automatizado.}
+\end{frame}
+
+%--------------------------- 25. REFERENCIAS -------------------------
+\begin{frame}{Referencias principales}
+\quien{}
+\vspace{0.0in}
+{\tCuatro
+\begin{columns}[T,onlytextwidth]
+\begin{column}{0.485\textwidth}
+\raggedright
+Abadi, M., \& Fournet, C. (2003). Access control based on execution history. \emph{NDSS}.\\[5pt]
+Clark, D. D., \& Wilson, D. R. (1987). A comparison of commercial and military computer security
+policies. \emph{IEEE S\&P}.\\[5pt]
+Kuhn, D. R., Coyne, E. J., \& Weil, T. R. (2010). Adding attributes to role-based access control.
+\emph{Computer, 43}(6).\\[5pt]
+Li, N., Tripunitara, M. V., \& Bizri, Z. (2007). On mutually exclusive roles and separation-of-duty.
+\emph{ACM TISSEC, 10}(2).\\[5pt]
+Saltzer, J. H., \& Schroeder, M. D. (1975). The protection of information in computer systems.
+\emph{Proc. IEEE, 63}(9).\\[5pt]
+Sandhu, R. S., Coyne, E. J., Feinstein, H. L., \& Youman, C. E. (1996). Role-based access control
+models. \emph{Computer, 29}(2).
+\end{column}
+\begin{column}{0.485\textwidth}
+\raggedright
+Schneier, B., \& Kelsey, J. (1999). Secure audit logs to support computer forensics. \emph{ACM
+TISSEC, 2}(2).\\[5pt]
+Simon, R. T., \& Zurko, M. E. (1997). Separation of duty in role-based environments. \emph{CSFW}.\\[5pt]
+Temoshok, D., et al. (2025). \emph{Digital identity guidelines: Authentication and authenticator
+management} (NIST SP 800-63B-4).\\[5pt]
+Ley N.º 8968 (2011) y su reglamento, Decreto N.º 37554-JP. Ley N.º 7975 (2000). Ley N.º 8454
+(2005). Ley N.º 9048 (2012).\\[5pt]
+ISO/IEC 17029:2019. ISO 14065:2020. ISO/IEC 27001:2022.\\[5pt]
+Vargas Rivera, A. (2026). \emph{Material de estudio del curso CE-1115 y enunciado del proyecto,
+parte 1}. ITCR.
+\end{column}
+\end{columns}
+}
+\note{La lista completa, en formato APA, está en cada uno de los cinco documentos.}
+\end{frame}
+
+\end{document}

@@ -1,0 +1,1008 @@
+%=====================================================================
+%  CE-1115 Seguridad de la Informacion -- Proyecto, Parte 1
+%  Entregable 4: Documento de arquitectura del sistema
+%  Cliente: Verdeazul Carbono S.A.
+%  Tecnologico de Costa Rica -- Escuela de Ingenieria en Computadores
+%  Prof. MSc. Andres Vargas Rivera -- Semestre II, 2026
+%
+%  Compilar dos veces:  pdflatex P1_Arquitectura_grupo6.tex
+%  Las respuestas del cliente estan en la minuta (Anexo A de P1_Politicas).
+%=====================================================================
+\documentclass[11pt,letterpaper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-noshorthands,es-tabla]{babel}
+\usepackage{XCharter}
+\usepackage[defaultsans,scale=0.92]{lato}
+\usepackage[scaled=0.9]{inconsolata}
+\usepackage[letterpaper,margin=2.4cm,headheight=15pt]{geometry}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{booktabs,tabularx,array,longtable,multirow}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage[most]{tcolorbox}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,calc,fit}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{needspace}
+\usepackage[hidelinks]{hyperref}
+
+%--------------------------- datos del grupo -------------------------
+\newcommand{\numgrupo}{6}
+\newcommand{\titulodoc}{Documento de arquitectura del sistema}
+\newcommand{\subtitulodoc}{Componentes, tecnologías y decisiones de seguridad}
+\newcommand{\titulocorto}{Arquitectura del sistema}
+\newcommand{\numentregable}{4}
+\newcommand{\fechaentrega}{15 de octubre de 2026}
+
+%--------------------------- color y estilo --------------------------
+\definecolor{vz}{HTML}{0F6E6A}        % acento unico (verde azulado)
+\definecolor{vzclaro}{HTML}{E7F2F1}
+\definecolor{tinta}{HTML}{1A1A1A}
+\definecolor{gris}{HTML}{5F5E5A}
+\definecolor{regla}{HTML}{B9B8B0}
+\definecolor{negado}{HTML}{F2F1EC}
+\color{tinta}
+
+\titleformat{\section}{\Large\sffamily\bfseries\color{vz}}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\large\sffamily\bfseries\color{tinta}}{\thesubsection}{0.6em}{}
+\titlespacing*{\section}{0pt}{1.3em}{0.45em}
+\titlespacing*{\subsection}{0pt}{0.9em}{0.25em}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5em}
+\setlist{leftmargin=1.5em,itemsep=2pt,topsep=3pt,parsep=0pt}
+\captionsetup{font={small,sf},labelfont={bf,color=vz},skip=5pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\sffamily\color{gris}CE-1115 $\cdot$ Proyecto Parte 1 $\cdot$ Grupo \numgrupo}
+\fancyhead[R]{\small\sffamily\color{gris}\titulocorto}
+\fancyfoot[C]{\small\sffamily\color{gris}\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{regla}\leaders\hrule height \headrulewidth\hfill}}
+
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcommand{\cab}[1]{\textbf{\sffamily #1}}
+
+% Trazabilidad con la consulta al cliente (minuta: Anexo A de P1_Politicas)
+%   \resp{P-07}: la decision sale de una respuesta del cliente
+%   \supu{P-13}: supuesto que el equipo fijo y documento
+\newcommand{\resp}[1]{\textsf{\footnotesize\bfseries\color{vz}[minuta #1]}}
+\newcommand{\supu}[1]{\textsf{\footnotesize\color{gris}[supuesto #1]}}
+\newtcolorbox{decision}{enhanced,breakable,colback=vzclaro,colframe=vz,
+  boxrule=0pt,leftrule=3pt,arc=0pt,left=8pt,right=8pt,top=5pt,bottom=5pt}
+
+\newcommand{\rol}[1]{\textsf{\bfseries #1}}
+\newcommand{\est}[1]{\textsc{\small #1}}
+\newcommand{\carta}[1]{«\emph{#1}»}
+\newcommand{\cod}[1]{\texttt{#1}}
+% Ficha de tecnologia: fila con etiqueta
+\newcommand{\fila}[1]{\textsf{\bfseries #1}}
+
+\begin{document}
+
+%=====================================================================
+%  PORTADA
+%=====================================================================
+\begin{titlepage}
+\centering
+\vspace*{0.6cm}
+{\large\scshape Instituto Tecnológico de Costa Rica}\\[0.2cm]
+{\large\scshape Escuela de Ingeniería en Computadores}\\[0.2cm]
+{\large CE-1115 Seguridad de la Información}\\[1.5cm]
+
+{\color{vz}\rule{\textwidth}{1.4pt}}\\[0.6cm]
+{\sffamily\large Proyecto $\cdot$ Parte 1 $\cdot$ Diseño del control de acceso}\\[0.45cm]
+{\sffamily\bfseries\fontsize{24}{29}\selectfont \titulodoc}\\[0.35cm]
+{\sffamily\large \subtitulodoc}\\[0.35cm]
+{\sffamily\large Entregable \numentregable\ de 5}\\[0.6cm]
+{\color{vz}\rule{\textwidth}{1.4pt}}\\[1.1cm]
+
+{\large\bfseries Cliente}\\[0.25cm]
+{\large Verdeazul Carbono S.A.}\\[0.1cm]
+{Certificación de captura de carbono $\cdot$ Pérez Zeledón, Costa Rica}\\[1.1cm]
+
+{\large\bfseries Grupo \numgrupo}\\[0.4cm]
+\begin{tabular}{@{}l@{\hspace{1.4cm}}l@{}}
+\toprule
+\textbf{Integrante} & \textbf{Carné} \\
+\midrule
+Randall Bryan Bolaños López & 2019043784 \\
+Javier Tenorio Cervantes    & 2020065308 \\
+Julio Varela Venegas        & 2019008041 \\
+Axel Flores Lara            & 2021453573 \\
+\bottomrule
+\end{tabular}\\[1.1cm]
+
+{\large Prof. MSc. Andrés Vargas Rivera}\\[0.15cm]
+{\large Semestre II, 2026}
+
+\vfill
+{\large\bfseries Fecha de entrega: \fechaentrega}
+\end{titlepage}
+
+\pagenumbering{roman}
+\tableofcontents
+\newpage
+\pagenumbering{arabic}
+
+%=====================================================================
+\section{Qué se va a construir}
+%=====================================================================
+
+Este documento es para el equipo que va a construir la plataforma. Dice de qué piezas se compone, con
+qué tecnologías se hace cada una y cómo se llevan al sistema las reglas de la matriz de control de
+acceso (Entregable~3). Cada elección se justifica desde la seguridad.
+
+La plataforma es una aplicación web. Técnicos, verificadores, supervisores, gerencia, administrador,
+dueños y auditores la usan desde un navegador; no hay un programa que instalar ni, en esta etapa, una
+aplicación sin conexión. \resp{P-22} Corre en un solo servidor virtual, contratado a un proveedor
+externo y operado por personal que Verdeazul designe (sección~\ref{sec:hospedaje}), en contenedores sin
+privilegios de administrador. \resp{P-23} Toda petición pasa por un único punto de decisión antes de
+tocar un dato.
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.13}
+\begin{tabularx}{\textwidth}{@{}L{3.5cm} Y L{2.6cm} L{2.9cm}@{}}
+\toprule
+\cab{Decisión} & \cab{Elección} & \cab{Versión} & \cab{Licencia} \\
+\midrule
+Lenguaje & Python & 3.14 & PSF \\
+Framework & Django & 5.2 LTS & BSD de 3 cláusulas \\
+Base de datos & PostgreSQL con PostGIS & 18 y 3.6 & PostgreSQL y GPL 2 \\
+Mecanismo de sesión & Sesión de servidor con cookie opaca & la de Django 5.2 & BSD de 3 cláusulas \\
+Motor de autorización & Open Policy Agent (OPA) & 1.21 & Apache 2.0 \\
+Contenedores & Podman sin privilegios, sobre AlmaLinux & 5.8 sobre 10.2 & Apache 2.0 y GPL 2 \\
+\midrule
+Proxy y TLS & Caddy & 2.11 & Apache 2.0 \\
+Secretos y sello & OpenBao & 2.7 & MPL 2.0 \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+Todo es software libre, como pide la carta. La condición no fue un trámite: dos opciones conocidas se
+descartaron por su licencia (sección~\ref{sec:tecnologias}).
+
+\textbf{Supuestos de capacidad.} El cliente no tiene cifras y pidió que el diseño no dependa de cantidades
+fijas. \resp{P-02} Nada en el modelo crece con el catálogo: los roles son siete con cualquier número
+de fincas y los umbrales son parámetros por rol. Solo el tamaño del servidor exigió suponer una
+carga, declarada en el Anexo~B.1: hasta 100 cuentas internas y 2\,000 fincas caben con margen en un
+servidor virtual de 4 núcleos y 16~GB, que se amplía sin migrar.
+
+%=====================================================================
+\section{Arquitectura general}
+\label{sec:arquitectura}
+%=====================================================================
+
+\subsection{Componentes}
+
+El sistema tiene nueve piezas, agrupadas en cuatro zonas de confianza. El diagrama es la
+figura~\ref{fig:componentes}, en el Anexo~A.1; la tabla dice qué hace cada pieza.
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.13}
+\begin{tabularx}{\textwidth}{@{}L{3.3cm} Y@{}}
+\toprule
+\cab{Componente} & \cab{Qué hace} \\
+\midrule
+Proxy (Caddy) & Única puerta de entrada. Termina la conexión cifrada, obliga a usar HTTPS y limita el tamaño y el ritmo de las peticiones. \\
+Aplicación (Django) & Identifica al usuario, valida lo que llega, reúne los hechos que la decisión necesita, pregunta al motor y ejecuta solo lo concedido. Contiene las máquinas de estado de mediciones, períodos y enmiendas. \\
+Motor de decisión (OPA) & Responde «conceder», «conceder con restricción» o «denegar» a cada petición. Su política es la matriz: los roles, las reglas C1 a C20 y los controles H1 a H4. \\
+Servicio de emisión & Proceso sin usuario humano (la fila SIS de la matriz). Emite y revoca certificados y los sella con una llave que no puede leer. \\
+Comprobación pública & Ruta de solo lectura y sin sesión (la fila PUB). Recibe el código de un certificado y responde si es auténtico y cuál es su estado, desde una vista que solo contiene esos campos. \resp{P-04} \\
+Trabajos programados & Calculan las alertas, verifican la cadena de la bitácora, envían su huella diaria al testigo externo, hacen vencer cuentas, habilitaciones y asignaciones temporales, y generan los reportes de revisión. \\
+Base de datos (PostgreSQL) & Guarda los datos del negocio, las sesiones y la bitácora. Vuelve a aplicar, como segundo candado, las reglas que se pueden expresar como restricción. \\
+Bóveda (OpenBao) & Guarda las contraseñas de servicio y las llaves. Firma los certificados sin entregar la llave. \\
+Testigo externo & Un servicio de sello de tiempo y el buzón del auditor. Reciben cada día una huella de la bitácora; no reciben datos. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\subsection{Fronteras de confianza}
+
+La regla general es la de la clase 14: se supone hostil todo lo que está fuera de la propia zona. Cada
+frontera dice qué no se da por bueno al cruzarla y dónde se valida.
+
+{\small
+\renewcommand{\arraystretch}{1.13}
+\begin{longtable}{@{}L{0.7cm} L{3.1cm} L{5.5cm} L{6.1cm}@{}}
+\toprule
+\cab{Id.} & \cab{Frontera} & \cab{Qué no se da por bueno} & \cab{Dónde y cómo se valida} \\
+\midrule
+\endfirsthead
+\toprule
+\cab{Id.} & \cab{Frontera} & \cab{Qué no se da por bueno} & \cab{Dónde y cómo se valida} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+F1 & Internet y el dispositivo, hacia el proxy & La red, el equipo y todo lo que envía el navegador: identificadores en la dirección, campos ocultos, cabeceras, cookies y archivos. La empresa no administra todos los equipos de campo. \resp{P-22} & En el proxy: solo TLS 1.3 o 1.2, cabecera HSTS, límite de tamaño y de ritmo. Nada se interpreta todavía. \\
+F2 & Proxy, hacia la aplicación & El contenido de la petición. Que venga por HTTPS no la hace legítima. & En la aplicación: sesión válida, marca contra peticiones falsificadas (CSRF), tipo y rango de cada campo. Es la validación principal de entrada. \\
+F3 & Aplicación, hacia el motor & Los hechos sobre los que se decide. & La aplicación los toma de la base de datos, nunca de la petición. El motor solo escucha en la red interna. Si no responde, la aplicación deniega. \\
+F4 & Aplicación, hacia la base de datos & La propia aplicación: puede tener un error. & La base aplica restricciones, seguridad por fila y una bitácora en la que la aplicación solo puede insertar. La aplicación no es dueña de las tablas. \\
+F5 & Servidor, hacia el exterior & El proveedor de hospedaje, el de respaldos y, en sentido contrario, quien administra el servidor. & Los respaldos salen cifrados. El testigo recibe solo huellas, y con ellas se detecta cualquier cambio hecho desde dentro del servidor. \\
+\end{longtable}
+}
+
+\textbf{El operador de plataforma} queda fuera de la zona de confianza de los datos. Tiene acceso al
+servidor, no a la aplicación, y lo que haga directamente sobre la base queda en un registro que sale
+del servidor (sección~\ref{sec:bitacora}). Es personal que Verdeazul designa, no un especialista: la
+sección~\ref{sec:hospedaje} dice qué tareas le tocan. \resp{P-23}
+
+\subsection{Flujo de una petición autenticada}
+\label{sec:flujo}
+
+Ejemplo: un verificador aprueba la medición 8841. El diagrama de secuencia está en el Anexo~A.2.
+
+\begin{enumerate}
+\item El navegador envía la petición por HTTPS. El proxy la recibe y la pasa a la aplicación.
+\item La aplicación busca la sesión que indica la cookie. Si no existe o venció, responde que hay que
+      iniciar sesión y termina.
+\item Valida la marca contra peticiones falsificadas (CSRF) y la forma de los datos.
+\item Lee de la base los hechos: rol del sujeto, estado de la medición y de su período, autores de
+      todas sus versiones, vínculos declarados y el historial reciente del sujeto.
+\item \textbf{Punto de decisión.} Entrega al motor el sujeto, la acción, el objeto y esos hechos. El
+      motor evalúa las tres capas (rol, condiciones, historial) y devuelve la decisión con el
+      identificador de la regla que la determinó.
+\item Si la decisión es \emph{denegar}, la aplicación lo registra en la bitácora y responde sin revelar
+      si el objeto existe. Si es \emph{conceder con restricción}, pide el segundo factor y el motivo.
+\item Si es \emph{conceder}, abre una transacción: cambia el estado solo si la medición sigue
+      \est{enviada}, escribe el registro de bitácora y confirma las dos cosas juntas.
+\item La base aplica sus propias restricciones. Si alguna falla, la transacción entera se deshace.
+\item El servicio de emisión toma la medición aprobada y emite el certificado bajo la regla C4.
+\end{enumerate}
+
+\begin{decision}
+La decisión de autorización se toma \textbf{en el servidor, en un solo lugar (paso 5), antes de leer o
+cambiar el dato}, y en cada petición. Los pasos 7 y 8 son candados independientes del mismo criterio.
+\end{decision}
+
+%=====================================================================
+\section{Selección de tecnologías}
+\label{sec:tecnologias}
+%=====================================================================
+
+Para cada decisión se indican los cinco puntos que pide el enunciado: qué se eligió y en qué versión,
+qué alternativas se descartaron, qué aporta a la seguridad, qué limitaciones tiene y cómo se
+compensan, y con qué herramientas se analiza.
+
+{\small
+\renewcommand{\arraystretch}{1.13}
+\begin{longtable}{@{}L{2.4cm} L{13.5cm}@{}}
+\toprule
+\multicolumn{2}{@{}l}{\cab{Lenguaje: Python 3.14}} \\
+\midrule
+\fila{Elección} & Python 3.14, con correcciones de seguridad hasta octubre de 2030. \\
+\fila{Alternativas} & \emph{Java con Spring}: maduro y de tipado estático, pero más costoso de desarrollar y operar para un equipo pequeño. \emph{JavaScript con Node}: cada proyecto arrastra cientos de paquetes de terceros, y cada uno es una vía de ataque a la cadena de suministro. \emph{Go}: binarios simples, pero sin un marco que traiga las protecciones integradas, lo que obliga a escribir a mano más código de seguridad. \\
+\fila{Aporta} & Gestión automática de memoria: el código propio no produce desbordamientos. Tipado fuerte, sin conversiones implícitas peligrosas. Biblioteca estándar con generación de secretos y comparación en tiempo constante. Es el lenguaje con más oferta de personal en el país, y eso importa para mantener el sistema diez años. \\
+\fila{Limitaciones} & Los errores de tipo aparecen al ejecutar: se compensan con anotaciones de tipo comprobadas en cada integración. Los paquetes de PyPI pueden ser suplantados: se fijan versión y huella de cada dependencia. Funciones como \cod{eval} o \cod{pickle} sobre datos externos ejecutan código: se prohíben por regla de análisis. \\
+\fila{Herramientas} & Bandit y Ruff (análisis estático de seguridad), mypy (tipos), pip-audit (vulnerabilidades conocidas en dependencias). \\
+\bottomrule
+\addlinespace[0.8em]
+\toprule
+\multicolumn{2}{@{}l}{\cab{Framework: Django 5.2 LTS}} \\
+\midrule
+\fila{Elección} & Django 5.2 LTS, con soporte de seguridad hasta abril de 2028. Se planifica la migración a la 6.2 LTS, prevista para abril de 2027. \\
+\fila{Alternativas} & \emph{Flask} y \emph{FastAPI}: son marcos mínimos; la sesión, la protección contra peticiones falsificadas, el acceso a datos y la autenticación se arman con piezas sueltas, y cada pieza es una oportunidad de error. \emph{Spring}, \emph{Laravel} y \emph{Rails}: equivalentes, descartados por el lenguaje. \\
+\fila{Aporta} & De forma nativa: consultas parametrizadas en su capa de datos, que previenen la inyección SQL; plantillas que escapan la salida por omisión, contra la inyección de \emph{scripts}; protección contra peticiones falsificadas activada por omisión; cabeceras de seguridad; sesiones de servidor; marco de contraseñas con Argon2; y una orden, \cod{check -{}-deploy}, que audita la configuración de producción. \\
+\fila{Limitaciones} & Sus permisos son por tipo de objeto, no por objeto: usados solos permiten cambiar un identificador y ver lo ajeno. Por eso la decisión se saca a OPA y se repite en la base. Su sitio de administración edita cualquier tabla saltándose las reglas: \textbf{no se instala}. Las consultas en SQL directo reabren la inyección: se prohíben por análisis estático. No trae segundo factor: se agrega con django-allauth. \\
+\fila{Herramientas} & \cod{check -{}-deploy}, OWASP ZAP (análisis dinámico), sqlmap (inyección) y las pruebas automáticas de la matriz. \\
+\bottomrule
+\addlinespace[0.8em]
+\toprule
+\multicolumn{2}{@{}l}{\cab{Base de datos: PostgreSQL 18 con PostGIS 3.6}} \\
+\midrule
+\fila{Elección} & PostgreSQL 18, con soporte hasta noviembre de 2030, y PostGIS 3.6 para la geometría de las parcelas. \\
+\fila{Alternativas} & \emph{MariaDB}: no tiene seguridad por fila, de modo que el aislamiento entre dueños dependería solo de la aplicación. \emph{SQLite}: sin roles ni acceso concurrente por red. \emph{MongoDB}: su licencia SSPL no está reconocida como software libre, y no ofrece las restricciones que impiden la doble emisión. \emph{Un libro mayor tipo cadena de bloques}: resuelve la desconfianza entre varias organizaciones, que aquí no existe; la inalterabilidad necesaria se logra con mucho menos (sección~\ref{sec:bitacora}). \\
+\fila{Aporta} & Seguridad por fila: el alcance del técnico (C1) y el «solo lo suyo» del dueño (C5) se aplican también en la base. Restricciones que hacen imposible la doble emisión: un índice único de certificado vigente por parcela y período, y con PostGIS el rechazo de parcelas traslapadas. Privilegios por tabla y por operación: la aplicación puede insertar en la bitácora, pero no modificarla. Transacciones: la acción y su registro se confirman juntos. Sumas de verificación de datos activas por omisión desde la versión 18. \\
+\fila{Limitaciones} & El superusuario se salta todo lo anterior: no se usa en operación, su uso es una emergencia registrada y la bitácora se ancla fuera del servidor. No cifra los datos en reposo: se cifran el disco y los respaldos. La misma regla vive en OPA y en la base, y podrían divergir: los casos T-01 a T-37 se ejecutan contra ambas. \\
+\fila{Herramientas} & pgAudit (registro de sentencias, incluidas las del superusuario), pgTAP (pruebas de restricciones y de seguridad por fila) y la guía de configuración segura del CIS. \\
+\bottomrule
+\addlinespace[0.8em]
+\toprule
+\multicolumn{2}{@{}l}{\cab{Mecanismo de sesión: sesión de servidor con cookie opaca}} \\
+\midrule
+\fila{Elección} & La sesión se guarda en el servidor, en una tabla de PostgreSQL. El navegador solo recibe una cookie con un identificador aleatorio que no significa nada por sí mismo. \\
+\fila{Alternativas} & \emph{Tokens JWT sin estado}: un \emph{token} firmado vale hasta que vence, así que no se puede revocar en el acto al dar de baja a alguien o cambiarle el rol, salvo que se vuelva a guardar estado en el servidor. \emph{Sesión guardada en la propia cookie}: mismo problema. \emph{Sesión en una memoria caché aparte}: otro componente que operar, innecesario con la carga supuesta. \\
+\fila{Aporta} & Revocación inmediata: basta borrar la fila. El rol no viaja en el navegador; se lee de la base en cada decisión, así que un cambio de privilegios rige desde la siguiente petición. La cookie es inaccesible para los \emph{scripts} de la página, solo viaja por HTTPS y no se envía desde otros sitios. Al iniciar sesión se genera un identificador nuevo. \\
+\fila{Limitaciones} & La cookie es un pase al portador: quien la copie entra, como mostró Firesheep. Se compensa con cifrado en toda la sesión, vida corta (30 minutos de inactividad, 12 horas como máximo) y reautenticación en las decisiones. No se ata a la dirección de red, porque en el teléfono cambia; un cambio brusco sí es una señal para los controles de historial. \\
+\fila{Herramientas} & OWASP ZAP (pruebas de gestión de sesión), testssl.sh (configuración de TLS) y Mozilla HTTP Observatory (cabeceras y cookies). \\
+\bottomrule
+\addlinespace[0.8em]
+\toprule
+\multicolumn{2}{@{}l}{\cab{Motor de autorización: Open Policy Agent 1.21}} \\
+\midrule
+\fila{Elección} & OPA 1.21 como punto de decisión, en un contenedor junto a la aplicación. La política se escribe como texto y es la matriz transcrita: una tabla de rol, objeto y verbo, y una regla por cada condición, con su mismo identificador. \\
+\fila{Alternativas} & \emph{Permisos de Django con comprobaciones en cada pantalla}: la decisión queda repartida por todo el código y basta olvidar una para abrir un hueco. \emph{Casbin}: es una biblioteca dentro de la aplicación; las condiciones de historial terminarían escritas como código, sin registro propio de decisiones. \emph{Cedar}: lenguaje muy legible, pero su integración con Python es reciente y la mantiene la comunidad. \emph{Keycloak}: ata la autorización a un proveedor de identidad que una sola aplicación no necesita. \\
+\fila{Aporta} & Un solo lugar donde vive la decisión. Niega por omisión. La política es un texto versionado que se puede revisar, firmar y enseñar al auditor. Trae un marco de pruebas, con lo que la matriz se verifica celda por celda de forma automática. Registra cada decisión con la regla que la determinó. \\
+\fila{Limitaciones} & Si no responde, no hay decisión: la aplicación deniega y se vigila su disponibilidad. No conoce el historial; decide con los hechos que recibe: un único módulo los arma, siempre desde la base. Responde sí o no a una petición, no filtra listados: de eso se encarga la seguridad por fila. Su lenguaje, Rego, es nuevo para el equipo: se escribe una regla por condición y nada más. \\
+\fila{Herramientas} & \cod{opa test} con medición de cobertura, \cod{opa check} en modo estricto y Regal (analizador de políticas). \\
+\bottomrule
+\addlinespace[0.8em]
+\toprule
+\multicolumn{2}{@{}l}{\cab{Contenedores: Podman 5.8 sin privilegios, sobre AlmaLinux 10}} \\
+\midrule
+\fila{Elección} & Podman 5.8, el que distribuye AlmaLinux 10.2, con contenedores sin privilegios administrados por el propio sistema. AlmaLinux 10 recibe parches de seguridad hasta 2035, lo que cubre los diez años de trazabilidad. \\
+\fila{Alternativas} & \emph{Docker Engine}: por omisión depende de un servicio que corre como administrador, y quien controla ese servicio controla el servidor. \emph{Docker Desktop}: no es software libre. \emph{Kubernetes}: pensado para muchos servidores; aquí solo agrega superficie y exige un conocimiento especializado que la empresa no tiene. \resp{P-23} \emph{Sin contenedores}: las dependencias se mezclan con el sistema y es más difícil reproducir y parchar. \\
+\fila{Aporta} & No hay servicio con privilegios. Cada contenedor corre bajo un usuario común: salir del contenedor no da el control del servidor. SELinux, en modo obligatorio, confina cada contenedor: es el control de acceso obligatorio (MAC) que se descartó para la aplicación, usado donde sí corresponde. Sistema de archivos de solo lectura. Redes internas: solo el proxy es alcanzable desde fuera y la base no publica ningún puerto. \\
+\fila{Limitaciones} & Todos los contenedores comparten el núcleo del servidor: se aplican parches automáticos. Las imágenes de terceros traen vulnerabilidades: se usan imágenes propias mínimas, fijadas por huella y analizadas. Un solo servidor es un punto único de falla: se compensa con respaldos y una restauración probada. \supu{P-24} \\
+\fila{Herramientas} & Trivy o Grype (vulnerabilidades en imágenes), Syft (inventario de componentes) y OpenSCAP (endurecimiento del sistema). \\
+\bottomrule
+\end{longtable}
+}
+
+\textbf{Componentes de apoyo.}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.13}
+\begin{tabularx}{\textwidth}{@{}L{2.5cm} L{3.4cm} Y@{}}
+\toprule
+\cab{Función} & \cab{Elección} & \cab{Razón de seguridad y alternativa descartada} \\
+\midrule
+Proxy y TLS & Caddy 2.11 & HTTPS automático con certificados de Let's Encrypt y valores seguros por omisión. Nginx exige configurar TLS a mano. \\
+Secretos y sello & OpenBao 2.7 & Firma sin entregar la llave y registra cada uso. HashiCorp Vault se descartó porque desde 2023 su licencia (BUSL) no es de software libre. \\
+Segundo factor & django-allauth & Llaves de acceso (WebAuthn) del propio dispositivo y códigos temporales, sin costo de hardware. Admite llaves físicas FIDO2 para las cuentas privilegiadas. El SMS se descarta (POL-AU-05). \resp{P-23} \\
+Resumen de contraseñas & Argon2id & Ver la sección~\ref{sec:credenciales}. \\
+Respaldos & Copia base y archivo continuo de PostgreSQL, cifrados con \emph{age} & Se cifran antes de salir del servidor, con una llave que el proveedor de almacenamiento no tiene. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+%=====================================================================
+\section{Decisiones de seguridad de la implementación}
+\label{sec:decisiones}
+%=====================================================================
+
+\subsection{Dónde vive la decisión de autorización}
+
+Vive en el motor de decisión, en el servidor. La aplicación tiene un único módulo de cumplimiento por
+el que pasa toda ruta; una ruta que no declare qué acción y qué objeto protege no arranca, y eso se
+comprueba con una prueba automática que recorre todas las rutas.
+
+\textbf{Qué pasa si el control está solo en la interfaz.} Supóngase que la pantalla del técnico
+simplemente no muestra el botón «Aprobar». El técnico, con su sesión válida, envía a mano la petición
+de aprobar su propia medición. Si el servidor no decide, la ejecuta, y con eso un técnico mide y
+aprueba. Es el mismo error de la clase 13: cambiar un número en la dirección y ver el certificado de
+otro dueño. En este diseño la interfaz también le pregunta al motor qué botones mostrar, pero solo por
+comodidad. Lo que protege es el paso 5 de la sección~\ref{sec:flujo}, y detrás de él la base de datos.
+
+Los identificadores de los objetos no son consecutivos, para que no se puedan recorrer. Es higiene, no
+control: el control es comprobar el permiso sobre cada objeto.
+
+\subsection{Cómo se implementan las celdas condicionadas}
+
+Cada regla se evalúa dos veces: antes de leer o cambiar el dato y, cuando hay un cambio, otra vez
+dentro de la transacción que lo aplica. Así dos verificadores que aprueban a la vez, o un período que
+cierra mientras alguien edita, no dejan el sistema en un estado que las reglas prohíben.
+
+{\small
+\renewcommand{\arraystretch}{1.13}
+\begin{longtable}{@{}L{1.9cm} L{5.4cm} L{3.6cm} L{4.6cm}@{}}
+\toprule
+\cab{Regla} & \cab{Qué hay que almacenar} & \cab{Cuándo se evalúa} & \cab{Segundo candado en la base} \\
+\midrule
+\endfirsthead
+\toprule
+\cab{Regla} & \cab{Qué hay que almacenar} & \cab{Cuándo se evalúa} & \cab{Segundo candado en la base} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+C1, C19 & Asignaciones: técnico, finca, período, tipo, motivo y vigencia. & En toda petición sobre una finca; al asignar. & Seguridad por fila según la asignación vigente. \\
+C2, C14 & Estado de cada medición y período; autor de cada versión; fecha de medición y de registro. & Al crear, modificar o enviar; al abrir y cerrar. & Un disparador rechaza cambios con el período cerrado y fechas fuera del período. \\
+C3, C8, C10 & Una fila por versión de medición y por paso de enmienda, con su autor; si la enmienda es material. & Al aprobar, revisar o autorizar. & Restricción: quien decide no figura en un paso anterior. \\
+C4 & Certificado con parcela, período, estado y enlace al que reemplaza. & Al emitir y al autorizar una enmienda. & Índice único de vigente por parcela y período; revocar y emitir en una transacción. \\
+C5 & Titular de cada finca y cuentas que lo representan. & En toda lectura de un dueño. & Seguridad por fila según el titular. \\
+C6, C18 & Vigencia de la cuenta; registro y huella de cada paquete exportado. & Al iniciar sesión, en cada petición y al exportar. & Conexión de solo lectura para el auditor. \\
+C7, C9 & Las filas de autoría y dictamen de C3; fecha de la solicitud. & Al solicitar y al corregir. & Restricción de fecha. \\
+C11 & Geometría de cada parcela; estado propuesto o aprobado. & Al proponer y al aprobar. & Restricción espacial que impide el traslape. \\
+C12 & Propuesta de rol, quién propone y quién aprueba; fin de una habilitación. & Al aprobar. & Restricción de roles por persona e identidad única. \\
+C13, C15 & Titular de la cuenta; sujeto de cada alerta y su supervisor. & Al cambiar credenciales; al resolver. & No aplica. \\
+C16 & Fecha del último certificado ligado al titular. & Al suprimir datos personales. & Impide borrar un titular con certificados en plazo. \\
+C17 & Declaración de vínculos: persona, titular y fechas. & En toda acción sobre una finca que no sea leer. & No aplica: vive en el motor. \\
+C20 & Código de cada certificado; vista con sello, estado, toneladas y reemplazo. & En cada consulta pública. & La ruta pública solo lee esa vista. \\
+H1, H3 & Un evento por lectura; las fincas que cada sujeto vio en 90 días; los umbrales por rol. & Antes de entregar el detalle de una finca. & No aplica: vive en el motor. \\
+H2 & Jornada de cada rol. & En cada acción de decisión. & No aplica. \\
+\end{longtable}
+}
+
+Los contadores de H1 y H3 se calculan con una consulta sobre una ventana de tiempo. Con la carga
+supuesta no hace falta un sistema aparte de procesamiento de eventos.
+
+\subsection{Almacenamiento de credenciales}
+\label{sec:credenciales}
+
+\textbf{Contraseñas.} Se guarda solo un resumen calculado con \textbf{Argon2id}, con una sal aleatoria por
+usuario. La razón es la de Morris y Thompson (1979), vista en clase: quien roba la base no debe poder
+probar millones de contraseñas por segundo. Argon2id es lento a propósito y además exige mucha
+memoria, lo que anula la ventaja de las tarjetas gráficas; bcrypt no exige memoria y PBKDF2, el valor
+por omisión de Django, tampoco. Parámetros iniciales: los de Django (100~MiB de memoria, dos
+iteraciones), por encima del mínimo que recomienda OWASP (19~MiB). El costo se sube con los años sin
+obligar a nadie a cambiar su contraseña.
+
+\textbf{Segundo factor.} De una llave de acceso solo se guarda la llave pública: no hay nada que robar.
+La semilla de los códigos temporales se guarda cifrada con una llave que vive en la bóveda. Los códigos
+de recuperación se guardan resumidos, como las contraseñas.
+
+\textbf{Lo que nunca se hace.} Guardar contraseñas en claro o con cifrado reversible, escribirlas en un
+registro o enviarlas por correo.
+
+\subsection{Gestión de sesión}
+
+\begin{itemize}
+\item \textbf{Entre peticiones} el usuario se identifica por la cookie de sesión. La aplicación la busca
+      en la tabla de sesiones y de ahí obtiene quién es; el rol se lee de la base en ese momento.
+\item \textbf{Al iniciar sesión} se genera un identificador nuevo, para que nadie pueda fijar uno de
+      antemano.
+\item \textbf{Al cerrar sesión} la fila se borra. La cookie que quede en el navegador ya no sirve.
+\item \textbf{Al cambiar de privilegios} (rol, asignaciones, contraseña o baja) se borran todas las
+      sesiones de esa persona. Su siguiente petición exige iniciar sesión, y entra ya con los permisos
+      nuevos.
+\item \textbf{Para las decisiones} la sesión guarda cuándo se presentó por última vez el segundo
+      factor. Si pasaron más de cinco minutos, se pide de nuevo.
+\item \textbf{Vencimiento}: 30 minutos sin actividad o 12 horas en total, lo que ocurra primero.
+\end{itemize}
+
+\subsection{Diseño de la bitácora}
+\label{sec:bitacora}
+
+\textbf{Qué eventos.} Los de la política POL-BT-01: autenticación, cambios, consultas de datos sensibles,
+exportaciones, administración, y toda decisión denegada o con restricción.
+
+\textbf{Con qué campos.} Instante, según el reloj del servidor; cuenta y rol; acción; tipo e identificador
+del objeto y su versión; resultado y regla que lo decidió; origen (dirección, sesión); huella del valor
+anterior y del nuevo; huella del registro anterior; y huella propia.
+
+\textbf{Cómo se protege de quien tiene permiso de escritura.} El permiso de escritura es, en realidad,
+solo de inserción, y cuatro mecanismos se apoyan entre sí.
+
+\begin{enumerate}
+\item \textbf{Solo insertar.} La cuenta con que la aplicación se conecta a la base puede agregar
+      registros, no modificarlos ni borrarlos. Un disparador rechaza cualquier intento.
+\item \textbf{Cadena de huellas.} Cada registro incluye la huella SHA-256 del anterior. Cambiar o quitar
+      uno rompe la cadena desde ese punto (Schneier y Kelsey, 1999).
+\item \textbf{Testigo externo.} Una vez al día la última huella sale del servidor: recibe un sello de
+      tiempo (RFC 3161) y se envía al buzón de la Gerencia y del auditor. Ni siquiera quien tenga control
+      total de la base puede reescribir el pasado sin que deje de coincidir con lo que ya está afuera.
+\item \textbf{Misma transacción.} La acción y su registro se confirman juntos. No puede haber acción sin
+      registro ni registro de algo que no ocurrió.
+\end{enumerate}
+
+\textbf{Conservación.} La que fija la política POL-BT-04: diez años para cambios y decisiones, que es la trazabilidad que el cliente debe poder reconstruir \resp{P-18}, y dos para consultas. \supu{P-19} La tabla se divide por mes, de modo que lo antiguo se archiva sin romper la cadena.
+
+Un trabajo diario recalcula la cadena, y el auditor puede hacerlo por su cuenta. Lo que el operador
+ejecute directamente en la base queda en un registro aparte que se envía fuera del servidor.
+
+\subsection{Gestión de secretos}
+
+\textbf{Cuáles son.} Las contraseñas con que la aplicación y los trabajos se conectan a la base; la llave
+que sella los certificados; la llave que cifra las semillas del segundo factor; la llave secreta del
+framework; la credencial del correo saliente; y las llaves de cifrado de los respaldos.
+
+\textbf{Dónde viven.} En la bóveda. Cada componente se autentica ante ella al arrancar y recibe solo los
+secretos que le corresponden, que mantiene en memoria. La llave de sello nunca sale: el servicio de
+emisión le pide a la bóveda que firme. Es la raíz de confianza de todos los certificados, y la clase 14
+mostró qué ocurre cuando una raíz así se compromete.
+
+\textbf{Por qué no en el código.} El repositorio guarda su historia para siempre y lo lee todo el que
+desarrolla; las imágenes de los contenedores se copian; y cambiar un secreto obligaría a publicar una
+versión nueva. Un secreto en el código deja de ser secreto el día que se escribe. Cada cambio al
+repositorio se analiza con gitleaks para detectar secretos antes de aceptarlo.
+
+\textbf{Quién abre la bóveda.} La llave que la abre se divide en tres partes, y hacen falta dos. Las
+custodian la Gerencia General, la Gerencia de Certificación y el operador. Nadie la abre solo.
+
+\subsection{Fechas de medición y de registro}
+\label{sec:fechas}
+
+El cliente no pide una aplicación sin conexión, pero sí contemplar cómo trabaja el campo: la señal no
+siempre alcanza y algunos técnicos registran después de la visita. \resp{P-22}
+
+\begin{itemize}
+\item \textbf{Dos fechas por medición.} La de registro la pone el servidor. La de medición la declara el
+      técnico, y solo se acepta si cae dentro del período y de su asignación y no es posterior a la
+      de registro (C2). El verificador ve las dos; más de cinco días hábiles entre ambas pide un motivo.
+\item \textbf{Dos fechas por período.} El fin de medición y, unos días después, el cierre de registro:
+      lo medido el último día en una finca sin señal todavía se registra. Después, solo por enmienda.
+\item \textbf{La hoja de campo es evidencia.} Su fotografía se puede adjuntar a la medición; el sistema
+      guarda su huella.
+\end{itemize}
+
+\subsection{Autenticidad y estado del certificado}
+\label{sec:certificado}
+
+El cliente quiere poder demostrar que un certificado es auténtico, cuál es su estado y quién autorizó
+su emisión, y pidió valorar si hace falta una firma digital. \resp{P-04}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.14}
+\begin{tabularx}{\textwidth}{@{}L{3.6cm} L{4.0cm} Y L{3.5cm}@{}}
+\toprule
+\cab{Alternativa} & \cab{Qué demuestra} & \cab{Qué no} & \cab{Costo y operación} \\
+\midrule
+Firma digital certificada de cada verificador (Ley 8454) & Autenticidad y autoría, con presunción legal. & El estado: un documento firmado sigue pareciendo válido después de revocado. & Certificado y dispositivo por persona, y su renovación. \\
+Sello electrónico de la empresa, con llave en la bóveda & Autenticidad del contenido, incluido el nombre de quien aprobó. & El estado. No tiene la presunción legal de la firma certificada. & Ninguno adicional. \\
+Comprobación en línea por código & El estado de hoy y el enlace con el reemplazo. & Por sí sola, que el documento no fue alterado. & Una ruta pública de solo lectura. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\begin{decision}
+\textbf{Decisión.} No se exige firma digital certificada a cada verificador. El certificado lleva el
+\textbf{sello electrónico de la empresa} y un código; el estado se demuestra con la \textbf{comprobación
+en línea}; y quién autorizó, con la aprobación personal con segundo factor, que queda en la bitácora
+y dentro del contenido sellado. La firma personal no demuestra el estado, que es lo que importa
+cuando un certificado se revoca. Si Verdeazul quiere presunción legal para el sello, puede cambiar
+después la llave propia por un certificado de sello electrónico de persona jurídica (Ley 8454):
+cambia la custodia de la llave, no el flujo.
+\end{decision}
+
+\subsection{Riesgos residuales}
+
+{\small
+\renewcommand{\arraystretch}{1.13}
+\begin{longtable}{@{}L{1.25cm} L{4.9cm} L{9.5cm}@{}}
+\toprule
+\cab{Id.} & \cab{Qué queda sin cubrir} & \cab{Por qué se acepta y qué lo acota} \\
+\midrule
+\endfirsthead
+\toprule
+\cab{Id.} & \cab{Qué queda sin cubrir} & \cab{Por qué se acepta y qué lo acota} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+RR-1 & Colusión entre un técnico y un verificador. & Impedirla exigiría una tercera persona en cada certificado. La acotan la rotación, el indicador de parejas repetidas y la auditoría externa. \\
+RR-2 & Una medición falsa desde el origen. & El sistema no ve el árbol. La acotan la verificación independiente y la validación de rangos. \\
+RR-3 & Extracción lenta, por debajo de los umbrales, o con fotografías de la pantalla. & Los controles de historial la vuelven lenta y visible, no imposible. La confidencialidad firmada da la vía legal. \\
+RR-4 & Un equipo de usuario infectado, que actúa con su sesión. La empresa no administra todos los equipos. \resp{P-22} & El servidor no lo distingue de la persona. Lo acotan la reautenticación en las decisiones, la llave de acceso y que un técnico solo alcanza sus fincas asignadas. \\
+RR-5 & El operador puede detener el servicio o destruir datos. & Se detecta y se recupera, no se impide. La acotan los respaldos fuera del sitio y el testigo externo. \\
+RR-6 & Un solo servidor. & La redundancia duplica el costo y la operación. Se acepta un día de interrupción; no se acepta perder datos: el archivo continuo permite restaurar en otro servidor. \supu{P-24} \\
+RR-7 & Sin hardware de seguridad dedicado para la llave de sello ni, si no se compran llaves físicas, para las cuentas privilegiadas. & No hay presupuesto comprometido. \resp{P-23} Lo acotan la bóveda, el registro de cada firma y la rotación anual. \\
+RR-8 & La fecha de medición es declarada. & Sin aplicación sin conexión, el sistema no puede probar cuándo se midió ni evitar un error al transcribir. \resp{P-22} Lo acotan las dos fechas, su validación y la verificación independiente. \\
+RR-9 & El histórico migrado de las hojas de cálculo. & No se le puede dar la trazabilidad que nunca tuvo. Queda congelado, con su huella, y marcado como histórico. \supu{P-26} \\
+RR-10 & La misma regla en dos lugares, el motor y la base. & Es el precio de tener dos candados. Las pruebas T-01 a T-37 se ejecutan contra ambos. \\
+RR-11 & Vínculos no declarados entre un empleado y un dueño. & No existe un registro que los descarte. \resp{P-15} Lo acotan que ningún paso lo completa una sola persona, los indicadores de parejas repetidas y la sanción por omitir. \\
+RR-12 & El proveedor de hospedaje tiene acceso físico al servidor. & Es el precio de no operar un cuarto de servidores. \resp{P-23} Lo acotan el contrato, los respaldos cifrados en otro proveedor y el testigo externo. \\
+RR-13 & La aprobación no lleva firma digital certificada. & Ante un tercero, la autoría descansa en la bitácora y el sello, sin presunción legal. \resp{P-04} Puede agregarse después sin rediseñar. \\
+\end{longtable}
+}
+
+%=====================================================================
+\section{Hospedaje y operación}
+\label{sec:hospedaje}
+%=====================================================================
+
+El cliente no ha decidido dónde hospedar la plataforma, no tiene un equipo de ciberseguridad y pidió
+una recomendación fundamentada en seguridad, mantenimiento, disponibilidad y costo, que no dependa de
+especialistas para lo cotidiano. \resp{P-23}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.14}
+\begin{tabularx}{\textwidth}{@{}L{2.3cm} Y Y Y@{}}
+\toprule
+\cab{Criterio} & \cab{Servidor propio en la oficina} & \cab{Servidor virtual contratado} & \cab{Servicios administrados} \\
+\midrule
+Seguridad & La seguridad física, eléctrica y de red queda a cargo de la empresa. & El proveedor pone el centro de datos; Verdeazul controla el sistema y sus llaves. Es un tercero más (RR-12). & La base y las llaves quedan en cuentas del proveedor. \\
+Mantenimiento & Equipo, repuestos, energía y enlace, además del sistema. & Solo el sistema, que se parcha solo. & El menor, pero con servicios que no son software libre. \\
+Disponibilidad & La de la electricidad y el enlace de una oficina rural. & La del centro de datos; se restaura en horas. & La más alta. \\
+Costo & Inversión inicial y reposición cada pocos años. & Pago mensual bajo y predecible. & El mayor y el menos predecible. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\begin{decision}
+\textbf{Recomendación.} Un \textbf{servidor virtual contratado}, con los respaldos cifrados en un proveedor
+distinto. Da la disponibilidad y la seguridad física que una oficina no puede dar, no exige comprar
+equipo, crece con la empresa y conserva el diseño en software libre. De preferencia con centro de
+datos en Costa Rica, para que los datos personales no salgan del país. Los montos deben cotizarse.
+\end{decision}
+
+\textbf{Quién opera.} Personal que la empresa designe, sin ser especialista. Lo cotidiano está
+automatizado (respaldos, parches, verificación de la bitácora, vencimientos): el operador lee un
+aviso diario. Lo periódico tiene guía escrita: el reinicio mensual, que pide dos custodios para abrir
+la bóveda, y la prueba semestral de restauración. Lo extraordinario lo atiende soporte especializado
+por contrato (Anexo~B.2). La bóveda es la pieza que más pide; si Verdeazul prefiere menos operación,
+los secretos pueden ir cifrados en el propio servidor, a costa del registro de cada firma (sube RR-7).
+
+%=====================================================================
+\section{Criterios de aceptación de seguridad}
+\label{sec:aceptacion}
+%=====================================================================
+
+El sistema no entra en operación hasta cumplir estos criterios. Están escritos para que el equipo que
+construye sepa cuándo terminó, sin tener que preguntar.
+
+{\small
+\renewcommand{\arraystretch}{1.13}
+\begin{longtable}{@{}L{0.7cm} L{8.3cm} L{6.6cm}@{}}
+\toprule
+\cab{N.º} & \cab{Criterio} & \cab{Cómo se comprueba} \\
+\midrule
+\endfirsthead
+\toprule
+\cab{N.º} & \cab{Criterio} & \cab{Cómo se comprueba} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+1 & La matriz se cumple celda por celda. & Los casos T-01 a T-37 y una prueba por cada celda sin acceso pasan contra el motor y contra la base. \\
+2 & Ninguna ruta queda sin decisión de autorización. & Prueba automática que recorre todas las rutas. \\
+3 & Ningún objeto se entrega por adivinar su identificador. & Pruebas de cambio de identificador con cada rol, con OWASP ZAP. \\
+4 & La bitácora no se puede alterar sin que se note. & Se modifica un registro en un ambiente de prueba y la verificación de la cadena lo detecta. \\
+5 & Sin registro no hay acción. & Con la bitácora deshabilitada, toda operación se rechaza. \\
+6 & El sistema niega cuando el motor no responde. & Se detiene el motor y toda petición se deniega. \\
+7 & No hay secretos en el código ni en las imágenes. & Análisis del repositorio y de las imágenes sin hallazgos. \\
+8 & La configuración de producción es segura. & \cod{check -{}-deploy}, testssl.sh y el análisis de imágenes sin hallazgos altos. \\
+9 & Los respaldos sirven. & Restauración completa en un servidor limpio, con la cadena de la bitácora íntegra. \\
+10 & Un tercero intentó romperlo. & Prueba de penetración autorizada por escrito, con sus hallazgos altos corregidos. \\
+\end{longtable}
+}
+
+\textbf{Dónde está cada respuesta.} Para construir no hace falta consultar al equipo de diseño. Esto
+es lo que el equipo constructor recibe y dónde buscar.
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.13}
+\begin{tabularx}{\textwidth}{@{}L{7.4cm} Y@{}}
+\toprule
+\cab{Si la pregunta es\ldots} & \cab{la respuesta está en\ldots} \\
+\midrule
+¿Qué puede hacer cada rol sobre cada objeto? & La matriz (Entregable 3, sección 2). \\
+¿Qué condición tiene un permiso? & Reglas C1 a C20 y H1 a H4 (Entregable 3, sección 3). \\
+¿Cómo sé que una regla quedó bien construida? & Casos T-01 a T-37 (Entregable 3, sección 7). \\
+¿Por qué este modelo, estos controles y esta separación? & Entregable 2, secciones 3, 4 y 5. \\
+¿Qué se registra, por cuánto tiempo y quién lo lee? & Políticas POL-BT (Entregable 1, sección 6.3) y la sección~\ref{sec:bitacora}. \\
+¿Qué contraseña, qué segundo factor y qué sesión? & Políticas POL-AU (Entregable 1, sección 7). \\
+¿Dónde se hospeda y quién lo opera? & Sección~\ref{sec:hospedaje} y Anexo~B. \\
+¿Qué respondió el cliente y qué supuso el equipo? & La minuta (Entregable 1, Anexos A y B) y el Anexo~C de este documento. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+%=====================================================================
+%  ANEXOS
+%=====================================================================
+\clearpage
+\section*{Anexo A. Diagramas}
+\addcontentsline{toc}{section}{Anexo A. Diagramas}
+
+\subsection*{A.1 Componentes y fronteras de confianza}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[font=\sffamily\scriptsize,
+  comp/.style={draw=vz,line width=0.7pt,fill=white,align=center,minimum height=10mm,inner sep=3pt},
+  ext/.style={draw=gris,line width=0.6pt,fill=negado,align=center,minimum height=10mm,inner sep=3pt},
+  zona/.style={draw=gris,densely dashed,line width=0.5pt,rounded corners=2pt},
+  tz/.style={font=\sffamily\scriptsize\bfseries,text=gris,anchor=north},
+  fr/.style={font=\sffamily\scriptsize\bfseries,text=vz,fill=white,inner sep=1.5pt},
+  dos/.style={{Stealth[length=3.5pt]}-{Stealth[length=3.5pt]},draw=gris,line width=0.6pt},
+  uno/.style={-{Stealth[length=3.5pt]},draw=gris,line width=0.6pt}]
+% zonas
+\draw[zona] (-1.55,-4.4) rectangle (1.55,2.9);
+\draw[zona] (2.25,-4.4) rectangle (4.35,2.9);
+\draw[zona,fill=vzclaro] (5.05,-4.4) rectangle (10.55,2.9);
+\draw[zona] (11.25,-4.4) rectangle (15.05,2.9);
+\node[tz] at (0,2.8) {No confiable};
+\node[tz] at (3.3,2.8) {Borde};
+\node[tz] at (7.8,2.8) {Aplicación};
+\node[tz] at (13.15,2.8) {Datos y secretos};
+% nodos
+\node[ext,minimum width=27mm] (nav) at (0,0) {Navegador\\{\tiny personal, dueño,}\\{\tiny auditor, público}};
+\node[comp,minimum width=17mm] (px) at (3.3,0) {Proxy\\Caddy};
+\node[comp,minimum width=44mm,minimum height=12mm] (app) at (7.8,0) {\textbf{Aplicación Django}\\punto de cumplimiento};
+\node[comp,minimum width=44mm] (opa) at (7.8,1.75) {\textbf{Motor de decisión OPA}\\la matriz, como política};
+\node[comp,minimum width=20mm] (sis) at (6.55,-1.95) {Servicio de\\emisión};
+\node[comp,minimum width=20mm] (job) at (9.05,-1.95) {Trabajos\\programados};
+\node[comp,minimum width=30mm] (pub) at (6.75,-3.45) {Comprobación pública\\{\tiny sin sesión, solo lectura}};
+\node[comp,minimum width=30mm,minimum height=12mm] (pg) at (13.15,0.95) {\textbf{PostgreSQL}\\datos y bitácora};
+\node[comp,minimum width=30mm,minimum height=12mm] (bao) at (13.15,-1.55) {\textbf{Bóveda OpenBao}\\secretos y sello};
+\node[ext,minimum width=42mm] (tes) at (9.05,-5.7) {Testigo externo\\{\tiny sello de tiempo, buzón del auditor}};
+\node[ext,minimum width=30mm] (res) at (13.15,-5.7) {Respaldo cifrado\\en otro proveedor};
+% flechas
+\draw[dos] (nav) -- node[fr,above=1pt]{F1} (px);
+\draw[dos] (px) -- node[fr,above=1pt]{F2} (app);
+\draw[dos] (app) -- node[fr,right=1pt]{F3} (opa);
+\draw[dos] ($(app.east)+(0,0.25)$) -- ++(0.5,0) |- node[fr,pos=0.3,right=1pt]{F4} (pg.west);
+\draw[uno] ($(app.east)+(0,-0.25)$) -- ++(0.5,0) |- (bao.west);
+\draw[uno] (6.55,0 |- app.south) -- (sis.north);
+\draw[uno] (9.05,0 |- app.south) -- (job.north);
+\draw[uno] (7.8,0 |- app.south) -- (7.8,0 |- pub.north);
+\draw[uno] (job.south) -- node[fr,right=1pt,pos=0.82]{F5} (tes.north);
+\draw[uno] (pg.east) -- ++(0.45,0) |- (res.east);
+\end{tikzpicture}
+\caption{Componentes y fronteras de confianza (F1 a F5). Las líneas punteadas separan las zonas; solo el
+proxy es alcanzable desde Internet. El servidor es una máquina virtual contratada a un proveedor externo.}
+\label{fig:componentes}
+\end{figure}
+
+\subsection*{A.2 Secuencia de una petición: aprobar una medición}
+
+\begin{center}
+\begin{tikzpicture}[font=\sffamily\scriptsize,
+  cab/.style={draw=vz,line width=0.7pt,fill=vzclaro,minimum width=24mm,minimum height=7mm,align=center},
+  msg/.style={-{Stealth[length=3.5pt]},draw=tinta,line width=0.6pt},
+  ret/.style={-{Stealth[length=3.5pt]},draw=gris,line width=0.6pt,densely dashed},
+  et/.style={font=\sffamily\scriptsize,above=1pt,align=center,fill=white,inner sep=1.2pt},
+  propio/.style={font=\sffamily\scriptsize,anchor=west,align=left,text=tinta,fill=white,inner sep=1.2pt}]
+\def\xa{0}\def\xb{3.3}\def\xc{7.0}\def\xd{10.7}\def\xe{14.2}
+\foreach \x in {\xa,\xb,\xc,\xd,\xe} \draw[regla,line width=0.5pt] (\x,-0.35) -- (\x,-11.9);
+\node[cab] at (\xa,0) {Navegador};
+\node[cab] at (\xb,0) {Proxy};
+\node[cab] at (\xc,0) {Aplicación};
+\node[cab] at (\xd,0) {Motor OPA};
+\node[cab] at (\xe,0) {PostgreSQL};
+\draw[msg] (\xa,-1.1) -- node[et]{1. Petición por HTTPS} (\xb,-1.1);
+\draw[msg] (\xb,-1.9) -- node[et]{la reenvía} (\xc,-1.9);
+\draw[msg] (\xc,-2.8) -- node[et]{2. ¿De quién es esta sesión?} (\xe,-2.8);
+\draw[ret] (\xe,-3.6) -- node[et]{usuario y rol} (\xc,-3.6);
+\node[propio] at (\xc+0.12,-4.2) {3. Valida la forma de los datos};
+\draw[msg] (\xc,-5.1) -- node[et]{4. Lee los hechos: estados, autores, historial} (\xe,-5.1);
+\draw[ret] (\xe,-5.7) -- (\xc,-5.7);
+\draw[msg,draw=vz,line width=1.2pt] (\xc,-6.7) -- node[et,text=vz,font=\sffamily\scriptsize\bfseries]{5. ¿Puede aprobar?} (\xd,-6.7);
+\draw[ret,draw=vz,line width=1.2pt] (\xd,-7.5) -- node[et,text=vz,font=\sffamily\scriptsize\bfseries]{decisión y regla} (\xc,-7.5);
+\node[propio] at (\xc+0.12,-8.1) {6. Si deniega: registra y responde};
+\draw[msg] (\xc,-9.0) -- node[et]{7. Transacción: cambia el estado y escribe la bitácora} (\xe,-9.0);
+\node[propio,anchor=east,align=right] at (\xe-0.12,-9.6) {8. Restricciones y seguridad por fila};
+\draw[ret] (\xe,-10.5) -- node[et]{confirmado} (\xc,-10.5);
+\draw[ret] (\xc,-11.4) -- node[et]{respuesta} (\xa,-11.4);
+\end{tikzpicture}
+\end{center}
+
+El paso 5, en color, es el único punto donde se concede un permiso. Los pasos 7 y 8 pueden negar, pero
+nunca conceder.
+
+\Needspace{12cm}
+\subsection*{A.3 Estados de los objetos que condicionan los permisos}
+
+\begin{center}
+\begin{tikzpicture}[font=\sffamily\footnotesize,
+  st/.style={draw=vz,line width=0.7pt,fill=white,rounded corners=3pt,minimum height=7.5mm,minimum width=21mm,align=center},
+  fin/.style={draw=gris,line width=0.7pt,fill=negado,rounded corners=3pt,minimum height=7.5mm,minimum width=21mm,align=center},
+  tr/.style={-{Stealth[length=3.5pt]},draw=gris,line width=0.6pt},
+  et/.style={font=\sffamily\scriptsize,text=gris,align=center},
+  tit/.style={font=\sffamily\footnotesize\bfseries,anchor=west}]
+\def\xA{2.0}\def\xB{6.0}\def\xC{10.0}\def\xD{14.0}
+% Medicion
+\node[tit] at (-1.3,0) {Medición};
+\node[st] (b) at (\xA,0) {borrador};
+\node[st] (e) at (\xB,0) {enviada};
+\node[st] (a) at (\xC,0) {aprobada};
+\node[fin] (s) at (\xD,0) {sustituida};
+\node[st] (d) at (\xB,-1.9) {devuelta};
+\node[fin] (x) at (\xA,-1.9) {excluida};
+\draw[tr] (b) -- node[et,above]{envía\\(TEC)} (e);
+\draw[tr] (e) -- node[et,above]{aprueba\\(VER)} (a);
+\draw[tr] (a) -- node[et,above]{enmienda\\autorizada} (s);
+\draw[tr] ($(e.south)+(-0.45,0)$) -- node[et,left]{devuelve} ($(d.north)+(-0.45,0)$);
+\draw[tr] ($(d.north)+(0.45,0)$) -- node[et,right]{reenvía, con el\\período abierto} ($(e.south)+(0.45,0)$);
+\draw[tr] (b) -- node[et,left]{al cerrar,\\si no se envió} (x);
+\node[et,anchor=west,align=left] at (7.4,-1.9) {tras el cierre se sigue aprobando lo enviado a tiempo;\\lo devuelto y lo excluido solo cambian por enmienda};
+% Periodo
+\node[tit] at (-1.3,-3.9) {Período};
+\node[st] (p1) at (\xA,-3.9) {planificado};
+\node[st] (p2) at (\xB,-3.9) {abierto};
+\node[fin] (p3) at (\xC,-3.9) {cerrado};
+\draw[tr] (p1) -- node[et,above]{registra ADM,\\abre GER} (p2);
+\draw[tr] (p2) -- node[et,above]{registra ADM,\\cierra GER} (p3);
+\node[et,anchor=west,align=left] at (11.3,-3.9) {no existe «reabrir»;\\el cierre detiene registrar\\y modificar, no revisar};
+% Enmienda
+\node[tit] at (-1.3,-5.9) {Enmienda};
+\node[st] (m1) at (\xA,-5.9) {solicitada};
+\node[st] (m2) at (\xB,-5.9) {corregida};
+\node[st] (m3) at (\xC,-5.9) {revisada};
+\node[fin] (m4) at (\xD,-5.9) {autorizada};
+\node[fin] (m6) at (\xA,-7.6) {vencida};
+\node[fin] (m5) at (\xC,-7.6) {rechazada};
+\draw[tr] (m1) -- node[et,above]{corrige\\(TEC)} (m2);
+\draw[tr] (m2) -- node[et,above]{revisa\\(VER)} (m3);
+\draw[tr] (m3) -- node[et,above]{autoriza\\(GER)} (m4);
+\draw[tr] (m1) -- node[et,right]{pasa el plazo} (m6);
+\draw[tr] (m3) -- node[et,right]{GER no autoriza} (m5);
+\draw[tr] (m2) |- node[et,pos=0.25,left]{dictamen\\desfavorable} (m5);
+% Certificado
+\node[tit] at (-1.3,-9.5) {Certificado};
+\node[st] (c1) at (\xA,-9.5) {vigente};
+\node[fin] (c2) at (\xB,-9.5) {revocado};
+\draw[tr] (c1) -- node[et,above]{revoca\\(SIS)} (c2);
+\node[et,anchor=west,align=left] at (7.4,-9.5) {solo por una enmienda que cambia las toneladas;\\el revocado se conserva y enlaza a su reemplazo, emitido\\en la misma transacción: nunca hay dos vigentes};
+\end{tikzpicture}
+\end{center}
+
+\subsection*{A.4 Despliegue en el servidor}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.22}
+\begin{tabularx}{\textwidth}{@{}L{3.0cm} L{3.0cm} L{3.3cm} Y@{}}
+\toprule
+\cab{Contenedor} & \cab{Red} & \cab{Puerto publicado} & \cab{Notas de endurecimiento} \\
+\midrule
+Proxy & Externa e interna & 443 & El único con salida a Internet entrante. \\
+Aplicación & Interna & Ninguno & Solo lectura; sin sitio de administración. \\
+Motor de decisión & Interna & Ninguno & Política cargada desde un paquete firmado. \\
+Emisión y trabajos & Interna & Ninguno & Identidad propia ante la base y la bóveda. \\
+Comprobación pública & Interna & Ninguno & Sin sesión; solo lee la vista de certificados; límite de ritmo en el proxy. \\
+Base de datos & Interna & Ninguno & Volumen en disco cifrado; cuentas separadas por función. \\
+Bóveda & Interna & Ninguno & Se abre con dos de tres custodios. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+Todos corren sin privilegios, confinados por SELinux, con el sistema de archivos de solo lectura y sin
+capacidades adicionales del núcleo.
+
+%---------------------------------------------------------------------
+\Needspace{9cm}
+\section*{Anexo B. Capacidad y operación}
+\addcontentsline{toc}{section}{Anexo B. Capacidad y operación}
+\label{anexo:capacidad}
+
+\subsection*{B.1 Supuestos de capacidad}
+
+El cliente no tiene cifras definitivas y autorizó al equipo a fijar supuestos razonables, siempre que
+queden documentados. \resp{P-02} Estos son los que se usaron para escoger el tamaño del servidor. Se
+tomaron con holgura a propósito: ninguna regla de la matriz depende de ellos.
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.22}
+\begin{tabularx}{\textwidth}{@{}L{4.3cm} L{2.6cm} Y@{}}
+\toprule
+\cab{Magnitud} & \cab{Supuesto} & \cab{De dónde sale y qué pasa si se supera} \\
+\midrule
+Cuentas internas & Hasta 100 & Técnicos, verificadores, supervisores, gerencia y administración, con margen para el crecimiento que el cliente anuncia. Los roles no cambian. \\
+Cuentas de dueños y representantes & Hasta 2\,000 & Una o dos por titular. Solo leen. \\
+Fincas y parcelas & 2\,000 y 10\,000 & Cinco parcelas por finca. La restricción de traslape usa un índice espacial y no se degrada con el tamaño. \\
+Períodos por año & Hasta 4 & Con 10\,000 parcelas son 40\,000 mediciones por año, y 400\,000 en diez años. \\
+Sesiones simultáneas & Hasta 100 & El inicio de sesión es lo más costoso: Argon2id usa 100~MiB por cálculo. Se limita a ocho a la vez. \\
+Registros de bitácora & 5 millones por año & 100 personas, 200 eventos por día, 250 días. Unos 3~GB por año y 30~GB en diez: cabe en un disco común. La tabla se divide por mes. \\
+Servidor & 4 núcleos, 16~GB, 200~GB & Si la carga se duplica, se amplía el mismo servidor virtual sin migrar. Si se multiplica por diez, la base pasa a un segundo servidor; el diseño no cambia. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\subsection*{B.2 Calendario de operación}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.22}
+\begin{tabularx}{\textwidth}{@{}L{2.4cm} Y L{5.4cm}@{}}
+\toprule
+\cab{Frecuencia} & \cab{Tarea} & \cab{Quién} \\
+\midrule
+Diaria & Respaldo y archivo continuo; parches de seguridad; verificación de la cadena de la bitácora y envío de su huella; vencimiento de cuentas, habilitaciones y asignaciones. & Automático. El operador lee el aviso diario. \\
+Semanal & Resumen de alertas, asignaciones temporales y restricciones levantadas. & Automático, para la Gerencia. \\
+Mensual & Reinicio de mantenimiento y apertura de la bóveda. & El operador y un segundo custodio, con guía paso a paso. \\
+Por período & Revisión de cuentas, roles, asignaciones y declaraciones de vínculos; calibración de umbrales. & La Gerencia, con el reporte que genera el sistema. \\
+Semestral & Prueba de restauración en un servidor limpio. & El operador, con guía. \\
+Anual & Rotación de la llave de sello; activación de las cuentas de auditor. & La Gerencia y los custodios. \\
+Extraordinaria & Cambio de versión mayor, incidente de seguridad, prueba de penetración. & Soporte especializado, por contrato. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+%---------------------------------------------------------------------
+\section*{Anexo C. Respuestas del cliente y supuestos declarados}
+\addcontentsline{toc}{section}{Anexo C. Respuestas del cliente y supuestos declarados}
+
+La primera versión de este documento se escribió con supuestos de trabajo. El cliente respondió por
+escrito catorce de las veintiséis consultas del equipo; la minuta completa es el Anexo~A del informe
+de políticas. Estas son las respuestas que tocan la arquitectura.
+
+{\small
+\renewcommand{\arraystretch}{1.22}
+\begin{longtable}{@{}L{1.2cm} L{4.2cm} L{5.4cm} L{4.6cm}@{}}
+\toprule
+\cab{Consulta} & \cab{Supuesto original} & \cab{Lo que respondió el cliente} & \cab{Qué cambió aquí} \\
+\midrule
+\endfirsthead
+\toprule
+\cab{Consulta} & \cab{Supuesto original} & \cab{Lo que respondió el cliente} & \cab{Qué cambió aquí} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+P-02 & Decenas de usuarios. & No hay cifras; documentar supuestos de capacidad. & Supuestos declarados (sección 1 y Anexo~B.1). \\
+P-04 & El certificado se sella con una llave de la empresa. & Interesa demostrar autenticidad, estado y quién autorizó; valorar la firma digital. & Sección~\ref{sec:certificado}; componente de comprobación pública; RR-13. \\
+P-06 & Lo no aprobado al cierre queda excluido. & La revisión puede terminar después del cierre. & Estados de la medición y del período (Anexo~A.3). \\
+P-07, P-08 & La enmienda se autoriza y luego se verifica; el certificado se revoca y se reemite. & Revisión técnica antes de la autorización final; nunca dos certificados vigentes. & Estados de la enmienda y del certificado (Anexo~A.3); revocar y emitir en una transacción. \\
+P-15 & El diseño no guardaba vínculos. & No existe un registro formal de vínculos entre empleados y dueños. & Datos de la regla C17; RR-11. \\
+P-18 & Sin copias para los auditores. & A veces exportan evidencia; acceso en sitio o remoto. & Registro de paquetes exportados (C18). \\
+P-22 & El técnico registra en línea. & Señal inestable, registro posterior, equipos distintos; sin aplicación sin conexión. & Sección~\ref{sec:fechas}; frontera F1; RR-4 y RR-8. \\
+P-23 & Un servidor que opera un proveedor; sin llaves físicas. & Hospedaje por decidir; operación por personal designado, sin especialistas; sin presupuesto para llaves. & Sección~\ref{sec:hospedaje}; Anexo~B.2; RR-7 y RR-12. \\
+\end{longtable}
+}
+
+\textbf{Supuestos que el equipo fijó}, porque el cliente no respondió la consulta:
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.22}
+\begin{tabularx}{\textwidth}{@{}L{1.2cm} L{6.6cm} Y@{}}
+\toprule
+\cab{Consulta} & \cab{Supuesto declarado} & \cab{Qué cambia si es otro} \\
+\midrule
+P-19 & Las consultas se conservan dos años; los cambios y decisiones, diez. & La partición y el archivo de la bitácora. \\
+P-21 & Una hectárea se identifica por la geometría de su parcela. & La restricción espacial de la regla C11. \\
+P-24 & Se tolera un día de interrupción; no se tolera perder datos. & Si no se tolera, hace falta un segundo servidor (RR-6). \\
+P-26 & El histórico se migra una vez y queda marcado. & El riesgo RR-9. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+%=====================================================================
+\section*{Referencias}
+\addcontentsline{toc}{section}{Referencias}
+
+{\small
+\setlength{\parskip}{0.45em}
+\emergencystretch=3em
+\everypar{\hangindent=1.5em\hangafter=1}
+
+Adams, C., Cain, P., Pinkas, D., \& Zuccherato, R. (2001). \emph{Internet X.509 public key
+infrastructure time-stamp protocol (TSP)} (RFC 3161). Internet Engineering Task Force.
+\url{https://doi.org/10.17487/RFC3161}
+
+AlmaLinux OS Foundation. (2026). \emph{AlmaLinux 10.2 release notes}.
+\url{https://wiki.almalinux.org/release-notes/10.2.html}
+
+Biryukov, A., Dinu, D., Khovratovich, D., \& Josefsson, S. (2021). \emph{Argon2 memory-hard function
+for password hashing and proof-of-work applications} (RFC 9106). Internet Research Task Force.
+\url{https://doi.org/10.17487/RFC9106}
+
+Django Software Foundation. (2026). \emph{Security in Django} (versión 5.2) [Documentación].
+\url{https://docs.djangoproject.com/en/5.2/topics/security/}
+
+Hu, V. C., Ferraiolo, D., Kuhn, R., Schnitzer, A., Sandlin, K., Miller, R., \& Scarfone, K. (2014).
+\emph{Guide to attribute based access control (ABAC) definition and considerations} (NIST SP 800-162).
+National Institute of Standards and Technology. \url{https://doi.org/10.6028/NIST.SP.800-162}
+
+Morris, R., \& Thompson, K. (1979). Password security: A case history. \emph{Communications of the ACM,
+22}(11), 594--597. \url{https://doi.org/10.1145/359168.359172}
+
+Open Policy Agent. (2026). \emph{Open Policy Agent documentation} (versión 1.21) [Documentación].
+\url{https://www.openpolicyagent.org/docs/}
+
+OpenBao. (2026). \emph{OpenBao documentation} (versión 2.7) [Documentación].
+\url{https://openbao.org/docs/}
+
+OWASP Foundation. (2023). \emph{OWASP API security top 10: API1:2023 broken object level
+authorization}. \url{https://owasp.org/API-Security/editions/2023/en/0xa1-broken-object-level-authorization/}
+
+OWASP Foundation. (s.\,f.). \emph{Password storage cheat sheet}. OWASP Cheat Sheet Series. Recuperado el
+1 de octubre de 2026, de
+\url{https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html}
+
+Podman. (2026). \emph{Podman documentation} [Documentación]. \url{https://docs.podman.io/}
+
+PostgreSQL Global Development Group. (2026). \emph{PostgreSQL 18 documentation: Row security policies}
+[Documentación]. \url{https://www.postgresql.org/docs/18/ddl-rowsecurity.html}
+
+Saltzer, J. H., \& Schroeder, M. D. (1975). The protection of information in computer systems.
+\emph{Proceedings of the IEEE, 63}(9), 1278--1308. \url{https://doi.org/10.1109/PROC.1975.9939}
+
+Schneier, B., \& Kelsey, J. (1999). Secure audit logs to support computer forensics. \emph{ACM
+Transactions on Information and System Security, 2}(2), 159--176.
+\url{https://doi.org/10.1145/317087.317089}
+
+Vargas Rivera, A. (2026). \emph{Material de estudio, clases 2, 10, 12, 13 y 14} [Material de clase].
+Curso CE-1115 Seguridad de la Información, Instituto Tecnológico de Costa Rica.
+
+}
+
+\end{document}

@@ -1,0 +1,877 @@
+%=====================================================================
+%  CE-1115 Seguridad de la Informacion -- Proyecto, Parte 1
+%  Entregable 3: Matriz de control de acceso
+%  Cliente: Verdeazul Carbono S.A.
+%  Tecnologico de Costa Rica -- Escuela de Ingenieria en Computadores
+%  Prof. MSc. Andres Vargas Rivera -- Semestre II, 2026
+%
+%  Compilar dos veces:  pdflatex P1_Matriz_grupo6.tex
+%  Las respuestas del cliente estan en la minuta (Anexo A de P1_Politicas).
+%=====================================================================
+\documentclass[11pt,letterpaper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-noshorthands,es-tabla]{babel}
+\usepackage{XCharter}
+\usepackage[defaultsans,scale=0.92]{lato}
+\usepackage[scaled=0.9]{inconsolata}
+\usepackage[letterpaper,margin=2.4cm,headheight=15pt]{geometry}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{booktabs,tabularx,array,longtable,multirow}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{pdflscape}
+\usepackage[most]{tcolorbox}
+\usepackage{caption}
+\usepackage[hidelinks]{hyperref}
+
+%--------------------------- datos del grupo -------------------------
+\newcommand{\numgrupo}{6}
+\newcommand{\titulodoc}{Matriz de control de acceso}
+\newcommand{\titulocorto}{Matriz de control de acceso}
+\newcommand{\numentregable}{3}
+\newcommand{\fechaentrega}{15 de octubre de 2026}
+
+%--------------------------- color y estilo --------------------------
+\definecolor{vz}{HTML}{0F6E6A}        % acento unico (verde azulado)
+\definecolor{vzclaro}{HTML}{E7F2F1}
+\definecolor{tinta}{HTML}{1A1A1A}
+\definecolor{gris}{HTML}{5F5E5A}
+\definecolor{regla}{HTML}{B9B8B0}
+\definecolor{negado}{HTML}{F2F1EC}
+\color{tinta}
+
+\titleformat{\section}{\Large\sffamily\bfseries\color{vz}}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\large\sffamily\bfseries\color{tinta}}{\thesubsection}{0.6em}{}
+\titlespacing*{\section}{0pt}{1.4em}{0.5em}
+\titlespacing*{\subsection}{0pt}{1.0em}{0.3em}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.55em}
+\setlist{leftmargin=1.5em,itemsep=2pt,topsep=3pt,parsep=0pt}
+\captionsetup{font={small,sf},labelfont={bf,color=vz},skip=5pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\sffamily\color{gris}CE-1115 $\cdot$ Proyecto Parte 1 $\cdot$ Grupo \numgrupo}
+\fancyhead[R]{\small\sffamily\color{gris}\titulocorto}
+\fancyfoot[C]{\small\sffamily\color{gris}\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{regla}\leaders\hrule height \headrulewidth\hfill}}
+
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcommand{\cab}[1]{\textbf{\sffamily #1}}
+
+% Trazabilidad con la consulta al cliente (minuta: Anexo A de P1_Politicas)
+%   \resp{P-07}: la regla sale de una respuesta del cliente
+%   \supu{P-13}: supuesto que el equipo fijo y documento
+\newcommand{\resp}[1]{\textsf{\footnotesize\bfseries\color{vz}[minuta #1]}}
+\newcommand{\supu}[1]{\textsf{\footnotesize\color{gris}[supuesto #1]}}
+\newtcolorbox{decision}{enhanced,breakable,colback=vzclaro,colframe=vz,
+  boxrule=0pt,leftrule=3pt,arc=0pt,left=8pt,right=8pt,top=5pt,bottom=5pt}
+
+% Notacion de la matriz
+\newcommand{\cnd}[1]{\textsuperscript{\sffamily\bfseries\color{vz}#1}}   % condicion
+\newcommand{\no}{\cellcolor{negado}\textcolor{gris}{---}}                  % sin acceso
+\newcommand{\rol}[1]{\textsf{\bfseries #1}}
+\newcommand{\est}[1]{\textsc{\small #1}}
+
+\begin{document}
+
+%=====================================================================
+%  PORTADA
+%=====================================================================
+\begin{titlepage}
+\centering
+\vspace*{0.6cm}
+{\large\scshape Instituto Tecnológico de Costa Rica}\\[0.2cm]
+{\large\scshape Escuela de Ingeniería en Computadores}\\[0.2cm]
+{\large CE-1115 Seguridad de la Información}\\[1.5cm]
+
+{\color{vz}\rule{\textwidth}{1.4pt}}\\[0.6cm]
+{\sffamily\large Proyecto $\cdot$ Parte 1 $\cdot$ Diseño del control de acceso}\\[0.45cm]
+{\sffamily\bfseries\fontsize{24}{29}\selectfont \titulodoc}\\[0.45cm]
+{\sffamily\large Entregable \numentregable\ de 5}\\[0.6cm]
+{\color{vz}\rule{\textwidth}{1.4pt}}\\[1.2cm]
+
+{\large\bfseries Cliente}\\[0.25cm]
+{\large Verdeazul Carbono S.A.}\\[0.1cm]
+{Certificación de captura de carbono $\cdot$ Pérez Zeledón, Costa Rica}\\[1.2cm]
+
+{\large\bfseries Grupo \numgrupo}\\[0.4cm]
+\begin{tabular}{@{}l@{\hspace{1.4cm}}l@{}}
+\toprule
+\textbf{Integrante} & \textbf{Carné} \\
+\midrule
+Randall Bryan Bolaños López & 2019043784 \\
+Javier Tenorio Cervantes    & 2020065308 \\
+Julio Varela Venegas        & 2019008041 \\
+Axel Flores Lara            & 2021453573 \\
+\bottomrule
+\end{tabular}\\[1.2cm]
+
+{\large Prof. MSc. Andrés Vargas Rivera}\\[0.15cm]
+{\large Semestre II, 2026}
+
+\vfill
+{\large\bfseries Fecha de entrega: \fechaentrega}
+\end{titlepage}
+
+\pagenumbering{roman}
+\tableofcontents
+\newpage
+\pagenumbering{arabic}
+
+%=====================================================================
+\section{Cómo se lee esta matriz}
+%=====================================================================
+
+Esta es la versión comprobable del diseño: cada decisión del documento de control de acceso
+(Entregable~2) termina aquí convertida en una celda. Las filas son los
+\textbf{sujetos}, las columnas son los \textbf{objetos} y cada celda dice qué puede hacer ese sujeto
+sobre ese objeto.
+
+Tres reglas de lectura valen para toda la matriz:
+
+\begin{enumerate}
+\item \textbf{Lo que no está escrito está denegado.} El sistema niega por omisión. Una celda con
+      \colorbox{negado}{\textcolor{gris}{---}} significa que el sujeto no tiene ningún permiso sobre el objeto, y
+      dentro de una celda con permisos, toda operación que no aparezca también se deniega.
+\item \textbf{Una condición solo puede quitar.} Un permiso con una marca \cnd{C$n$} se concede
+      únicamente si la regla C$n$ de la sección~\ref{sec:reglas} se cumple en ese momento. Las
+      condiciones nunca amplían lo que el rol permite.
+\item \textbf{La marca \cnd{H} indica vigilancia por historial.} Las lecturas marcadas pasan además por los
+      controles H1 a H3 (frecuencia, horario y combinación de ambos), que responden de forma graduada:
+      avisan, piden una confirmación adicional o restringen por un tiempo.
+\end{enumerate}
+
+Las marcas como \resp{P-07} indican que la regla sale de una respuesta del cliente, recogida en la
+minuta (Anexo~A del informe de políticas). Las marcas como \supu{P-13} indican un supuesto que el
+equipo fijó y documentó porque el cliente no dio el dato. El resumen está en la sección~\ref{sec:minuta}.
+
+\subsection{Sujetos}
+
+\begin{center}
+\small
+\begin{tabularx}{\textwidth}{@{}L{1.1cm} L{3.7cm} Y@{}}
+\toprule
+\cab{Sigla} & \cab{Sujeto} & \cab{Quién es en Verdeazul} \\
+\midrule
+\rol{TEC} & Técnico de campo & Visita la finca, mide y registra. Trabaja con las fincas que tiene asignadas. \\
+\rol{VER} & Verificador & Revisa la medición desde la oficina y la aprueba o la devuelve. Por excepción puede medir, con una habilitación temporal de técnico. \resp{P-01} \\
+\rol{SUP} & Supervisor de campo & Coordina al personal de campo: asigna y reasigna las fincas y atiende las alertas de sus técnicos. \resp{P-05} \\
+\rol{GER} & Gerencia de Certificación & Responsable del dato. Incluye a la coordinación de certificación: decide los períodos y da la autorización final de las enmiendas y la segunda firma. \resp{P-05, P-07} \\
+\rol{ADM} & Administrador de catálogo y cuentas & Personal administrativo: mantiene el catálogo de fincas, registra los períodos y da de alta y de baja las cuentas. \\
+\rol{AUD} & Auditor externo & Revisa una vez al año, en sitio o a distancia. Ve todo, exporta evidencia y no modifica nada. \resp{P-18} \\
+\rol{DUE} & Dueño de finca & El titular, persona física o sociedad, o su representante autorizado. Consulta lo de sus fincas. \resp{P-15} \\
+\rol{SIS} & Procesos del sistema & Emisión de certificados, escritura de la bitácora y motor de alertas. No hay una persona detrás. \\
+\rol{OPE} & Operador de plataforma & Personal que la empresa designa para administrar servidores y respaldos. No tiene cuenta en la aplicación. \resp{P-23} \\
+\rol{PUB} & Público sin autenticar & Cualquiera que tenga en la mano el código de un certificado, por ejemplo un comprador. \resp{P-04} \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+Los siete primeros son los roles del modelo RBAC. \rol{SIS} es una identidad de servicio. \rol{OPE} y
+\rol{PUB} aparecen en la matriz para dejar escrito qué no pueden hacer: quien custodia la
+infraestructura no tiene permisos sobre los datos del negocio, y quien no se identifica solo puede
+comprobar un certificado.
+
+\subsection{Objetos}
+
+\begin{center}
+\small
+\begin{tabularx}{\textwidth}{@{}L{4.3cm} Y@{}}
+\toprule
+\cab{Objeto} & \cab{Qué contiene} \\
+\midrule
+Fincas y parcelas & Catálogo: finca, parcelas con su geometría y área, ubicación y titular asociado. \\
+Datos personales del dueño & Identificación y contacto del titular y de sus representantes. \\
+Períodos de medición & Fechas de inicio, de fin de medición y de cierre de registro, y estado: \est{planificado}, \est{abierto}, \est{cerrado}. \\
+Asignaciones & Qué técnico mide qué finca: \emph{ordinaria}, por el período, o \emph{temporal} (apoyo, sustitución o visita extraordinaria), con fecha de fin. \\
+Mediciones & Registro de campo por parcela y período, con todas sus versiones, su fecha de medición y de registro, y su estado: \est{borrador}, \est{enviada}, \est{devuelta}, \est{aprobada}, \est{excluida}. \\
+Enmiendas & Solicitud, corrección propuesta, revisión técnica y autorización final de un cambio sobre una medición aprobada o de un período cerrado. \\
+Certificados & Certificados de carbono emitidos, \est{vigente} o \est{revocado}, con el enlace entre el revocado y su reemplazo. \\
+Cuentas y roles & Usuarios, su rol, su vigencia, sus credenciales y los vínculos que declaran con titulares. \\
+Bitácora & Registro de quién hizo o consultó qué, cuándo y con qué resultado. \\
+Alertas de historial & Avisos que generan los controles H1 a H3, con su nivel y su resolución. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\subsection{Permisos}
+
+Se usan los verbos del dominio en lugar de siglas, para que la matriz se pueda leer proyectada:
+\textbf{leer}, \textbf{crear}, \textbf{modificar}, \textbf{eliminar} y \textbf{aprobar}, más los que el negocio
+necesita: \textbf{enviar} y \textbf{devolver} una medición; \textbf{solicitar}, \textbf{corregir}, \textbf{revisar} y
+\textbf{autorizar} una enmienda; \textbf{emitir} y \textbf{revocar} un certificado; \textbf{abrir} y \textbf{cerrar} un
+período; \textbf{proponer} un cambio que otra persona debe aprobar; \textbf{desactivar} una cuenta;
+\textbf{resolver} una alerta; \textbf{exportar} evidencia; \textbf{comprobar} un certificado y \textbf{anexar} a la
+bitácora.
+
+El permiso \textbf{eliminar} no aparece en ninguna celda de mediciones, enmiendas, certificados,
+cuentas ni bitácora. Es una decisión de diseño: en esos objetos nada se borra, todo cambio queda como
+una versión nueva o como un cambio de estado.
+
+%=====================================================================
+\begin{landscape}
+\section{La matriz}
+\label{sec:matriz}
+
+\vspace{-0.5em}
+{\small\sffamily
+\renewcommand{\arraystretch}{1.1}
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabularx}{\linewidth}{@{}>{\bfseries}L{1.15cm}|Y|Y|Y|Y|Y|Y|Y|Y|Y|Y@{}}
+\arrayrulecolor{regla}
+\rowcolor{vzclaro}
+{\normalfont\scriptsize\sffamily\color{gris}Sujeto\newline$\downarrow$} & \cab{Fincas y parcelas} & \cab{Datos pers. del dueño} & \cab{Períodos de medición} & \cab{Asigna\-ciones} & \cab{Mediciones} & \cab{Enmiendas} & \cab{Certificados} & \cab{Cuentas y roles} & \cab{Bitácora} & \cab{Alertas de historial} \\
+\hline
+TEC &
+leer\cnd{C1} &
+leer\cnd{C1}\newline{\scriptsize solo contacto} &
+leer &
+leer\cnd{C1}\newline{\scriptsize las propias} &
+leer\cnd{C1}\newline crear\cnd{C2}\newline modificar\cnd{C2}\newline enviar\cnd{C2} &
+leer\cnd{C1}\newline solicitar\cnd{C7}\newline corregir\cnd{C9} &
+\no &
+modificar\cnd{C13} &
+\no &
+\no \\
+\hline
+VER &
+leer\cnd{H} &
+\no &
+leer &
+\no &
+leer\cnd{H}\newline aprobar\cnd{C3}\newline devolver\cnd{C3} &
+leer\newline solicitar\cnd{C7}\newline revisar\cnd{C10} &
+leer\cnd{H} &
+modificar\cnd{C13} &
+\no &
+\no \\
+\hline
+SUP &
+leer\cnd{H} &
+\no &
+leer &
+leer\newline crear\cnd{C19}\newline modificar\cnd{C19} &
+leer\cnd{H}\newline{\scriptsize solo estado y fechas} &
+leer\newline{\scriptsize solo estado} &
+\no &
+modificar\cnd{C13} &
+\no &
+leer\cnd{C15}\newline resolver\cnd{C15} \\
+\hline
+GER &
+leer\cnd{H}\newline aprobar\cnd{C11} &
+leer\cnd{H} &
+leer\newline abrir\cnd{C14}\newline cerrar\cnd{C14} &
+leer &
+leer\cnd{H} &
+leer\newline solicitar\cnd{C7}\newline autorizar\cnd{C8} &
+leer\cnd{H} &
+leer\newline aprobar\cnd{C12}\newline modificar\cnd{C13} &
+leer &
+leer\newline resolver\cnd{C15} \\
+\hline
+ADM &
+leer\cnd{H}\newline proponer\cnd{C11} &
+leer\cnd{H}\newline crear\newline modificar\newline eliminar\cnd{C16} &
+leer\newline crear\newline proponer\cnd{C14} &
+\no &
+\no &
+\no &
+\no &
+leer\newline crear\cnd{C12}\newline desactivar\cnd{C12}\newline proponer\cnd{C12}\newline modificar\cnd{C13} &
+\no &
+\no \\
+\hline
+AUD &
+leer\cnd{C6}\newline exportar\cnd{C18} &
+leer\cnd{C6} &
+leer\cnd{C6}\newline exportar\cnd{C18} &
+leer\cnd{C6}\newline exportar\cnd{C18} &
+leer\cnd{C6}\newline exportar\cnd{C18} &
+leer\cnd{C6}\newline exportar\cnd{C18} &
+leer\cnd{C6}\newline exportar\cnd{C18} &
+leer\cnd{C6}\newline modificar\cnd{C13} &
+leer\cnd{C6}\newline exportar\cnd{C18} &
+leer\cnd{C6}\newline exportar\cnd{C18} \\
+\hline
+DUE &
+leer\cnd{C5} &
+leer\cnd{C5} &
+leer &
+leer\cnd{C5} &
+leer\cnd{C5}\newline{\scriptsize solo aprobadas} &
+leer\cnd{C5} &
+leer\cnd{C5} &
+modificar\cnd{C13} &
+\no &
+\no \\
+\hline
+SIS &
+leer &
+leer\newline{\scriptsize solo nombre del titular} &
+leer &
+leer &
+leer &
+leer &
+emitir\cnd{C4}\newline revocar\cnd{C4} &
+\no &
+anexar &
+crear \\
+\hline
+OPE & \no & \no & \no & \no & \no & \no & \no & \no & \no & \no \\
+\hline
+PUB & \no & \no & \no & \no & \no & \no & comprobar\cnd{C20} & \no & \no & \no \\
+\end{tabularx}
+}
+
+\vspace{0.2em}
+{\footnotesize\sffamily
+\textbf{Leyenda.}\quad
+\colorbox{negado}{\textcolor{gris}{---}} sin acceso: se deniega.\quad
+\cnd{C$n$} permiso sujeto a la regla C$n$ (sección~\ref{sec:reglas}).\quad
+\cnd{H} lectura vigilada por los controles de historial H1 a H3.\quad
+Toda operación no escrita en una celda está denegada.\quad
+\textbf{C17} (abstención por vínculo) condiciona además todo verbo que no sea \emph{leer} de TEC, VER, SUP, GER y ADM
+sobre fincas, asignaciones, mediciones y enmiendas.\quad
+\emph{Aprobar}, \emph{devolver}, \emph{revisar}, \emph{autorizar}, \emph{abrir}, \emph{cerrar}, \emph{resolver} y \emph{exportar}
+exigen reautenticación con segundo factor en los cinco minutos previos.\quad
+\textbf{OPE:} su acceso a la infraestructura se trata en el documento de arquitectura.}
+\end{landscape}
+
+%=====================================================================
+\section{Reglas de las celdas condicionadas}
+\label{sec:reglas}
+%=====================================================================
+
+Cada regla se escribe de forma que se pueda comprobar con un caso de prueba: dada una situación
+concreta, el sistema concede o deniega. En las reglas, $s$ es el sujeto que hace la petición, $m$ una
+medición, $e$ una enmienda y $\mathit{Autores}(m)$ es el conjunto de personas que registraron o
+modificaron cualquier versión de $m$. La columna \emph{Depende de} indica si la regla mira el
+\textbf{estado} del sistema, el \textbf{historial} del sujeto o un \textbf{atributo} del objeto.
+
+{\small
+\renewcommand{\arraystretch}{1.25}
+\begin{longtable}{@{}L{0.8cm} L{2.5cm} L{8.0cm} L{1.7cm} L{1.95cm}@{}}
+\toprule
+\cab{Id.} & \cab{Nombre} & \cab{Regla: el permiso se concede solo si\ldots} & \cab{Depende de} & \cab{Celdas} \\
+\midrule
+\endfirsthead
+\toprule
+\cab{Id.} & \cab{Nombre} & \cab{Regla: el permiso se concede solo si\ldots} & \cab{Depende de} & \cab{Celdas} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+
+C1 & Asignación vigente &
+existe una asignación de $s$ a la finca del objeto y la fecha actual cae dentro de su vigencia: la
+\emph{ordinaria} vale mientras el período esté \est{abierto}; la \emph{temporal}, hasta su fecha de fin.
+También si $s$ es el técnico que debe corregir una enmienda en trámite sobre esa finca. Además,
+siempre puede leer las mediciones que él mismo registró. \resp{P-11} &
+Estado, atributo y tiempo &
+TEC: fincas, datos, asignaciones, mediciones, enmiendas \\
+
+C2 & Edición solo en borrador &
+se cumple C1, el período de $m$ está \est{abierto}, $m$ está en \est{borrador} o \est{devuelta}, y
+$s$ es su autor o el técnico a quien SUP reasignó la finca; en ese caso el cambio es una versión
+nueva, con $s$ como autor. La fecha de medición que $s$ declara cae dentro del período y de su
+asignación, y no es posterior a la de registro, que pone el servidor. \emph{Enviar} pasa $m$ a
+\est{enviada} y la deja fuera del alcance del técnico. \resp{P-22} &
+Estado e historial &
+TEC: mediciones \\
+
+C3 & Quien registró no aprueba &
+$m$ está \est{enviada} y $s \notin \mathit{Autores}(m)$. Vale con el período \est{abierto} o ya
+\est{cerrado}: el cierre detiene el registro, no la revisión de lo que se envió a tiempo. La regla
+mira todas las versiones: vale aunque $s$ haya cambiado de rol o haya medido con una habilitación
+temporal. \resp{P-01, P-06} &
+Historial y estado &
+VER: mediciones \\
+
+C4 & Emisión única &
+la medición está \est{aprobada}, quien la aprobó no está en $\mathit{Autores}(m)$ y \textbf{no existe otro
+certificado \est{vigente} para la misma parcela y el mismo período}. \emph{Revocar} solo ocurre por
+una enmienda autorizada (C8) que cambia las toneladas certificadas: en una sola transacción el
+certificado anterior pasa a \est{revocado} y se emite el nuevo, enlazados entre sí. Si las toneladas
+no cambian, el certificado sigue \est{vigente} y se le anota la enmienda. Ninguno se borra. \resp{P-08} &
+Estado &
+SIS: certificados \\
+
+C5 & Solo lo suyo &
+$s$ tiene una relación vigente con el titular de la finca a la que pertenece el objeto: es el titular
+o un representante que este autorizó. El titular puede ser una persona física o una sociedad, y tener
+varias fincas. En mediciones, además, solo las que están \est{aprobadas}. \resp{P-15} \supu{P-16} &
+Atributo &
+DUE: todas sus lecturas \\
+
+C6 & Ventana de auditoría &
+la fecha actual está dentro de la ventana de vigencia de la cuenta de auditor, que GER fija al
+activarla. Fuera de la ventana la cuenta no puede iniciar sesión, ni en sitio ni a distancia.
+Prorrogarla es una autorización nueva de GER. \resp{P-18} &
+Estado (tiempo) &
+AUD: todas \\
+
+C7 & Solicitar enmienda &
+$m$ está \est{aprobada}, o su período está \est{cerrado} y $m$ quedó \est{devuelta} o
+\est{excluida}. La solicita el técnico responsable de $m$ (TEC), un verificador (VER) o la Gerencia
+(GER), con el error que encontró y su evidencia. \resp{P-07} &
+Estado e historial &
+TEC, VER, GER: enmiendas \\
+
+C8 & Autorización final &
+$e$ tiene dictamen técnico favorable (C10) y $s$ no la solicitó, no la revisó ni figura en
+$\mathit{Autores}(m)$. Si $e$ revoca un certificado, $s$ deja registrado si ya fue comercializado y qué
+se acordó con el dueño. \resp{P-07, P-08} &
+Historial y estado &
+GER: enmiendas \\
+
+C9 & Corregir dentro del plazo &
+$e$ está \est{solicitada}, $s$ es el técnico responsable de $m$ o el que SUP designó en su ausencia,
+y no han pasado 10 días hábiles desde la solicitud. La corrección se guarda como versión
+\emph{propuesta}: la versión vigente no cambia hasta la autorización final. \resp{P-03} &
+Estado (tiempo) &
+TEC: enmiendas \\
+
+C10 & Revisión técnica independiente &
+$e$ tiene su corrección registrada, $s \notin \mathit{Autores}(m)$ y $s$ no es quien solicitó $e$. Si
+la enmienda es \emph{material} (cambia un dato que entra en el cálculo de las toneladas, o $m$ ya
+tiene un certificado emitido), $s$ tampoco es quien aprobó la versión que se corrige. La
+clasificación la calcula el sistema al comparar las dos versiones. \resp{P-07} &
+Historial &
+VER: enmiendas \\
+
+C11 & Catálogo con segunda firma &
+el alta de una finca, el cambio de titular y todo cambio de geometría o área que propone ADM quedan en
+estado \est{propuesto} y solo surten efecto cuando GER los aprueba. El sistema rechaza una parcela
+cuya geometría se traslape con otra parcela activa. Una parcela con mediciones o certificados no se
+edita: se crea una versión nueva. \supu{P-21} &
+Estado &
+ADM y GER: fincas \\
+
+C12 & Nadie se administra a sí mismo &
+la cuenta afectada no es la de $s$. Asignar los roles TEC, VER, SUP, GER, ADM o AUD es una propuesta de
+ADM que solo surte efecto cuando la aprueba GER, y quien aprueba no es ni quien propone ni el titular de
+la cuenta. La habilitación temporal de técnico para un verificador sigue la misma vía y lleva fecha
+de fin. El sistema rechaza toda asignación que viole las restricciones de la
+sección~\ref{sec:exclusion}. \resp{P-01} \supu{P-20} &
+Atributo e historial &
+ADM y GER: cuentas y roles \\
+
+C13 & Credenciales y declaración propias &
+la cuenta es la de $s$ y el cambio se limita a su contraseña, sus factores de autenticación y su
+declaración de vínculos con titulares. La declaración se puede ampliar; retirar un vínculo lo aprueba
+GER. &
+Atributo &
+Todos los roles: cuentas \\
+
+C14 & Apertura y cierre entre dos &
+ADM registró la apertura o el cierre con las fechas que indicó la coordinación de certificación, y
+GER lo aprueba: ninguno de los dos pasos basta solo. No existe la operación \emph{reabrir}. Al cerrar,
+lo \est{enviado} sigue su revisión (C3), los borradores que nunca se enviaron pasan a \est{excluida}
+y lo \est{devuelto} solo cambia por enmienda. \resp{P-05, P-06} &
+Estado &
+ADM y GER: períodos \\
+
+C15 & Alertas ajenas &
+el sujeto de la alerta no es $s$. SUP atiende las de los técnicos que tiene a cargo; GER, las de todos
+los demás y las que SUP no resuelva en dos días hábiles. Las alertas sobre GER se notifican a la
+Gerencia General y quedan visibles para el auditor externo. \resp{P-10} &
+Atributo &
+SUP y GER: alertas \\
+
+C16 & Supresión condicionada &
+no hay obligación vigente de conservar el dato: los datos personales ligados a un certificado emitido
+se conservan mientras dure la trazabilidad exigida y después se desasocian del titular. &
+Estado (tiempo) &
+ADM: datos personales \\
+
+C17 & Abstención por vínculo &
+$s$ no tiene declarado un vínculo familiar o comercial con el titular de la finca del objeto. Quien
+lo tiene no mide, no aprueba, no asigna, no revisa ni autoriza nada sobre esa finca: el sistema lo
+pasa a otra persona. \resp{P-15} &
+Atributo &
+Las que indica la leyenda de la matriz \\
+
+C18 & Exportar evidencia &
+se cumple C6 y lo exportado es un paquete que genera el sistema: va sellado, lleva la identidad del
+auditor y su huella queda en la bitácora. El titular aparece por su código; los datos personales no
+se exportan. \resp{P-18} &
+Estado (tiempo) &
+AUD: todas menos datos personales y cuentas \\
+
+C19 & Asignar con vigencia &
+el asignado tiene el rol TEC vigente, propio o por habilitación temporal, y no es $s$. La asignación
+es ordinaria, por el período, o temporal, con motivo y fecha de fin: 15 días como máximo, renovable.
+\resp{P-05, P-11} &
+Atributo y tiempo &
+SUP: asignaciones \\
+
+C20 & Comprobación pública &
+quien consulta presenta el código impreso en el certificado. Recibe solo si el sello es válido, el
+estado, las toneladas, el período y, si fue revocado, el código del que lo reemplaza. No hay
+listados, búsquedas ni datos del titular. \resp{P-04} &
+Atributo &
+PUB: certificados \\
+\end{longtable}
+}
+
+\textbf{Controles de historial sobre las lecturas marcadas con \cnd{H}.} Su definición completa está en el
+documento de control de acceso; aquí se resume lo necesario para comprobarlos. Los umbrales son
+parámetros por rol que aprueba GER, no constantes. \resp{P-02}
+
+{\small
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{@{}L{0.75cm} L{2.0cm} Y L{4.6cm}@{}}
+\toprule
+\cab{Id.} & \cab{Tipo} & \cab{Regla} & \cab{Decisión} \\
+\midrule
+H1 & Frecuencia &
+Número de fincas distintas cuyo detalle consultó $s$ en las últimas 24 horas, comparado con los tres
+umbrales de su rol. Los intentos denegados por C1 o C5 cuentan doble. \resp{P-10} \supu{P-13} &
+Conceder; conceder y avisar; conceder con segundo factor y motivo; o restringir las fincas nuevas
+hasta el siguiente día hábil. \\
+H2 & Tiempo &
+Una acción de decisión se pide fuera de la jornada del rol. \supu{P-12} &
+Conceder con segundo factor y motivo. \\
+H3 & Combinada &
+Fuera de jornada, más fincas distintas en 60 minutos que el umbral (inicial: 10) y la mayoría nunca
+consultadas por $s$ en los últimos 90 días. \resp{P-10} &
+Conceder con segundo factor y motivo, y avisar de inmediato. Si la pauta sigue, restringir las
+fincas nuevas hasta el siguiente día hábil. \\
+H4 & Secuencia &
+Quien participó en un paso anterior del flujo no decide el siguiente. Es el nombre que reciben, como
+control de historial, las reglas C3, C8 y C10. &
+Denegar. \\
+\bottomrule
+\end{tabularx}
+}
+
+%=====================================================================
+\section{Restricciones entre roles}
+\label{sec:exclusion}
+%=====================================================================
+
+La matriz supone que una persona tiene una sola identidad en el sistema y que los roles no se
+acumulan. Son las restricciones del nivel RBAC$_2$ de Sandhu \emph{et al.} (1996), y el sistema las
+valida cada vez que se asigna un rol (regla C12).
+
+\begin{center}
+\small\sffamily
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{@{}l|c|c|c|c|c|c|c@{}}
+ & TEC & VER & SUP & GER & ADM & AUD & DUE \\
+\hline
+TEC & \cellcolor{negado} & \textbf{\color{vz}D} & $\times$ & $\times$ & $\times$ & $\times$ & $\times$ \\
+\hline
+VER & \textbf{\color{vz}D} & \cellcolor{negado} & $\times$ & $\times$ & $\times$ & $\times$ & $\times$ \\
+\hline
+SUP & $\times$ & $\times$ & \cellcolor{negado} & $\times$ & $\times$ & $\times$ & $\times$ \\
+\hline
+GER & $\times$ & $\times$ & $\times$ & \cellcolor{negado} & $\times$ & $\times$ & $\times$ \\
+\hline
+ADM & $\times$ & $\times$ & $\times$ & $\times$ & \cellcolor{negado} & $\times$ & $\times$ \\
+\hline
+AUD & $\times$ & $\times$ & $\times$ & $\times$ & $\times$ & \cellcolor{negado} & $\times$ \\
+\hline
+DUE & $\times$ & $\times$ & $\times$ & $\times$ & $\times$ & $\times$ & \cellcolor{negado} \\
+\end{tabular}
+
+\vspace{0.3em}
+{\footnotesize $\times$ = exclusión estática: ninguna persona puede tener ambos roles.\quad
+\textbf{\color{vz}D} = exclusión dinámica: una persona puede tener ambos, pero nunca activos en la misma sesión.}
+\end{center}
+
+\begin{itemize}
+\item \textbf{Un rol por persona, con una sola excepción.} El cliente confirmó que algunos verificadores
+      fueron técnicos y que, en situaciones excepcionales, pueden colaborar midiendo. Un verificador
+      puede recibir una \textbf{habilitación temporal de técnico}, con fecha de fin, que propone ADM y
+      aprueba GER (C12). Mientras dure, entra como técnico o como verificador, nunca como ambos a la
+      vez. La separación no descansa en esa casilla sino en la regla C3, que mira cada medición: lo
+      que midió con la habilitación no lo podrá aprobar nunca. \resp{P-01}
+\item \textbf{Una identidad por persona.} La cuenta se liga al número de identificación; el sistema no
+      admite dos cuentas activas para la misma persona.
+\item \textbf{Cardinalidad.} Al menos dos cuentas VER activas mientras haya mediciones sin dictamen,
+      para que C3 nunca deje una medición sin nadie que pueda aprobarla. Es el mínimo que exige una
+      revisión independiente, no un supuesto de tamaño: ninguna regla depende de cuántos técnicos,
+      verificadores o fincas haya. El número de personas con rol GER o ADM tiene un tope que fija la
+      Gerencia General. \resp{P-02}
+\item \textbf{Dueños y personal interno.} DUE es excluyente con todos los roles internos. Si un empleado
+      es titular de una finca certificada, el acceso como dueño lo ejerce un representante. Y como
+      no existe un registro que descarte los vínculos familiares o comerciales, todo el personal
+      declara los suyos al ingresar y antes de cada período; la regla C17 lo aparta de esas fincas.
+      \resp{P-15}
+\end{itemize}
+
+%=====================================================================
+\section{Dónde se ve la separación de responsabilidades}
+%=====================================================================
+
+La acción que ninguna persona puede completar sola es la \textbf{emisión de un certificado}. En la
+matriz eso se lee siguiendo la columna \emph{Mediciones} hacia \emph{Certificados}:
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{@{}L{3.3cm} L{4.6cm} Y@{}}
+\toprule
+\cab{Paso del flujo} & \cab{Celda} & \cab{Qué impide} \\
+\midrule
+Registrar y enviar & (TEC, Mediciones): crear, modificar, enviar\cnd{C2} &
+El técnico no tiene \emph{aprobar}. Después de enviar ya no puede modificar. \\
+Aprobar o devolver & (VER, Mediciones): aprobar, devolver\cnd{C3} &
+El verificador no tiene \emph{crear} ni \emph{modificar}, y no aprueba una medición en la que
+participó, aunque haya sido en otro puesto o con una habilitación temporal. \\
+Emitir & (SIS, Certificados): emitir\cnd{C4} &
+Ninguna persona tiene \emph{emitir}. El sistema emite solo si los dos pasos anteriores los hicieron
+personas distintas y no hay otro certificado vigente para la misma parcela y período. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+El mismo patrón, quien inicia no cierra, se repite en otras cinco columnas:
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{@{}L{3.3cm} Y L{2.2cm}@{}}
+\toprule
+\cab{Columna} & \cab{Quién hace cada paso} & \cab{Reglas} \\
+\midrule
+Enmiendas & Solicita TEC, VER o GER; corrige TEC; revisa un VER que no es autor ni solicitante; autoriza GER, que no solicitó ni revisó. Cuatro pasos y al menos tres personas. & C7 a C10 \\
+Períodos de medición & Registra ADM; abre y cierra GER. & C14 \\
+Asignaciones & Asigna SUP; mide TEC. Nadie se asigna a sí mismo. & C19 \\
+Fincas y parcelas & Propone ADM; aprueba GER. & C11 \\
+Cuentas y roles & Propone ADM; aprueba GER; nadie toca su propia cuenta. & C12 \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\textbf{Registrar, modificar, revisar y aprobar son cuatro permisos distintos.} El cliente pidió que el
+diseño los distinga, porque al cerrar un período pueden quedar mediciones pendientes de revisión.
+\resp{P-06} Así se comporta cada uno:
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{@{}L{2.7cm} L{2.6cm} Y Y@{}}
+\toprule
+\cab{Acción} & \cab{Verbo y celda} & \cab{Con el período abierto} & \cab{Con el período cerrado} \\
+\midrule
+Registrar & crear (TEC) & El técnico asignado. & Nadie. \\
+Modificar & modificar (TEC) & El autor, si está en borrador o devuelta. & Nadie. Solo por enmienda (C7 a C10). \\
+Revisar & leer, devolver (VER) & Cualquier verificador. & Cualquier verificador, sobre lo que se envió a tiempo. \\
+Aprobar & aprobar (VER) & Un verificador que no participó. & Igual: el cierre no lo impide. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+%=====================================================================
+\section{Justificación de mínimo privilegio}
+%=====================================================================
+
+Por cada permiso amplio de la matriz, por qué no puede ser más estrecho y qué lo acota.
+
+{\small
+\renewcommand{\arraystretch}{1.25}
+\begin{longtable}{@{}L{3.9cm} L{6.3cm} L{5.4cm}@{}}
+\toprule
+\cab{Permiso amplio} & \cab{Por qué no puede ser más estrecho} & \cab{Qué lo acota} \\
+\midrule
+\endfirsthead
+\toprule
+\cab{Permiso amplio} & \cab{Por qué no puede ser más estrecho} & \cab{Qué lo acota} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+AUD lee los diez objetos y exporta evidencia &
+El cliente lo exige: los auditores «necesitan ver absolutamente todo» y, en ocasiones, llevarse
+evidencia para sus informes. &
+Ningún verbo de escritura; ventana de vigencia (C6); cuentas nominales; la exportación es un paquete sellado, registrado y sin datos personales (C18). \\
+GER lee todo el negocio y la bitácora &
+Autoriza enmiendas, atiende alertas y responde ante el auditor: sin ver la medición, el certificado y el rastro no puede decidir. &
+No crea, modifica ni aprueba mediciones; no asigna fincas; no emite; vigilancia H1 a H3; no resuelve sus propias alertas (C15). \\
+VER lee mediciones, fincas y certificados de cualquier finca &
+La cola de verificación abarca cualquier finca del período y el dictamen compara contra el historial de la parcela y sus certificados anteriores. &
+Sin acceso a datos personales del dueño ni a asignaciones; vigilancia H1 a H3; abstención por vínculo (C17). \\
+SUP lee el catálogo y crea asignaciones de cualquier finca &
+Coordina al personal de campo y debe poder reasignar por vacaciones, incapacidades o visitas extraordinarias. &
+De las mediciones solo ve estado y fechas; no ve datos personales; no se asigna a sí mismo (C19); las temporales vencen solas; cada asignación va al resumen semanal de GER. \\
+ADM lee y mantiene todo el catálogo y los datos personales &
+Es su función: administrar el catálogo, habilitar las cuentas de los dueños y atender sus solicitudes de rectificación. &
+Sin acceso a mediciones, enmiendas, certificados ni bitácora; todo cambio de geometría o de titular requiere a GER (C11). \\
+ADM crea y desactiva cuentas y registra períodos &
+Alguien tiene que dar de alta y de baja al personal el mismo día en que entra o sale, y registrar las fechas que decide la coordinación. &
+No asigna roles por sí solo ni toca su propia cuenta (C12); un período no se abre ni se cierra sin GER (C14). \\
+TEC crea y modifica mediciones &
+Es su trabajo, y debe poder corregir lo que el verificador le devuelve. &
+Solo en fincas asignadas, solo sus propios borradores y solo con el período abierto (C1, C2). \\
+DUE lee todo lo de sus fincas &
+El cliente lo pide: «sus mediciones, sus certificados». &
+Solo lo propio (C5) y solo mediciones aprobadas; ninguna escritura. \\
+SIS emite y revoca certificados &
+La emisión debe ocurrir sin que una persona tenga ese permiso. &
+Solo bajo C4; ninguna persona puede invocar la emisión directamente. \\
+PUB comprueba un certificado &
+El cliente quiere poder demostrar ante terceros que un certificado es auténtico y cuál es su estado. &
+Solo con el código del certificado; respuesta mínima, sin listados ni datos del titular (C20); límite de ritmo por origen. \\
+\end{longtable}
+}
+
+%=====================================================================
+\section{Comprobación celda por celda}
+\label{sec:casos}
+%=====================================================================
+
+Para que la matriz sea verificable por alguien que no participó en el diseño, cada regla se acompaña
+de al menos un caso de prueba con su resultado esperado. El equipo que construya el sistema debe
+convertirlos en pruebas automáticas y ejecutar además una prueba por cada celda marcada con
+\colorbox{negado}{\textcolor{gris}{---}}.
+
+{\small
+\renewcommand{\arraystretch}{1.22}
+\begin{longtable}{@{}L{0.9cm} L{9.5cm} L{2.9cm} L{2.2cm}@{}}
+\toprule
+\cab{Caso} & \cab{Situación} & \cab{Resultado} & \cab{Regla} \\
+\midrule
+\endfirsthead
+\toprule
+\cab{Caso} & \cab{Situación} & \cab{Resultado} & \cab{Regla} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+T-01 & El técnico A, asignado a la finca F1 en un período abierto, crea una medición en F1. & Concede & C1, C2 \\
+T-02 & El técnico A pide el detalle de la finca F2, que no tiene asignada. & Deniega & C1; suma a H1 \\
+T-03 & El técnico A intenta modificar una medición suya que ya está \est{enviada}. & Deniega & C2 \\
+T-04 & El técnico A intenta modificar un borrador suyo después del cierre del período. & Deniega & C2, C14 \\
+T-05 & El verificador B aprueba una medición registrada por A. & Concede & C3 \\
+T-06 & La verificadora C, que el año pasado era técnica y registró la versión 1 de una medición, intenta aprobarla. & Deniega & C3 \\
+T-07 & Se aprueba una segunda medición de la misma parcela y período que ya tiene certificado vigente. & No emite & C4 \\
+T-08 & El dueño D cambia en la dirección el identificador de su certificado por el de otro dueño. & Deniega\cnd{b} & C5 \\
+T-09 & La auditora E inicia sesión una semana después de terminada su ventana. & Deniega & C6 \\
+T-10 & La auditora E, dentro de su ventana, envía una petición de modificación sobre cualquier objeto. & Deniega & Fila AUD \\
+T-11 & El técnico A solicita una enmienda sobre una medición que registró otro técnico. & Deniega & C7 \\
+T-12 & La gerente G autoriza una enmienda que solicitó y corrigió A y que tiene dictamen favorable de C. & Concede & C8 \\
+T-13 & El técnico A registra la corrección once días hábiles después de la solicitud. & Deniega & C9 \\
+T-14 & El verificador B, que solicitó la enmienda, intenta dar el dictamen técnico. & Deniega & C10 \\
+T-15 & El administrador propone una parcela que se traslapa con otra activa. & Deniega & C11 \\
+T-16 & El administrador se asigna a sí mismo el rol VER. & Deniega & C12 \\
+T-17 & Se cierra el período; después B aprueba una medición que A envió antes del cierre. & Concede & C3, C14 \\
+T-18 & El verificador B consulta en un día más fincas distintas que el umbral de verificación de su rol. & Pide segundo factor y motivo & H1 \\
+T-19 & Un sábado a las 23:00, B abre en una hora el detalle de 11 fincas que nunca había consultado. & Pide segundo factor y motivo, y avisa a GER & H3 \\
+T-20 & El operador de plataforma intenta iniciar sesión en la aplicación. & Deniega & Fila OPE \\
+\midrule
+T-21 & Después del cierre, A intenta modificar una medición que B le devolvió. & Deniega: procede una enmienda & C2, C7 \\
+T-22 & El administrador registra el cierre y GER aún no lo aprueba; A crea una medición. & Concede: el período sigue abierto & C14 \\
+T-23 & Enmienda material: B, que aprobó la versión que se corrige, intenta dar el dictamen técnico. & Deniega & C10 \\
+T-24 & La gerente G, que solicitó una enmienda, intenta autorizarla. & Deniega & C8 \\
+T-25 & Se autoriza una enmienda que cambia las toneladas de un certificado vigente. & Revoca y emite el reemplazo en un solo paso & C4 \\
+T-26 & La verificadora C, con habilitación temporal de técnica, registra una medición y después, en otra sesión, intenta aprobarla. & Deniega & C3 \\
+T-27 & El supervisor S da a A una asignación temporal a F2 por tres días; al cuarto, A pide el detalle de F2. & Deniega & C1, C19 \\
+T-28 & El supervisor S intenta asignarse a sí mismo una finca. & Deniega & C19 \\
+T-29 & B declaró un vínculo con el titular de F5 e intenta aprobar una medición de F5. & Deniega & C17 \\
+T-30 & A registra una medición con fecha de medición posterior a la de hoy, o fuera del período. & Deniega & C2 \\
+T-31 & La auditora E exporta la evidencia de un certificado dentro de su ventana. & Concede: paquete sellado, sin datos personales & C18 \\
+T-32 & Un comprador, sin cuenta, consulta el código de un certificado revocado. & Responde «revocado» y el código del reemplazo & C20 \\
+T-33 & B, después de confirmar en T-19, abre otras diez fincas que nunca había consultado. & Restringe las fincas nuevas y avisa & H3 \\
+T-34 & B aprueba una medición un domingo por la tarde. & Pide segundo factor y motivo & H2 \\
+T-35 & El técnico A intenta cambiar la contraseña de otra cuenta. & Deniega & C13 \\
+T-36 & El supervisor S intenta resolver una alerta sobre sí mismo. & Deniega & C15 \\
+T-37 & El administrador intenta suprimir los datos de un titular con un certificado emitido hace tres años. & Deniega & C16 \\
+\end{longtable}
+}
+
+{\footnotesize\cnd{b} La respuesta es «no encontrado», igual que si el certificado no existiera, para no
+revelar la existencia de datos de otro dueño.\quad Los casos T-21 a T-37 se agregaron después de la
+consulta al cliente; T-12, T-13, T-17, T-18 y T-19 cambiaron con ella.}
+
+%=====================================================================
+\section{Qué respondió el cliente y qué cambió en la matriz}
+\label{sec:minuta}
+%=====================================================================
+
+La primera versión de la matriz se construyó con supuestos de trabajo. El cliente respondió por
+escrito catorce de las veintiséis consultas del equipo; la minuta completa es el Anexo~A del informe
+de políticas. Esto es lo que cada respuesta cambió aquí.
+
+{\small
+\renewcommand{\arraystretch}{1.22}
+\begin{longtable}{@{}L{1.2cm} L{6.0cm} L{8.4cm}@{}}
+\toprule
+\cab{Consulta} & \cab{Lo que respondió el cliente} & \cab{Qué cambió en la matriz} \\
+\midrule
+\endfirsthead
+\toprule
+\cab{Consulta} & \cab{Lo que respondió el cliente} & \cab{Qué cambió en la matriz} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+P-01 & Un verificador puede medir, por excepción. Hace falta revisión independiente sin impedir que el personal asuma otras tareas. & La exclusión TEC--VER pasó de estática a dinámica, con habilitación temporal (C12). C3 no cambió. Caso T-26. \\
+P-02 & No hay cifras de personal ni de fincas; el diseño no debe depender de cantidades fijas. & Los umbrales de H1 y H3 son parámetros por rol. El tope de GER y ADM dejó de ser un número fijo. \\
+P-03 & El verificador devuelve con observaciones; no modifica mediciones ajenas. & Confirmado: (VER, Mediciones) no tiene \emph{crear} ni \emph{modificar}, y en la enmienda corrige el técnico (C9). \\
+P-04 & Interesa demostrar la autenticidad del certificado, su estado y quién autorizó su emisión. & Fila PUB y regla C20: comprobación pública con el código del certificado. \\
+P-05 & La coordinación de certificación decide los períodos y el personal administrativo los registra. Las fincas las asignan los supervisores de campo. & Rol nuevo, SUP, con la columna \emph{Asignaciones} (C19). \emph{Períodos}: ADM registra y GER abre y cierra (C14). GER dejó de crear asignaciones. \\
+P-06 & Al cierre pueden quedar mediciones por revisar; el cierre impide registrar y modificar, no terminar la revisión. & C3 ya no exige el período abierto. C14 solo excluye los borradores nunca enviados. Casos T-17, T-21 y T-22. \\
+P-07 & Solicita el técnico responsable, un verificador o el personal de certificación; autoriza la Gerencia con una revisión técnica; los tres deben ser independientes. & La enmienda cambió de orden: solicitar, corregir, revisar, autorizar. C7, C8 y C10 se reescribieron y GER ganó \emph{solicitar}. Casos T-12, T-23 y T-24. \\
+P-08 & Si cambian las toneladas hay que evaluar el certificado; nunca desaparece ni hay dos vigentes. & C4: revocar y reemitir en una sola transacción, con enlace entre ambos. C8: registro de si fue comercializado. Caso T-25. \\
+P-10 & Como mínimo detectar y avisar al supervisor o a la Gerencia; respuesta según la gravedad; no bloquear de inmediato. & H1 ganó un escalón de solo aviso; H3 pide confirmación antes de restringir. La columna \emph{Alertas} tiene a SUP (C15). Casos T-19 y T-33. \\
+P-11 & El técnico trabaja con sus fincas asignadas, pero debe poder apoyar, sustituir y atender visitas extraordinarias. & C1 admite asignaciones temporales con fecha de fin, que crea SUP (C19). Caso T-27. \\
+P-15 & Los dueños entran; hay personas físicas y sociedades, con varias fincas y representantes. No hay registro de vínculos con empleados. & C5 reconoce titular y representante. Regla nueva C17, abstención por vínculo declarado, y C13 para declararlo. Caso T-29. \\
+P-18 & No hay una norma de auditoría definida. Auditan una vez al año, en sitio o a distancia, y a veces exportan evidencia. & Verbo \emph{exportar} en la fila AUD (C18). C6 aclara que una prórroga es una autorización nueva. Caso T-31. \\
+P-22 & El registro puede hacerse después de la visita; importa la trazabilidad de las fechas de medición y de registro. & C2 valida la fecha de medición declarada contra el período, la asignación y la fecha de registro. Caso T-30. \\
+P-23 & La operación quedará en personal que la empresa designe. & La fila OPE se mantiene sin permisos; su descripción dejó de suponer un proveedor. \\
+\end{longtable}
+}
+
+\textbf{Supuestos que el equipo fijó.} El cliente no respondió estas consultas y pidió que el equipo
+decida y justifique. La matriz usa estos valores; si cambian, cambia lo que indica la última columna.
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.22}
+\begin{tabularx}{\textwidth}{@{}L{1.2cm} L{6.6cm} Y@{}}
+\toprule
+\cab{Consulta} & \cab{Supuesto declarado} & \cab{Qué cambiaría} \\
+\midrule
+P-12 & La jornada es de lunes a viernes, de 6:00 a 19:00. Es un parámetro por rol. & El valor de H2 y de H3. \\
+P-13 & Hasta calibrar con datos reales, los umbrales de H1 son 40, 60 y 80 fincas por día. & Los valores de H1. \\
+P-16 & El dueño ve una medición solo cuando está aprobada. & C5 en la celda (DUE, Mediciones). \\
+P-20 & La jefatura solicita la cuenta, ADM la crea y GER aprueba el rol. & C12 y la celda (GER, Cuentas y roles). \\
+P-21 & Una hectárea se identifica por la geometría de su parcela. & La restricción de traslape de C11. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\section*{Referencias}
+\addcontentsline{toc}{section}{Referencias}
+
+{\small
+\setlength{\parskip}{0.5em}
+\everypar{\hangindent=1.5em\hangafter=1}
+
+Lampson, B. W. (1974). Protection. \emph{ACM SIGOPS Operating Systems Review, 8}(1), 18--24.
+\url{https://doi.org/10.1145/775265.775268}
+
+Saltzer, J. H., \& Schroeder, M. D. (1975). The protection of information in computer systems.
+\emph{Proceedings of the IEEE, 63}(9), 1278--1308. \url{https://doi.org/10.1109/PROC.1975.9939}
+
+Sandhu, R. S., Coyne, E. J., Feinstein, H. L., \& Youman, C. E. (1996). Role-based access control
+models. \emph{Computer, 29}(2), 38--47. \url{https://doi.org/10.1109/2.485845}
+
+Vargas Rivera, A. (2026). \emph{Material de estudio, clase 10: Matriz de control de acceso}
+[Material de clase]. Curso CE-1115 Seguridad de la Información, Instituto Tecnológico de Costa Rica.
+
+}
+
+\end{document}

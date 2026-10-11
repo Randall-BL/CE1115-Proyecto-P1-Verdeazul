@@ -1,0 +1,386 @@
+%=====================================================================
+%  CE-1115 Seguridad de la Informacion -- Proyecto, Parte 1
+%  Entregable 5: Documento del atributo de acreditacion Diseno (DI)
+%  Cliente: Verdeazul Carbono S.A.
+%  Tecnologico de Costa Rica -- Escuela de Ingenieria en Computadores
+%  Prof. MSc. Andres Vargas Rivera -- Semestre II, 2026
+%
+%  Compilar dos veces:  pdflatex P1_AtributoDI_grupo6.tex
+%  Las respuestas del cliente estan en la minuta (Anexo A de P1_Politicas).
+%=====================================================================
+\documentclass[11pt,letterpaper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-noshorthands,es-tabla]{babel}
+\usepackage{XCharter}
+\usepackage[defaultsans,scale=0.92]{lato}
+\usepackage[scaled=0.9]{inconsolata}
+\usepackage[letterpaper,margin=2.4cm,headheight=15pt]{geometry}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{booktabs,tabularx,array,longtable}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage[most]{tcolorbox}
+\usepackage{needspace}
+\usepackage[hidelinks]{hyperref}
+
+%--------------------------- datos del grupo -------------------------
+\newcommand{\numgrupo}{6}
+\newcommand{\titulodoc}{Atributo de acreditación: Diseño (DI)}
+\newcommand{\subtitulodoc}{Respuestas a los indicadores DI1 a DI4}
+\newcommand{\titulocorto}{Atributo Diseño (DI)}
+\newcommand{\numentregable}{5}
+\newcommand{\fechaentrega}{15 de octubre de 2026}
+
+%--------------------------- color y estilo --------------------------
+\definecolor{vz}{HTML}{0F6E6A}
+\definecolor{vzclaro}{HTML}{E7F2F1}
+\definecolor{tinta}{HTML}{1A1A1A}
+\definecolor{gris}{HTML}{5F5E5A}
+\definecolor{regla}{HTML}{B9B8B0}
+\definecolor{negado}{HTML}{F2F1EC}
+\color{tinta}
+
+\titleformat{\section}{\Large\sffamily\bfseries\color{vz}}{}{0em}{}
+\titleformat{\subsection}{\large\sffamily\bfseries\color{tinta}}{}{0em}{}
+\titlespacing*{\section}{0pt}{1.3em}{0.45em}
+\titlespacing*{\subsection}{0pt}{0.9em}{0.25em}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5em}
+\setlist{leftmargin=1.5em,itemsep=2pt,topsep=3pt,parsep=0pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\sffamily\color{gris}CE-1115 $\cdot$ Proyecto Parte 1 $\cdot$ Grupo \numgrupo}
+\fancyhead[R]{\small\sffamily\color{gris}\titulocorto}
+\fancyfoot[C]{\small\sffamily\color{gris}\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{regla}\leaders\hrule height \headrulewidth\hfill}}
+
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcommand{\cab}[1]{\textbf{\sffamily #1}}
+
+% Texto oficial, copiado literalmente
+\newtcolorbox{literal}{enhanced,colback=negado,colframe=gris,boxrule=0.6pt,arc=0pt,
+  left=9pt,right=9pt,top=6pt,bottom=6pt}
+\newcommand{\carta}[1]{«\emph{#1}»}
+\newcommand{\ev}[1]{\textsf{\small\color{vz}[#1]}}   % donde esta la evidencia
+
+\begin{document}
+
+%=====================================================================
+%  PORTADA
+%=====================================================================
+\begin{titlepage}
+\centering
+\vspace*{0.6cm}
+{\large\scshape Instituto Tecnológico de Costa Rica}\\[0.2cm]
+{\large\scshape Escuela de Ingeniería en Computadores}\\[0.2cm]
+{\large CE-1115 Seguridad de la Información}\\[1.5cm]
+
+{\color{vz}\rule{\textwidth}{1.4pt}}\\[0.6cm]
+{\sffamily\large Proyecto $\cdot$ Parte 1 $\cdot$ Diseño del control de acceso}\\[0.45cm]
+{\sffamily\bfseries\fontsize{24}{29}\selectfont \titulodoc}\\[0.35cm]
+{\sffamily\large \subtitulodoc}\\[0.35cm]
+{\sffamily\large Entregable \numentregable\ de 5}\\[0.6cm]
+{\color{vz}\rule{\textwidth}{1.4pt}}\\[1.1cm]
+
+{\large\bfseries Cliente}\\[0.25cm]
+{\large Verdeazul Carbono S.A.}\\[0.1cm]
+{Certificación de captura de carbono $\cdot$ Pérez Zeledón, Costa Rica}\\[1.1cm]
+
+{\large\bfseries Grupo \numgrupo}\\[0.4cm]
+\begin{tabular}{@{}l@{\hspace{1.4cm}}l@{}}
+\toprule
+\textbf{Integrante} & \textbf{Carné} \\
+\midrule
+Randall Bryan Bolaños López & 2019043784 \\
+Javier Tenorio Cervantes    & 2020065308 \\
+Julio Varela Venegas        & 2019008041 \\
+Axel Flores Lara            & 2021453573 \\
+\bottomrule
+\end{tabular}\\[1.1cm]
+
+{\large Prof. MSc. Andrés Vargas Rivera}\\[0.15cm]
+{\large Semestre II, 2026}
+
+\vfill
+{\large\bfseries Fecha de entrega: \fechaentrega}
+\end{titlepage}
+
+%=====================================================================
+\section{Atributo: Diseño (DI)}
+%=====================================================================
+
+Este documento presenta la evidencia del atributo de egreso Diseño (DI) en la Parte~1 del proyecto: el
+diseño del control de acceso y de la arquitectura de seguridad de la plataforma de Verdeazul Carbono
+S.A. Se transcribe la definición oficial y, en orden, cada indicador seguido de la respuesta del equipo.
+Las marcas como \ev{E2 §3.2} dicen en qué entregable y en qué sección está la evidencia: E1 es el
+informe de políticas, E2 el documento de control de acceso, E3 la matriz y E4 la arquitectura.
+
+\subsection{Definición oficial del atributo}
+
+\begin{literal}
+Diseña soluciones creativas para problemas de ingeniería complejos y diseña sistemas, componentes o
+procesos para satisfacer las necesidades identificadas con la consideración adecuada para la salud y la
+seguridad públicas, el costo total de la vida, el carbono neto cero, así como las consideraciones de
+recursos, culturales, sociales y ambientales según sea necesario.
+\end{literal}
+
+%=====================================================================
+\section{DI1. Necesidades y requerimientos}
+%=====================================================================
+
+\begin{literal}
+\textbf{DI1.} Identifica las necesidades y los requerimientos de un problema complejo de ingeniería
+considerando la salud y la seguridad pública, el costo total de la vida, el carbono neto cero, así como
+aspectos relacionados con recursos, culturales, sociales y ambientales según sea necesario.
+\end{literal}
+
+\textbf{Lo que se extrajo de la carta.} Diez requerimientos salen de frases textuales de la gerente,
+y cada uno se convirtió en una consecuencia de diseño \ev{E2 §2, R1 a R10}. Tres ejemplos: \carta{si
+alguien cambió un dato, quién fue y cuándo} obliga a que nada se sobrescriba; \carta{cuando cierra ya
+nadie debería poder cambiar nada} obliga a que el permiso dependa del estado del período; \carta{aunque
+tuviera permiso de verla} obliga a vigilar cómo se usa un permiso y no solo quién lo tiene. Además se
+tomaron tres condiciones de contorno: solo software libre, trazabilidad de diez años y un personal de
+campo que es el que \carta{menos tiempo tiene para pelearse} con el sistema.
+
+\textbf{Lo que hubo que deducir.} La carta no lo dice, pero el caso lo exige.
+
+\begin{itemize}
+\item \textbf{Emisión única por parcela y período.} Se dedujo del segundo susto, el certificado emitido dos
+      veces. No es un error de permisos: es una regla que mira lo ya emitido \ev{E3, regla C4}.
+\item \textbf{Una medición aprobada queda congelada aunque el período siga abierto.} Se dedujo del
+      primer susto: la carta habla del cierre, pero el incidente fue después de aprobar \ev{E3, regla C2}.
+\item \textbf{Quien administra necesita una segunda firma.} La carta menciona de pasada que una sola persona
+      administra el catálogo y da de alta al personal. Esa persona podría crear una finca y una cuenta
+      ficticias \ev{E1, amenaza AM-05; E3, reglas C11 y C12}.
+\item \textbf{Los datos de los dueños son datos personales.} La carta habla de competencia, no de
+      privacidad. La Ley 8968 aplica porque los datos se comparten con auditores \ev{E1 §5}.
+\item \textbf{El pasado no tiene trazabilidad.} Diez años de certificados viven en hojas de cálculo que
+      el sistema nuevo no puede volver verificables \ev{E1 §6.4}.
+\item \textbf{Hay un sujeto que la carta no menciona:} quien opere los servidores \ev{E3, fila OPE}.
+\end{itemize}
+
+\textbf{Lo que hubo que consultar.} El enunciado advierte que la carta deja cosas abiertas a propósito.
+El equipo preparó 26 preguntas escritas, cada una con el supuesto con que ya había diseñado y con la
+parte del diseño que dependía de la respuesta. El cliente respondió por escrito catorce, entre ellas
+las tres que señala el enunciado: si un verificador puede registrar mediciones (P-01), quién autoriza
+una enmienda (P-07) y qué hacer con el técnico del último párrafo (P-10). La minuta, con las
+respuestas literales, está en \ev{E1, Anexo A}. De ellas salieron ocho requerimientos más
+\ev{E2 §2, R11 a R18}. Estos son los que más pesaron:
+
+{\small
+\renewcommand{\arraystretch}{1.22}
+\begin{longtable}{@{}L{6.3cm} L{5.9cm} L{3.4cm}@{}}
+\toprule
+\cab{Lo que respondió el cliente} & \cab{Requerimiento que produjo} & \cab{Evidencia} \\
+\midrule
+\endfirsthead
+\toprule
+\cab{Lo que respondió el cliente} & \cab{Requerimiento que produjo} & \cab{Evidencia} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Un verificador puede medir por excepción, pero hace falta una revisión independiente. & La separación no puede depender del puesto de la persona. & E2 §5.2; E3 §4 \\
+Al cierre quedan mediciones por revisar. & Registrar, modificar, revisar y aprobar son permisos distintos. & E3 §5; reglas C3 y C14 \\
+La autorización final de una enmienda necesita una revisión técnica, y quienes solicitan, revisan y autorizan deben ser independientes. & Otro orden para la enmienda, con al menos tres personas. & E2 §5.3 \\
+No bloquear de inmediato; responder según la gravedad. & Controles de historial por niveles, con criterios para distinguir lo legítimo. & E2 §4.1 \\
+Las fincas las asignan los supervisores de campo, con reasignaciones. & Una función de trabajo nueva: el séptimo rol. & E2 §3.1; E3, fila SUP \\
+No hay registro de vínculos entre empleados y dueños. & Declaración de vínculos y abstención. & E1, POL-CA-14; E3, regla C17 \\
+No hay cifras de personal ni equipo de ciberseguridad; la señal en el campo es inestable. & Un diseño sin cantidades fijas, operable por personal no especializado y con registro diferido. & E4 §1, §4.7 y §5 \\
+\end{longtable}
+}
+
+Las doce consultas que quedaron sin respuesta se resolvieron con supuestos declarados, cada uno con su
+razón y con lo que habría que ajustar si el dato real fuera otro \ev{E1, Anexo B}.
+
+\Needspace{6cm}
+\textbf{Qué aspectos condicionaron el diseño.}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{@{}L{3.3cm} Y L{2.9cm}@{}}
+\toprule
+\cab{Aspecto} & \cab{Cómo condicionó el diseño} & \cab{Evidencia} \\
+\midrule
+Ambiental y carbono neto cero & Cada certificado respalda una tonelada que alguien deja de compensar por otra vía. Un certificado falso es una emisión real sin compensar: por eso la integridad se puso por encima de los otros dos pilares. & E1 §3 \\
+Seguridad de las personas y legal & Datos personales de los dueños (Ley 8968), secreto comercial de la cartera (Ley 7975) e imparcialidad de quien verifica. El verificador no ve quién es el dueño de lo que revisa, y la evidencia que exporta un auditor no lleva datos personales. & E1 §5; E3, celda (VER, Datos personales) y regla C18 \\
+Costo total de la vida & Solo software libre, con versiones de soporte largo que cubren los diez años, en un servidor virtual contratado, sin comprar equipo ni llaves físicas para todo el personal. & E4 §1, §3 y §5; E1 §7 \\
+Recursos & El cliente no tiene cifras de personal y espera crecer: ninguna regla depende de cantidades fijas, y la separación se resolvió sin exigir más personal. La operación cotidiana no pide especialistas. & E2 §3.5 y §5.6; E4 §5 \\
+Social y cultural & Técnicos que trabajan en fincas con señal inestable y con equipos distintos; dueños de zonas rurales. Autenticación con la llave del propio teléfono, registro después de la visita con dos fechas y ningún permiso que dependa del equipo o de la red. & E1, POL-AU-05 y POL-AU-11; E4 §4.7 \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+%=====================================================================
+\section{DI2. Valoración de alternativas}
+%=====================================================================
+
+\begin{literal}
+\textbf{DI2.} Valora alternativas de solución para un problema complejo de ingeniería que cumplan con
+necesidades específicas, considerando los mismos aspectos.
+\end{literal}
+
+En cada decisión se compararon las alternativas con criterios fijados de antemano, y se anotó el costo
+de cada opción descartada. Las tres últimas filas son decisiones que el cliente dejó expresamente en
+manos del equipo.
+
+{\small
+\renewcommand{\arraystretch}{1.25}
+\begin{longtable}{@{}L{2.4cm} L{3.9cm} L{3.9cm} L{5.0cm}@{}}
+\toprule
+\cab{Decisión} & \cab{Alternativas valoradas} & \cab{Criterio de comparación} & \cab{Costo de lo descartado} \\
+\midrule
+\endfirsthead
+\toprule
+\cab{Decisión} & \cab{Alternativas valoradas} & \cab{Criterio de comparación} & \cab{Costo de lo descartado} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Modelo de control de acceso \ev{E2 §3} &
+DAC, MAC, RBAC en sus cuatro niveles, ABAC puro y el híbrido elegido. &
+Que exprese los requisitos que no dependen del puesto; que se pueda enumerar y explicar a un auditor; que lo pueda administrar una empresa sin personal especializado. &
+DAC repetiría los dos incidentes. MAC exigiría un compartimento por finca. ABAC puro perdería la fila que responde «qué puede hacer un verificador». La jerarquía de RBAC$_1$ y RBAC$_3$ volvería implícitos los permisos. \\
+Controles de historial \ev{E2 §4} &
+Reglas explícitas o aprendizaje automático; Muralla China; umbrales por persona o por rol; bloquear de inmediato o responder por niveles. &
+Que se le pueda leer a un auditor; que funcione con pocos usuarios; costo de un falso positivo para quien trabaja de buena fe. &
+El aprendizaje automático no tiene datos con qué entrenarse y no se puede explicar. La Muralla China dejaría a cada empleado con una sola finca. El bloqueo inmediato detiene un trabajo extraordinario que puede ser legítimo. \\
+Separación de responsabilidades \ev{E2 §5.4} &
+Roles excluyentes estáticos y dinámicos, doble control, separación por etapas, segregación temporal y rotación. &
+Que impida el acto concreto; que sobreviva a un cambio de puesto; que deje al personal asumir otras tareas. &
+El doble control duplicaría la verificación de cada certificado. La exclusión estática sola no cubre al técnico ascendido ni deja que un verificador mida por excepción. La rotación pierde el conocimiento de la finca. \\
+Tecnologías \ev{E4 §3} &
+Entre tres y cuatro por cada una de las seis decisiones. &
+Protección nativa, licencia libre, años de soporte y que la pueda operar un equipo pequeño. &
+Vault y Docker Desktop se descartaron por licencia; los \emph{tokens} JWT, por no poder revocarse; una cadena de bloques, por resolver un problema que el cliente no tiene. \\
+Quién revisa una enmienda \ev{E2 §5.3} &
+Siempre un verificador distinto del original; el mismo; o según lo que cambia. &
+Que nadie dictamine sobre su propio error; que una corrección de forma no quede esperando. &
+«Siempre distinto» frena toda corrección. «El mismo» permite la autorrevisión justo donde hay toneladas en juego. \\
+Hospedaje \ev{E4 §5} &
+Servidor propio, servidor virtual contratado o servicios administrados. &
+Los cuatro que pidió el cliente: seguridad, mantenimiento, disponibilidad y costo. &
+El propio exige inversión y cuidar la energía y el enlace de una oficina rural. Los administrados atan el diseño a servicios que no son software libre. \\
+Certificado y segundo factor \ev{E4 §4.8; E1 §7} &
+Firma digital certificada por persona, sello de la empresa y comprobación en línea. Llaves físicas para todos, llave de acceso del dispositivo o códigos temporales. &
+Qué demuestra cada opción; costo por persona; que funcione en equipos de campo distintos. &
+La firma personal no demuestra si el certificado sigue vigente y cuesta por persona. Las llaves físicas para todo el personal no tienen presupuesto y no protegen más que la llave de acceso del equipo. \\
+\end{longtable}
+}
+
+El costo operativo contó como razón: el doble control era la opción más fuerte contra el fraude y se
+descartó porque duplica el trabajo de verificación en todos los períodos.
+
+%=====================================================================
+\section{DI3. Diseño de la alternativa seleccionada}
+%=====================================================================
+
+\begin{literal}
+\textbf{DI3.} Diseña de forma creativa, la alternativa seleccionada que cumpla con las necesidades
+específicas para resolver el problema complejo de ingeniería, considerando los mismos aspectos.
+\end{literal}
+
+\textbf{Cómo se refleja en la matriz y en la arquitectura.} La matriz tiene diez sujetos y diez objetos;
+veinte reglas de celda (C1 a C20) y cuatro controles de historial (H1 a H4), cada una con su caso de
+prueba \ev{E3 §2, §3 y §7}. En la arquitectura, esas mismas reglas, con los mismos identificadores, son
+la política de un único motor de decisión, y las que se pueden expresar como restricción se repiten en
+la base de datos \ev{E4 §2.3 y §4.2}.
+
+\textbf{Decisiones que el equipo considera propias}, y no una aplicación mecánica de lo visto en clase:
+
+\begin{enumerate}
+\item \textbf{Nadie emite.} Ningún rol tiene el permiso de emitir un certificado. La emisión la ejecuta el
+      sistema, y solo cuando dos personas distintas hicieron los dos pasos anteriores \ev{E3, fila SIS}.
+\item \textbf{La separación se comprueba por medición, no por puesto.} El control de historial de tipo
+      secuencia y la técnica de separación son la misma regla. Por eso, cuando el cliente confirmó que
+      un verificador puede medir por excepción, la técnica no cambió: bastó volver dinámica una
+      exclusión entre roles \ev{E2 §4.2 y §5.2}.
+\item \textbf{Se eligió menos de lo que el modelo ofrecía.} RBAC$_2$ en lugar de RBAC$_3$: la jerarquía
+      habría roto la separación y vuelto implícita la matriz \ev{E2 §3.4}.
+\item \textbf{La primera respuesta al técnico del fin de semana fue quitar el permiso, y darlo por tiempo
+      limitado cuando hace falta.} La asignación temporal vence sola. Los controles de historial quedan
+      para quienes sí necesitan leer muchas fincas, y los intentos denegados también cuentan como
+      historial \ev{E2 §4; E3, reglas C1 y C19}.
+\item \textbf{Las condiciones solo pueden quitar.} Con una lista cerrada de atributos, el híbrido
+      conserva la propiedad de RBAC que el auditor necesita: la matriz muestra el máximo \ev{E2 §3.3}.
+\item \textbf{La consulta agregó un rol y cuatro atributos.} De cinco necesidades nuevas, solo la que era
+      una función de trabajo, el supervisor de campo, produjo un rol \ev{E2 §3.5}.
+\item \textbf{Lo delicado de una enmienda no lo decide quien la tramita.} Si es material, y qué ocurre con
+      el certificado, lo calcula el sistema al comparar las versiones \ev{E2 §5.3; E3, reglas C4 y C10}.
+\item \textbf{Quien custodia los servidores aparece en la matriz, sin permisos.} Y la bitácora se ancla
+      fuera del servidor, de modo que ni él pueda reescribirla \ev{E3, fila OPE; E4 §4.5}.
+\item \textbf{El modelo descartado se usa donde sí corresponde.} El control obligatorio (MAC) no sirve para
+      la aplicación, pero confina los contenedores \ev{E4 §3}.
+\end{enumerate}
+
+%=====================================================================
+\section{DI4. Validación del diseño}
+%=====================================================================
+
+\begin{literal}
+\textbf{DI4.} Valida el diseño final de acuerdo con los requerimientos, la salud y la seguridad pública,
+el costo total de la vida, el carbono neto cero, así como aspectos relacionados con recursos, culturales,
+sociales y ambientales según sea necesario.
+\end{literal}
+
+\textbf{Cómo se comprobó que el diseño responde a lo que pedía el cliente.}
+
+\begin{enumerate}
+\item \textbf{Trazabilidad de cada requisito.} Cada uno de los dieciocho requisitos tiene, en una sola
+      tabla, su consecuencia de diseño, una regla de la matriz y al menos un caso de prueba
+      \ev{E2 §2}.
+\item \textbf{Los tres incidentes de la carta, repetidos contra el diseño.} La medición modificada después
+      de aprobada se deniega (caso T-03) y solo puede cambiar por enmienda. La segunda emisión sobre la
+      misma parcela no ocurre (T-07). La consulta masiva de un fin de semana se deniega si es un
+      técnico (T-02); a quien sí puede leer muchas fincas le pide confirmación, avisa y, si insiste,
+      lo restringe (T-19 y T-33) \ev{E3 §7}.
+\item \textbf{Treinta y siete casos de prueba y diez criterios de aceptación}, escritos para que los
+      ejecute el equipo que construya el sistema \ev{E3 §7; E4 §6}.
+\item \textbf{Coherencia entre documentos.} Cada amenaza del modelo tiene una respuesta, y cada control de
+      historial cita la amenaza que mitiga \ev{E1 §4; E2 §4.2}.
+\item \textbf{Aspectos del atributo.} Cada obligación legal tiene una regla operativa \ev{E1 §5}; toda la
+      tecnología es libre y tiene soporte para el horizonte de diez años \ev{E4 §1}; y la fricción que el
+      diseño impone al personal está declarada y acotada \ev{E2 §5.6}.
+\item \textbf{Validación con el cliente.} El diseño se había hecho completo con supuestos declarados, de
+      modo que la consulta funcionó como una validación. De los catorce supuestos que el cliente
+      respondió, dos se confirmaron (P-03 y P-11), cuatro se ajustaron (P-02, P-08, P-10 y P-15), seis
+      cambiaron (P-01, P-05, P-06, P-07, P-18 y P-22) y dos quedaron a decisión del equipo (P-04 y
+      P-23) \ev{E1, Anexo A}. Cada cambio se llevó hasta la matriz: diecisiete casos de prueba nuevos y
+      cinco modificados \ev{E3 §7 y §8}.
+\end{enumerate}
+
+\textbf{Qué mostró esa validación.} Lo que estaba diseñado sobre el dato resistió: la separación por
+medición y la emisión única no cambiaron. Lo que estaba diseñado sobre el procedimiento hubo que
+rehacerlo: el orden de la enmienda, lo que el cierre de un período detiene y quién asigna las fincas.
+Y el diseño original era más estricto de lo que el cliente quería en un punto: bloqueaba de inmediato
+donde bastaba avisar.
+
+\Needspace{7cm}
+\textbf{Qué quedó sin cubrir y por qué se aceptó.}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{@{}L{4.4cm} Y@{}}
+\toprule
+\cab{Requerimiento no cubierto del todo} & \cab{Por qué se aceptó el riesgo residual} \\
+\midrule
+Que la misma persona no mida y apruebe, si dos se ponen de acuerdo & La separación sube el fraude de una persona a dos. Impedir la colusión exigiría una tercera persona en cada certificado. Quedan la rotación, los indicadores y la auditoría externa \ev{E4, RR-1}. \\
+Que nadie favorezca una finca con la que tiene un vínculo, si no lo declara & No existe un registro que descarte esos vínculos, y la abstención solo ve lo declarado. Ningún paso lo completa una sola persona, y omitir un vínculo es falta grave \ev{E4, RR-11}. \\
+Trazabilidad de diez años, hacia atrás & El histórico de las hojas de cálculo no puede adquirir la trazabilidad que nunca tuvo. Se congela, se marca y se declara \ev{E4, RR-9}. \\
+Darse cuenta de quien consulta lo que no le corresponde, si lo hace despacio & Los controles ven la extracción masiva, no la de tres fincas por día. Bajar los umbrales castigaría al personal que trabaja de buena fe \ev{E4, RR-3}. \\
+Probar cuándo se midió, en fincas sin señal & El cliente no pidió una aplicación sin conexión: la fecha de medición la declara el técnico. Se valida contra el período y la asignación y queda junto a la de registro \ev{E4, RR-8}. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\end{document}

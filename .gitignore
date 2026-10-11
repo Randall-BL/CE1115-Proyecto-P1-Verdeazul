@@ -1,0 +1,19 @@
+# Archivos auxiliares de LaTeX (se regeneran al compilar)
+*.aux
+*.log
+*.toc
+*.out
+*.nav
+*.snm
+*.vrb
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.bbl
+*.blg
+
+# Sistema y editor
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
