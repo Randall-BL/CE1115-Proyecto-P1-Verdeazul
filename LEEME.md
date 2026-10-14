@@ -80,8 +80,8 @@ pero son decisiones nuestras y hay que poder defenderlas:
 
 - **Número de grupo.** Se usó el 6. Si es otro: cambiar `\newcommand{\numgrupo}{6}` al inicio de cada
   `.tex` y renombrar los archivos.
-- **Reparto de la defensa.** Es una propuesta; el nombre aparece abajo a la izquierda de cada lámina
-  (en Canva es un texto editable; en la fuente, `\quien{...}`).
+- **Reparto de la defensa.** Es una propuesta y está por definir: las láminas ya no muestran quién
+  expone, solo el número (en la fuente sigue `\quien{...}`, que alimenta la versión con notas).
 - **Duración de la defensa.** Las 25 láminas están pensadas para unos 20 minutos.
 
 | Bloque | Láminas | Expone |
@@ -109,7 +109,7 @@ pdflatex P1_Politicas_grupo6.tex
 ```
 
 Las láminas se arman en Canva, en el diseño «CE-1115 P1 · Defensa Verdeazul Carbono (Grupo 6)» de la
-cuenta de Randall. El título, el número y el nombre de quien expone son texto de Canva. El cuerpo de
+cuenta de Randall. El título y el número de cada lámina son texto de Canva. El cuerpo de
 cada lámina (tabla o diagrama) es una imagen que sale de `P1_Presentacion_grupo6.tex`, que sigue siendo
 la fuente del contenido:
 
