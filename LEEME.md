@@ -17,11 +17,11 @@ archivos de entrega, que compilan. **Quedan dos fechas por escribir en la minuta
 | `Entregables/P1_Matriz_grupo6` (.tex, .pdf) | La matriz (10 sujetos, 10 objetos), sus 20 reglas, 37 casos de prueba | Sí |
 | `Entregables/P1_Arquitectura_grupo6` (.tex, .pdf) | Componentes, tecnologías y decisiones. 12 páginas de contenido; diagramas en anexo | Sí |
 | `Entregables/P1_AtributoDI_grupo6` (.tex, .pdf) | Indicadores DI1 a DI4 | Sí |
-| `Entregables/P1_Presentacion_grupo6.pdf` | 25 láminas de la defensa | Sí |
+| `Entregables/P1_Presentacion_grupo6.pdf` | 25 láminas de la defensa, exportadas de Canva (plantilla «Pixelated Retro Interface») | Sí |
 | `Consultas_cliente/Respuesta_cliente.md` | La respuesta del cliente, tal como llegó | No: es la fuente de la minuta |
 | `Consultas_cliente/P1_ConsultasCliente_grupo6` (.tex, .pdf) | Las 26 preguntas que preparó el equipo | No |
 | `Consultas_cliente/Correo_solicitud_cita.md` | Borrador del correo de solicitud | No |
-| `Presentacion_fuente/` | Fuente de las láminas y versión con notas del orador (guion de estudio) | No |
+| `Presentacion_fuente/` | Fuente del contenido de las láminas (LaTeX), versión con notas del orador (guion de estudio) y `canva/`, que genera los paneles para Canva | No |
 
 Los tres documentos con límite (políticas, control de acceso y arquitectura) están **justo en 12 páginas
 de contenido**, el máximo del enunciado. Si se agrega texto a alguno hay que quitar otro tanto, y
@@ -84,8 +84,8 @@ pero son decisiones nuestras y hay que poder defenderlas:
 
 - **Número de grupo.** Se usó el 6. Si es otro: cambiar `\newcommand{\numgrupo}{6}` al inicio de cada
   `.tex` y renombrar los archivos.
-- **Reparto de la defensa.** Es una propuesta; el nombre aparece abajo a la derecha de cada lámina
-  (`\quien{...}` en la fuente).
+- **Reparto de la defensa.** Es una propuesta; el nombre aparece abajo a la izquierda de cada lámina
+  (en Canva es un texto editable; en la fuente, `\quien{...}`).
 - **Duración de la defensa.** Las 25 láminas están pensadas para unos 20 minutos.
 
 | Bloque | Láminas | Expone |
@@ -112,8 +112,23 @@ pdflatex P1_Politicas_grupo6.tex
 pdflatex P1_Politicas_grupo6.tex
 ```
 
-Las láminas: `pdflatex P1_Presentacion_grupo6.tex` en `Presentacion_fuente/`, y copiar el PDF a
-`Entregables/`. La versión con notas: `pdflatex P1_Presentacion_grupo6_notas.tex`.
+Las láminas se arman en Canva, en el diseño «CE-1115 P1 · Defensa Verdeazul Carbono (Grupo 6)» de la
+cuenta de Randall. El título, el número y el nombre de quien expone son texto de Canva. El cuerpo de
+cada lámina (tabla o diagrama) es una imagen que sale de `P1_Presentacion_grupo6.tex`, que sigue siendo
+la fuente del contenido:
+
+```
+cd Presentacion_fuente/canva
+python generar_paneles.py
+```
+
+Eso deja un PNG por lámina en `canva/build/png/` (requiere `pdflatex` y PyMuPDF). Para cambiar el
+contenido de una lámina: editar el `.tex`, regenerar, reemplazar la imagen en Canva y exportar de nuevo
+a `Entregables/P1_Presentacion_grupo6.pdf` como «PDF para impresión»: el «PDF estándar» reduce las
+imágenes y las tablas salen borrosas.
+
+La versión con notas sigue saliendo de LaTeX, con el diseño anterior:
+`pdflatex P1_Presentacion_grupo6_notas.tex`.
 
 En los documentos, la marca `[minuta P-07]` señala una decisión que sale de una respuesta del cliente
 y `[supuesto P-13]` una que el equipo fijó porque el cliente no dio el dato.

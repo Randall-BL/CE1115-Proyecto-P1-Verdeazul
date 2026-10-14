@@ -12,6 +12,9 @@
 *.bbl
 *.blg
 
+# Salida de Presentacion_fuente/canva/generar_paneles.py (se regenera)
+Presentacion_fuente/canva/build/
+
 # Sistema y editor
 Thumbs.db
 desktop.ini
