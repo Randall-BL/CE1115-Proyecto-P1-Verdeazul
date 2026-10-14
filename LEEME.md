@@ -6,7 +6,8 @@ Integrantes: Randall Bolaños López, Javier Tenorio Cervantes, Julio Varela Ven
 ## Estado
 
 El cliente respondió las consultas por escrito y sus respuestas ya están incorporadas en los seis
-archivos de entrega, que compilan. **Quedan dos fechas por escribir en la minuta** (ver «Lo que falta»).
+archivos de entrega, que compilan. La minuta ya tiene sus fechas: solicitud el martes 6 y respuesta
+por correo el viernes 9 de octubre de 2026. No hubo reunión.
 
 ## Qué hay en la carpeta
 
@@ -29,13 +30,10 @@ comprobarlo al recompilar: el contenido termina donde empieza el Anexo A.
 
 ## Lo que falta, en orden
 
-1. **Escribir las dos fechas de la minuta.** Al inicio de `P1_Politicas_grupo6.tex`, sustituir
-   `\porllenar` en `\fechasolicitud` (día en que se envió el correo) y en `\fecharespuesta` (día en
-   que respondió el cliente). Son las únicas marcas ámbar que quedan en los PDF. Recompilar.
-2. **Leer los cinco documentos completos, los cuatro.** El diseño cambió en varios puntos y las
+1. **Leer los cinco documentos completos, los cuatro.** El diseño cambió en varios puntos y las
    preguntas del profesor son individuales.
-3. **Revisar las decisiones que tomó el equipo** (siguiente sección) y ajustar las que no compartan.
-4. **Entregar** por la plataforma del curso: los cinco `.tex`, los cinco `.pdf` y el PDF de las láminas.
+2. **Revisar las decisiones que tomó el equipo** (siguiente sección) y ajustar las que no compartan.
+3. **Entregar** por la plataforma del curso: los cinco `.tex`, los cinco `.pdf` y el PDF de las láminas.
 
 ## Qué cambió con las respuestas del cliente
 
@@ -75,8 +73,6 @@ pero son decisiones nuestras y hay que poder defenderlas:
 - **Sello electrónico de persona jurídica** (Arquitectura §4.8). Se menciona como mejora opcional para
   dar presunción legal al sello. Confirmar con la autoridad certificadora cómo se emite y se custodia
   antes de afirmarlo en la defensa.
-- **Si además de la respuesta escrita hubo reunión**, agregar su fecha y medio en «Datos de la
-  consulta» de la minuta: hoy dice solo que el cliente respondió por escrito.
 - **Supuestos de capacidad** (100 cuentas internas, 2 000 fincas, etc.): Arquitectura, Anexo B.
 - **Doce consultas sin respuesta** quedaron como supuestos declarados: Políticas, Anexo B.
 
