@@ -13,9 +13,8 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[spanish,es-noshorthands,es-tabla]{babel}
-\usepackage{XCharter}
-\usepackage[defaultsans,scale=0.92]{lato}
-\usepackage[scaled=0.9]{inconsolata}
+\usepackage{mathptmx}
+\renewcommand{\ttdefault}{ptm}
 \usepackage[letterpaper,margin=2.4cm,headheight=15pt]{geometry}
 \usepackage{microtype}
 \usepackage{xcolor}
@@ -36,17 +35,11 @@
 \newcommand{\numentregable}{5}
 \newcommand{\fechaentrega}{15 de octubre de 2026}
 
-%--------------------------- color y estilo --------------------------
-\definecolor{vz}{HTML}{0F6E6A}
-\definecolor{vzclaro}{HTML}{E7F2F1}
-\definecolor{tinta}{HTML}{1A1A1A}
-\definecolor{gris}{HTML}{5F5E5A}
-\definecolor{regla}{HTML}{B9B8B0}
-\definecolor{negado}{HTML}{F2F1EC}
-\color{tinta}
+%--------------------------- estilo ----------------------------------
 
-\titleformat{\section}{\Large\sffamily\bfseries\color{vz}}{}{0em}{}
-\titleformat{\subsection}{\large\sffamily\bfseries\color{tinta}}{}{0em}{}
+
+\titleformat{\section}{\Large\rmfamily\bfseries }{}{0em}{}
+\titleformat{\subsection}{\large\rmfamily\bfseries }{}{0em}{}
 \titlespacing*{\section}{0pt}{1.3em}{0.45em}
 \titlespacing*{\subsection}{0pt}{0.9em}{0.25em}
 \setlength{\parindent}{0pt}
@@ -55,21 +48,21 @@
 
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[L]{\small\sffamily\color{gris}CE-1115 $\cdot$ Proyecto Parte 1 $\cdot$ Grupo \numgrupo}
-\fancyhead[R]{\small\sffamily\color{gris}\titulocorto}
-\fancyfoot[C]{\small\sffamily\color{gris}\thepage}
+\fancyhead[L]{\small\rmfamily CE-1115 $\cdot$ Proyecto Parte 1 $\cdot$ Grupo \numgrupo}
+\fancyhead[R]{\small\rmfamily \titulocorto}
+\fancyfoot[C]{\small\rmfamily \thepage}
 \renewcommand{\headrulewidth}{0.4pt}
-\renewcommand{\headrule}{\hbox to\headwidth{\color{regla}\leaders\hrule height \headrulewidth\hfill}}
+\renewcommand{\headrule}{\hbox to\headwidth{\leaders\hrule height \headrulewidth\hfill}}
 
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
-\newcommand{\cab}[1]{\textbf{\sffamily #1}}
+\newcommand{\cab}[1]{\textbf{\rmfamily #1}}
 
 % Texto oficial, copiado literalmente
-\newtcolorbox{literal}{enhanced,colback=negado,colframe=gris,boxrule=0.6pt,arc=0pt,
+\newtcolorbox{literal}{enhanced,colback=white,colframe=black,boxrule=0.6pt,arc=0pt,
   left=9pt,right=9pt,top=6pt,bottom=6pt}
 \newcommand{\carta}[1]{«\emph{#1}»}
-\newcommand{\ev}[1]{\textsf{\small\color{vz}[#1]}}   % donde esta la evidencia
+\newcommand{\ev}[1]{\textrm{\small [#1]}}   % donde esta la evidencia
 
 \begin{document}
 
@@ -83,12 +76,12 @@
 {\large\scshape Escuela de Ingeniería en Computadores}\\[0.2cm]
 {\large CE-1115 Seguridad de la Información}\\[1.5cm]
 
-{\color{vz}\rule{\textwidth}{1.4pt}}\\[0.6cm]
-{\sffamily\large Proyecto $\cdot$ Parte 1 $\cdot$ Diseño del control de acceso}\\[0.45cm]
-{\sffamily\bfseries\fontsize{24}{29}\selectfont \titulodoc}\\[0.35cm]
-{\sffamily\large \subtitulodoc}\\[0.35cm]
-{\sffamily\large Entregable \numentregable\ de 5}\\[0.6cm]
-{\color{vz}\rule{\textwidth}{1.4pt}}\\[1.1cm]
+{\rule{\textwidth}{1.4pt}}\\[0.6cm]
+{\rmfamily\large Proyecto $\cdot$ Parte 1 $\cdot$ Diseño del control de acceso}\\[0.45cm]
+{\rmfamily\bfseries\fontsize{24}{29}\selectfont \titulodoc}\\[0.35cm]
+{\rmfamily\large \subtitulodoc}\\[0.35cm]
+{\rmfamily\large Entregable \numentregable\ de 5}\\[0.6cm]
+{\rule{\textwidth}{1.4pt}}\\[1.1cm]
 
 {\large\bfseries Cliente}\\[0.25cm]
 {\large Verdeazul Carbono S.A.}\\[0.1cm]

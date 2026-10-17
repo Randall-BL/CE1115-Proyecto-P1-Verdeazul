@@ -7,16 +7,14 @@
 %
 %  Compilar dos veces:  pdflatex P1_Politicas_grupo6.tex
 %  El Anexo A es la minuta de la consulta al cliente.
-%  ANTES DE ENTREGAR: completar \fechasolicitud y \fecharespuesta (abajo).
 %=====================================================================
 \documentclass[11pt,letterpaper]{article}
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[spanish,es-noshorthands,es-tabla]{babel}
-\usepackage{XCharter}
-\usepackage[defaultsans,scale=0.92]{lato}
-\usepackage[scaled=0.9]{inconsolata}
+\usepackage{mathptmx}
+\renewcommand{\ttdefault}{ptm}
 \usepackage[letterpaper,margin=2.4cm,headheight=15pt]{geometry}
 \usepackage{microtype}
 \usepackage{amsmath,amssymb}
@@ -38,63 +36,53 @@
 \newcommand{\titulocorto}{Políticas de seguridad}
 \newcommand{\numentregable}{1}
 \newcommand{\fechaentrega}{15 de octubre de 2026}
-% Fechas de la consulta al cliente (Anexo A). COMPLETAR ANTES DE ENTREGAR:
-% sustituir \porllenar por la fecha, por ejemplo {2 de octubre de 2026}.
+% Fechas de la consulta al cliente (Anexo A)
 \newcommand{\fechasolicitud}{martes 6 de octubre de 2026}   % dia en que se envio el correo de solicitud
 \newcommand{\fecharespuesta}{viernes 9 de octubre de 2026}   % dia en que el cliente respondio por escrito
 
-%--------------------------- color y estilo --------------------------
-\definecolor{vz}{HTML}{0F6E6A}        % acento unico (verde azulado)
-\definecolor{vzclaro}{HTML}{E7F2F1}
-\definecolor{tinta}{HTML}{1A1A1A}
-\definecolor{gris}{HTML}{5F5E5A}
-\definecolor{regla}{HTML}{B9B8B0}
-\definecolor{pend}{HTML}{9A6200}      % campos por completar (fechas de la minuta)
-\definecolor{pendfondo}{HTML}{FFF4D9}
-\definecolor{negado}{HTML}{F2F1EC}
-\color{tinta}
+%--------------------------- estilo ----------------------------------
 
-\titleformat{\section}{\Large\sffamily\bfseries\color{vz}}{\thesection}{0.6em}{}
-\titleformat{\subsection}{\large\sffamily\bfseries\color{tinta}}{\thesubsection}{0.6em}{}
+
+\titleformat{\section}{\Large\rmfamily\bfseries }{\thesection}{0.6em}{}
+\titleformat{\subsection}{\large\rmfamily\bfseries }{\thesubsection}{0.6em}{}
 \titlespacing*{\section}{0pt}{1.3em}{0.45em}
 \titlespacing*{\subsection}{0pt}{0.9em}{0.25em}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.5em}
 \setlist{leftmargin=1.5em,itemsep=2pt,topsep=3pt,parsep=0pt}
-\captionsetup{font={small,sf},labelfont={bf,color=vz},skip=5pt}
+\captionsetup{font=small,labelfont=bf,skip=5pt}
 
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[L]{\small\sffamily\color{gris}CE-1115 $\cdot$ Proyecto Parte 1 $\cdot$ Grupo \numgrupo}
-\fancyhead[R]{\small\sffamily\color{gris}\titulocorto}
-\fancyfoot[C]{\small\sffamily\color{gris}\thepage}
+\fancyhead[L]{\small\rmfamily CE-1115 $\cdot$ Proyecto Parte 1 $\cdot$ Grupo \numgrupo}
+\fancyhead[R]{\small\rmfamily \titulocorto}
+\fancyfoot[C]{\small\rmfamily \thepage}
 \renewcommand{\headrulewidth}{0.4pt}
-\renewcommand{\headrule}{\hbox to\headwidth{\color{regla}\leaders\hrule height \headrulewidth\hfill}}
+\renewcommand{\headrule}{\hbox to\headwidth{\leaders\hrule height \headrulewidth\hfill}}
 
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
 \newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
-\newcommand{\cab}[1]{\textbf{\sffamily #1}}
+\newcommand{\cab}[1]{\textbf{\rmfamily #1}}
 
 % Trazabilidad con la consulta al cliente (minuta: Anexo A)
 %   \resp{P-07}: la regla sale de una respuesta del cliente
 %   \supu{P-13}: supuesto que el equipo fijo y documento (Anexo B)
-\newcommand{\resp}[1]{\textsf{\footnotesize\bfseries\color{vz}[minuta #1]}}
-\newcommand{\supu}[1]{\textsf{\footnotesize\color{gris}[supuesto #1]}}
+\newcommand{\resp}[1]{\textrm{\footnotesize\bfseries [minuta #1]}}
+\newcommand{\supu}[1]{\textrm{\footnotesize [supuesto #1]}}
 % Minuta: pregunta, respuesta literal del cliente y decision del equipo
-\newtcolorbox{respuesta}{enhanced,breakable,colback=negado,colframe=regla,
+\newtcolorbox{respuesta}{enhanced,breakable,colback=white,colframe=black,
   boxrule=0pt,leftrule=2.5pt,arc=0pt,left=8pt,right=8pt,top=4pt,bottom=4pt,
   fontupper=\small,parbox=false,before upper={\setlength{\parskip}{0.45em}}}
 \newcommand{\pregunta}[2]{\par\Needspace{6\baselineskip}\vspace{0.6em}%
-  {\sffamily\bfseries\color{vz}#1}\quad{\sffamily\bfseries #2}\par}
+  {\rmfamily\bfseries #1}\quad{\rmfamily\bfseries #2}\par}
 \newcommand{\dec}{\textbf{Decisión del equipo.}\ }
-\newcommand{\donde}[1]{{\small\sffamily\color{gris}Queda en: #1}}
-\newtcolorbox{decision}{enhanced,breakable,colback=vzclaro,colframe=vz,
+\newcommand{\donde}[1]{{\small\rmfamily Queda en: #1}}
+\newtcolorbox{decision}{enhanced,breakable,colback=white,colframe=black,
   boxrule=0pt,leftrule=3pt,arc=0pt,left=8pt,right=8pt,top=5pt,bottom=5pt}
 
-\newcommand{\rol}[1]{\textsf{\bfseries #1}}
+\newcommand{\rol}[1]{\textrm{\bfseries #1}}
 \newcommand{\carta}[1]{«\emph{#1}»}
-\newcommand{\porllenar}{\textcolor{pend}{\sffamily\small[por completar]}}
 \newcommand{\alto}{\textbf{A}}
 
 \begin{document}
@@ -109,12 +97,12 @@
 {\large\scshape Escuela de Ingeniería en Computadores}\\[0.2cm]
 {\large CE-1115 Seguridad de la Información}\\[1.5cm]
 
-{\color{vz}\rule{\textwidth}{1.4pt}}\\[0.6cm]
-{\sffamily\large Proyecto $\cdot$ Parte 1 $\cdot$ Diseño del control de acceso}\\[0.45cm]
-{\sffamily\bfseries\fontsize{24}{29}\selectfont \titulodoc}\\[0.35cm]
-{\sffamily\large \subtitulodoc}\\[0.35cm]
-{\sffamily\large Entregable \numentregable\ de 5}\\[0.6cm]
-{\color{vz}\rule{\textwidth}{1.4pt}}\\[1.1cm]
+{\rule{\textwidth}{1.4pt}}\\[0.6cm]
+{\rmfamily\large Proyecto $\cdot$ Parte 1 $\cdot$ Diseño del control de acceso}\\[0.45cm]
+{\rmfamily\bfseries\fontsize{24}{29}\selectfont \titulodoc}\\[0.35cm]
+{\rmfamily\large \subtitulodoc}\\[0.35cm]
+{\rmfamily\large Entregable \numentregable\ de 5}\\[0.6cm]
+{\rule{\textwidth}{1.4pt}}\\[1.1cm]
 
 {\large\bfseries Preparado para}\\[0.25cm]
 {\large Gerencia de Verdeazul Carbono S.A.}\\[0.1cm]
@@ -166,7 +154,7 @@ que opere la plataforma y al proveedor que la hospede.
 el sistema, sus respaldos, los reportes que se exporten y, durante la transición, las hojas de cálculo
 actuales.
 
-\textbf{Cómo se lee.} Las reglas numeradas (\textsf{POL-}) son obligatorias. Cada una está escrita de
+\textbf{Cómo se lee.} Las reglas numeradas (\textrm{POL-}) son obligatorias. Cada una está escrita de
 modo que se pueda comprobar si se cumple; una regla que no se puede comprobar está mal escrita. Las marcas como
 \resp{P-07} señalan reglas que salen de una respuesta del cliente; la minuta de esa consulta es el
 Anexo~A. Las marcas como \supu{P-17} señalan supuestos que el equipo fijó porque el cliente no dio el

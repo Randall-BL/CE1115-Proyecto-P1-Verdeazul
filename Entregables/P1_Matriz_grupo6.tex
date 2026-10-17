@@ -13,9 +13,8 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[spanish,es-noshorthands,es-tabla]{babel}
-\usepackage{XCharter}
-\usepackage[defaultsans,scale=0.92]{lato}
-\usepackage[scaled=0.9]{inconsolata}
+\usepackage{mathptmx}
+\renewcommand{\ttdefault}{ptm}
 \usepackage[letterpaper,margin=2.4cm,headheight=15pt]{geometry}
 \usepackage{microtype}
 \usepackage{amsmath,amssymb}
@@ -37,48 +36,42 @@
 \newcommand{\numentregable}{3}
 \newcommand{\fechaentrega}{15 de octubre de 2026}
 
-%--------------------------- color y estilo --------------------------
-\definecolor{vz}{HTML}{0F6E6A}        % acento unico (verde azulado)
-\definecolor{vzclaro}{HTML}{E7F2F1}
-\definecolor{tinta}{HTML}{1A1A1A}
-\definecolor{gris}{HTML}{5F5E5A}
-\definecolor{regla}{HTML}{B9B8B0}
-\definecolor{negado}{HTML}{F2F1EC}
-\color{tinta}
+%--------------------------- estilo ----------------------------------
 
-\titleformat{\section}{\Large\sffamily\bfseries\color{vz}}{\thesection}{0.6em}{}
-\titleformat{\subsection}{\large\sffamily\bfseries\color{tinta}}{\thesubsection}{0.6em}{}
+
+\titleformat{\section}{\Large\rmfamily\bfseries }{\thesection}{0.6em}{}
+\titleformat{\subsection}{\large\rmfamily\bfseries }{\thesubsection}{0.6em}{}
 \titlespacing*{\section}{0pt}{1.4em}{0.5em}
 \titlespacing*{\subsection}{0pt}{1.0em}{0.3em}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.55em}
 \setlist{leftmargin=1.5em,itemsep=2pt,topsep=3pt,parsep=0pt}
-\captionsetup{font={small,sf},labelfont={bf,color=vz},skip=5pt}
+\captionsetup{font=small,labelfont=bf,skip=5pt}
 
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[L]{\small\sffamily\color{gris}CE-1115 $\cdot$ Proyecto Parte 1 $\cdot$ Grupo \numgrupo}
-\fancyhead[R]{\small\sffamily\color{gris}\titulocorto}
-\fancyfoot[C]{\small\sffamily\color{gris}\thepage}
+\fancyhead[L]{\small\rmfamily CE-1115 $\cdot$ Proyecto Parte 1 $\cdot$ Grupo \numgrupo}
+\fancyhead[R]{\small\rmfamily \titulocorto}
+\fancyfoot[C]{\small\rmfamily \thepage}
 \renewcommand{\headrulewidth}{0.4pt}
-\renewcommand{\headrule}{\hbox to\headwidth{\color{regla}\leaders\hrule height \headrulewidth\hfill}}
+\renewcommand{\headrule}{\hbox to\headwidth{\leaders\hrule height \headrulewidth\hfill}}
 
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
-\newcommand{\cab}[1]{\textbf{\sffamily #1}}
+\newcommand{\cab}[1]{\textbf{\rmfamily #1}}
 
 % Trazabilidad con la consulta al cliente (minuta: Anexo A de P1_Politicas)
 %   \resp{P-07}: la regla sale de una respuesta del cliente
 %   \supu{P-13}: supuesto que el equipo fijo y documento
-\newcommand{\resp}[1]{\textsf{\footnotesize\bfseries\color{vz}[minuta #1]}}
-\newcommand{\supu}[1]{\textsf{\footnotesize\color{gris}[supuesto #1]}}
-\newtcolorbox{decision}{enhanced,breakable,colback=vzclaro,colframe=vz,
+\newcommand{\resp}[1]{\textrm{\footnotesize\bfseries [minuta #1]}}
+\newcommand{\supu}[1]{\textrm{\footnotesize [supuesto #1]}}
+\newtcolorbox{decision}{enhanced,breakable,colback=white,colframe=black,
   boxrule=0pt,leftrule=3pt,arc=0pt,left=8pt,right=8pt,top=5pt,bottom=5pt}
 
 % Notacion de la matriz
-\newcommand{\cnd}[1]{\textsuperscript{\sffamily\bfseries\color{vz}#1}}   % condicion
-\newcommand{\no}{\cellcolor{negado}\textcolor{gris}{---}}                  % sin acceso
-\newcommand{\rol}[1]{\textsf{\bfseries #1}}
+\newcommand{\cnd}[1]{\textsuperscript{\rmfamily\bfseries #1}}   % condicion
+\newcommand{\no}{---}                  % sin acceso
+\newcommand{\rol}[1]{\textrm{\bfseries #1}}
 \newcommand{\est}[1]{\textsc{\small #1}}
 
 \begin{document}
@@ -93,11 +86,11 @@
 {\large\scshape Escuela de Ingeniería en Computadores}\\[0.2cm]
 {\large CE-1115 Seguridad de la Información}\\[1.5cm]
 
-{\color{vz}\rule{\textwidth}{1.4pt}}\\[0.6cm]
-{\sffamily\large Proyecto $\cdot$ Parte 1 $\cdot$ Diseño del control de acceso}\\[0.45cm]
-{\sffamily\bfseries\fontsize{24}{29}\selectfont \titulodoc}\\[0.45cm]
-{\sffamily\large Entregable \numentregable\ de 5}\\[0.6cm]
-{\color{vz}\rule{\textwidth}{1.4pt}}\\[1.2cm]
+{\rule{\textwidth}{1.4pt}}\\[0.6cm]
+{\rmfamily\large Proyecto $\cdot$ Parte 1 $\cdot$ Diseño del control de acceso}\\[0.45cm]
+{\rmfamily\bfseries\fontsize{24}{29}\selectfont \titulodoc}\\[0.45cm]
+{\rmfamily\large Entregable \numentregable\ de 5}\\[0.6cm]
+{\rule{\textwidth}{1.4pt}}\\[1.2cm]
 
 {\large\bfseries Cliente}\\[0.25cm]
 {\large Verdeazul Carbono S.A.}\\[0.1cm]
@@ -140,7 +133,7 @@ Tres reglas de lectura valen para toda la matriz:
 
 \begin{enumerate}
 \item \textbf{Lo que no está escrito está denegado.} El sistema niega por omisión. Una celda con
-      \colorbox{negado}{\textcolor{gris}{---}} significa que el sujeto no tiene ningún permiso sobre el objeto, y
+      --- significa que el sujeto no tiene ningún permiso sobre el objeto, y
       dentro de una celda con permisos, toda operación que no aparezca también se deniega.
 \item \textbf{Una condición solo puede quitar.} Un permiso con una marca \cnd{C$n$} se concede
       únicamente si la regla C$n$ de la sección~\ref{sec:reglas} se cumple en ese momento. Las
@@ -223,13 +216,11 @@ una versión nueva o como un cambio de estado.
 \label{sec:matriz}
 
 \vspace{-0.5em}
-{\small\sffamily
+{\small\rmfamily
 \renewcommand{\arraystretch}{1.1}
 \setlength{\tabcolsep}{3.5pt}
 \begin{tabularx}{\linewidth}{@{}>{\bfseries}L{1.15cm}|Y|Y|Y|Y|Y|Y|Y|Y|Y|Y@{}}
-\arrayrulecolor{regla}
-\rowcolor{vzclaro}
-{\normalfont\scriptsize\sffamily\color{gris}Sujeto\newline$\downarrow$} & \cab{Fincas y parcelas} & \cab{Datos pers. del dueño} & \cab{Períodos de medición} & \cab{Asigna\-ciones} & \cab{Mediciones} & \cab{Enmiendas} & \cab{Certificados} & \cab{Cuentas y roles} & \cab{Bitácora} & \cab{Alertas de historial} \\
+{\normalfont\scriptsize\rmfamily Sujeto\newline$\downarrow$} & \cab{Fincas y parcelas} & \cab{Datos pers. del dueño} & \cab{Períodos de medición} & \cab{Asigna\-ciones} & \cab{Mediciones} & \cab{Enmiendas} & \cab{Certificados} & \cab{Cuentas y roles} & \cab{Bitácora} & \cab{Alertas de historial} \\
 \hline
 TEC &
 leer\cnd{C1} &
@@ -334,9 +325,9 @@ PUB & \no & \no & \no & \no & \no & \no & comprobar\cnd{C20} & \no & \no & \no \
 }
 
 \vspace{0.2em}
-{\footnotesize\sffamily
+{\footnotesize\rmfamily
 \textbf{Leyenda.}\quad
-\colorbox{negado}{\textcolor{gris}{---}} sin acceso: se deniega.\quad
+--- sin acceso: se deniega.\quad
 \cnd{C$n$} permiso sujeto a la regla C$n$ (sección~\ref{sec:reglas}).\quad
 \cnd{H} lectura vigilada por los controles de historial H1 a H3.\quad
 Toda operación no escrita en una celda está denegada.\quad
@@ -565,29 +556,29 @@ acumulan. Son las restricciones del nivel RBAC$_2$ de Sandhu \emph{et al.} (1996
 valida cada vez que se asigna un rol (regla C12).
 
 \begin{center}
-\small\sffamily
+\small\rmfamily
 \renewcommand{\arraystretch}{1.25}
 \begin{tabular}{@{}l|c|c|c|c|c|c|c@{}}
  & TEC & VER & SUP & GER & ADM & AUD & DUE \\
 \hline
-TEC & \cellcolor{negado} & \textbf{\color{vz}D} & $\times$ & $\times$ & $\times$ & $\times$ & $\times$ \\
+TEC & --- & \textbf{D} & $\times$ & $\times$ & $\times$ & $\times$ & $\times$ \\
 \hline
-VER & \textbf{\color{vz}D} & \cellcolor{negado} & $\times$ & $\times$ & $\times$ & $\times$ & $\times$ \\
+VER & \textbf{D} & --- & $\times$ & $\times$ & $\times$ & $\times$ & $\times$ \\
 \hline
-SUP & $\times$ & $\times$ & \cellcolor{negado} & $\times$ & $\times$ & $\times$ & $\times$ \\
+SUP & $\times$ & $\times$ & --- & $\times$ & $\times$ & $\times$ & $\times$ \\
 \hline
-GER & $\times$ & $\times$ & $\times$ & \cellcolor{negado} & $\times$ & $\times$ & $\times$ \\
+GER & $\times$ & $\times$ & $\times$ & --- & $\times$ & $\times$ & $\times$ \\
 \hline
-ADM & $\times$ & $\times$ & $\times$ & $\times$ & \cellcolor{negado} & $\times$ & $\times$ \\
+ADM & $\times$ & $\times$ & $\times$ & $\times$ & --- & $\times$ & $\times$ \\
 \hline
-AUD & $\times$ & $\times$ & $\times$ & $\times$ & $\times$ & \cellcolor{negado} & $\times$ \\
+AUD & $\times$ & $\times$ & $\times$ & $\times$ & $\times$ & --- & $\times$ \\
 \hline
-DUE & $\times$ & $\times$ & $\times$ & $\times$ & $\times$ & $\times$ & \cellcolor{negado} \\
+DUE & $\times$ & $\times$ & $\times$ & $\times$ & $\times$ & $\times$ & --- \\
 \end{tabular}
 
 \vspace{0.3em}
 {\footnotesize $\times$ = exclusión estática: ninguna persona puede tener ambos roles.\quad
-\textbf{\color{vz}D} = exclusión dinámica: una persona puede tener ambos, pero nunca activos en la misma sesión.}
+\textbf{D} = exclusión dinámica: una persona puede tener ambos, pero nunca activos en la misma sesión.}
 \end{center}
 
 \begin{itemize}
@@ -735,7 +726,7 @@ Solo con el código del certificado; respuesta mínima, sin listados ni datos de
 Para que la matriz sea verificable por alguien que no participó en el diseño, cada regla se acompaña
 de al menos un caso de prueba con su resultado esperado. El equipo que construya el sistema debe
 convertirlos en pruebas automáticas y ejecutar además una prueba por cada celda marcada con
-\colorbox{negado}{\textcolor{gris}{---}}.
+---.
 
 {\small
 \renewcommand{\arraystretch}{1.22}
